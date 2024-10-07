@@ -1,0 +1,42 @@
+{
+  "sc": {
+    "fe": {
+      "forms": {
+        "email": "E-mail",
+        "password": "Hasło",
+        "validation": {
+          "email": "Wprowadź swój mail.",
+          "password": "Wprowadź hasło.",
+          "name": "Wprowadź \"name\"",
+          "value": "Wprowadź \"value\""
+        },
+        "login": "Zaloguj się",
+        "submit": "Nadpisz dane",
+        "addFields": "Dodaj Pola",
+        "saveConfig": "Zapisz powyższą konfigurację jako szablon.",
+        "inputName": "Pole \"name\"",
+        "inputValue": "Pole \"value\""
+      },
+      "views": {
+        "login": {
+          "title": "Login Page Title",
+          "button": "Login"
+        },
+        "root": {
+          "steps": {
+            "title": {
+              "upload": "1. Załaduj plik XML",
+              "edit": "2. Edytuj dane",
+              "download": "3. Pobierz zaktualizowany plik."
+            },
+            "upload": {
+              "title": "Kliknij lub przeciągnij plik w ten obszar, żeby załadować plik.",
+              "description": "Załaduj pojedynczy plik w formacie XML by odczytać i edytować, a następnie zapisać jego dane."
+            },
+            "download": "Pobierz"
+          }
+        }
+      }
+    }
+  }
+}
