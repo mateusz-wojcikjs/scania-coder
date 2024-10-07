@@ -10,10 +10,9 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "target": "ES5",
     "module": "commonjs",
-    "outDir": "./dist",
+    "outDir": "dist",
     "rootDir": "./src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,6 +20,6 @@
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"],
 }

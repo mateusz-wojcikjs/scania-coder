@@ -1,7 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UserRole } from "../enums";
-import { Layout } from "./Layout.entity";
-import { OneToMany } from "typeorm/browser";
 
 @Entity({
     name: "USERS"

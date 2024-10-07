@@ -8,7 +8,7 @@ export const AppDataSource: DataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     port: parseInt(process.env.DB_PORT ?? "5432"),
     database: process.env.DB_NAME,
-    entities: [path.join(__dirname, "/../**/**.entity.ts")],
+    entities: [process.env.NODE_ENV === 'production' ? path.join(__dirname, "/../**/**.entity.js") : path.join(__dirname, "/../**/**.entity.ts")],
     ssl: false,
     synchronize: true,
     logging: true,
