@@ -3,8 +3,8 @@ import { Container } from "./loader.styles.ts";
 
 export const Loader = () => {
   return (
-      <Container>
-        <Spin />
+    <Container>
+      <Spin />
     </Container>
-  )
-}
+  );
+};

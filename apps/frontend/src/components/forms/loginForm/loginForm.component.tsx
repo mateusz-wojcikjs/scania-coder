@@ -41,9 +41,11 @@ export const LoginForm = () => {
       localStorage.setItem("authJwtToken", JSON.stringify({ token: data.authJwtToken }));
       setLoading(false);
       navigate("/");
-    } catch (err) {
-      setLoading(false);
-      console.log(err.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setLoading(false);
+        console.log(error.message);
+      }
     }
   };
 
@@ -72,9 +74,7 @@ export const LoginForm = () => {
         >
           <Input.Password />
         </Form.Item>
-
         {validationMessage && <StyledAlertError message={validationMessage} type="error" showIcon />}
-
         <Form.Item>
           <StyledButton className="login-button" type="primary" htmlType="submit" loading={loading}>
             {t("sc.fe.forms.login")}

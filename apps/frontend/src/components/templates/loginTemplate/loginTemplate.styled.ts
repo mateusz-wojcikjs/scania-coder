@@ -1,8 +1,7 @@
-import styled, { DefaultTheme, StyledComponent } from "styled-components";
-import { ThemeType } from "../../../theme/theme.ts";
+import styled from "styled-components";
 import { Logo } from "../../logo/logo.component.tsx";
 
-export const Container: StyledComponent<"div", DefaultTheme, ThemeType> = styled.div`
+export const Container = styled.div`
     display: grid;
     grid-template-columns: 1fr minmax(min-content, 53.5rem) 1fr;
     grid-template-rows: 33vh 1fr;
@@ -23,12 +22,12 @@ export const Container: StyledComponent<"div", DefaultTheme, ThemeType> = styled
     }
 `;
 
-export const LoginWrapper: StyledComponent<"div", DefaultTheme, ThemeType> = styled.div`
+export const LoginWrapper = styled.div`
   width: 100%;
   grid-column: 2;
 `;
 
-export const StyledLogo: StyledComponent<typeof Logo, DefaultTheme, ThemeType> = styled(Logo)`
+export const StyledLogo = styled(Logo)`
   margin-top: 50px;
   align-self: center;
   grid-column: 2;

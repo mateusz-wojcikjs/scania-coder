@@ -1,5 +1,5 @@
 {
-  "files": ["react-i18next.d.ts"],
+  "files": ["./src/types/i18next.d.ts"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

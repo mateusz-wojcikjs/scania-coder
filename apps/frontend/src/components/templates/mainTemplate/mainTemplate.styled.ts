@@ -1,8 +1,7 @@
-import styled, { DefaultTheme, StyledComponent } from "styled-components";
-import { ThemeType } from "../../../theme/theme.ts";
+import styled from "styled-components";
 import { Logo } from "../../logo/logo.component.tsx";
 
-export const Container: StyledComponent<"div", DefaultTheme, ThemeType> = styled.div`
+export const Container = styled.div`
     height: 100vh;
     width: 100%;
     display: grid;
@@ -12,7 +11,7 @@ export const Container: StyledComponent<"div", DefaultTheme, ThemeType> = styled
     padding: 0;
 `;
 
-export const LogoWrapper: StyledComponent<"div", DefaultTheme, ThemeType> = styled.div`
+export const LogoWrapper = styled.div`
   position: relative;
   height: 7rem;
   display: flex;
@@ -20,20 +19,20 @@ export const LogoWrapper: StyledComponent<"div", DefaultTheme, ThemeType> = styl
   align-items: center;
 `;
 
-export const StyledLogo: StyledComponent<typeof Logo, DefaultTheme, ThemeType> = styled(Logo)`
+export const StyledLogo= styled(Logo)`
     max-height: 100%;
     max-width: 12.5rem;
     margin-top: 1rem;
 `;
 
-export const Sidebar: StyledComponent<"aside", DefaultTheme, ThemeType>  = styled.aside`
+export const Sidebar  = styled.aside`
   background-color: #eeeeee;
   grid-row: 1 / 3;
   box-shadow: 10px 0 10px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
 `;
 
-export const Main: StyledComponent<"main", DefaultTheme, ThemeType>  = styled.main`
+export const Main  = styled.main`
   grid-row: 1 /-1;
   overflow-y: auto;
 `;
