@@ -8,6 +8,9 @@
     "dev": {
       "cache": false
     },
+    "start": {
+      "dependsOn": ["^start"]
+    },
     "lint": {},
     "test": {}
   }
