@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Logo } from "../../logo/logo.component.tsx";
+import { Breakpoint } from "../../../enums";
 
 export const Container = styled.div`
     height: 100vh;
@@ -30,11 +31,19 @@ export const Sidebar  = styled.aside`
   grid-row: 1 / 3;
   box-shadow: 10px 0 10px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
+    
+  @media ${Breakpoint.Mobile} {
+      display: none;
+  }
 `;
 
 export const Main  = styled.main`
   grid-row: 1 /-1;
   overflow-y: auto;
+
+  @media ${Breakpoint.Mobile} {
+      grid-column: 1 /-1;
+  }
 `;
 
 export const Content = styled.section`
@@ -43,6 +52,6 @@ export const Content = styled.section`
   min-height: 50rem;
   max-width: 140rem;
   background-color: ${({ theme }) => theme.colors.white};
-    border-radius: 16px;
-    box-shadow: 5px 0 51px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 5px 0 51px 0 rgba(0, 0, 0, 0.05);
 `;

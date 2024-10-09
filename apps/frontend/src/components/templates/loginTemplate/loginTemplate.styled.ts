@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Logo } from "../../logo/logo.component.tsx";
+import { Breakpoint } from "../../../enums";
 
 export const Container = styled.div`
     display: grid;
@@ -7,6 +8,11 @@ export const Container = styled.div`
     grid-template-rows: 33vh 1fr;
     min-height: 100vh;
     justify-items: center;
+    column-gap: 16px;
+    
+    @media ${Breakpoint.Mobile} {
+        grid-template-rows: 25vh 1fr;
+    }
 
     .custom-form-label {
         .ant-form-item-label {
@@ -31,4 +37,8 @@ export const StyledLogo = styled(Logo)`
   margin-top: 50px;
   align-self: center;
   grid-column: 2;
+
+  @media ${Breakpoint.Mobile} {
+      margin-top: 0;
+  }
 `;

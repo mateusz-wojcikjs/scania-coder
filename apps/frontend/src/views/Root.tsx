@@ -87,7 +87,7 @@ const Root = () => {
       {!!file && <Alert message="Poprawnie załadowano plik XML." type="success" showIcon />}
       <Divider orientation="left"><Typography.Title level={3}>{t("sc.fe.views.root.steps.title.edit")}</Typography.Title></Divider>
       <p style={{ fontSize: "14px", marginBottom: 12, color: "#666" }}>Edytuj plik XML dodając pola w parach NAME - VALUE i uzupełnij je. Możesz też użyć, którejś z gotowych konfiguracji pliku. Następnie klikniij przycisk "Nadpisz dane".</p>
-      <Flex gap="middle">
+      <Flex gap="middle" wrap>
         <EditFileForm { ...{ blobFile, file, setUrl, layoutFields, setIsLoading }} />
         <Select
           options={layoutItems}
