@@ -33,9 +33,16 @@
               "title": "Kliknij lub przeciągnij plik w ten obszar, żeby załadować plik.",
               "description": "Załaduj pojedynczy plik w formacie XML by odczytać i edytować, a następnie zapisać jego dane."
             },
+            "edit": {
+              "description": "Edytuj plik XML dodając pola w parach NAME - VALUE i uzupełnij je. Możesz też użyć, którejś z gotowych konfiguracji pliku. Następnie klikniij przycisk \"Nadpisz dane\"."
+            },
             "download": "Pobierz"
           }
         }
+      },
+      "alerts": {
+        "uploadSuccessful": "Poprawnie załadowano plik XML.",
+        "currentFile": "Edytujesz wersję pliku: {{version}}"
       }
     }
   }

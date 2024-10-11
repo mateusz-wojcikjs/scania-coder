@@ -12,6 +12,7 @@ const { Dragger } = Upload;
 const Root = () => {
   const { t }: TransProps<never> = useTranslation();
   const [file, setFile]: UseState<UploadFile<File> | undefined> = useState();
+  const [fileData, setFileData] = useState();
   const [blobFile, setBlobFile]: UseState<Blob | undefined> = useState();
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
   const [url, setUrl] = useState("");
@@ -56,7 +57,9 @@ const Root = () => {
       {isLoading && <Loader />}
       <Typography.Title level={1}>Dashboard</Typography.Title>
 
-      <Divider orientation="left"><Typography.Title level={3}>{t("sc.fe.views.root.steps.title.upload")}</Typography.Title></Divider>
+      <Divider orientation="left">
+        <Typography.Title level={3}>{t("sc.fe.views.root.steps.title.upload")}</Typography.Title>
+      </Divider>
       <Dragger
         name='file'
         action='/api/upload-xml'
@@ -67,6 +70,7 @@ const Root = () => {
           if (status === "done") {
             message.success(`${info.file.name} file uploaded successfully.`);
             setFile(info.file);
+            setFileData(info.file.response);
           } else if (status === "error") {
             message.error(`${info.file.name} file upload failed.`);
           }
@@ -84,9 +88,10 @@ const Root = () => {
           {t("sc.fe.views.root.steps.upload.description")}
         </p>
       </Dragger>
-      {!!file && <Alert message="Poprawnie załadowano plik XML." type="success" showIcon />}
+      {!!file && <Alert message={t("sc.fe.alerts.uploadSuccessful")} type="success" showIcon />}
       <Divider orientation="left"><Typography.Title level={3}>{t("sc.fe.views.root.steps.title.edit")}</Typography.Title></Divider>
-      <p style={{ fontSize: "14px", marginBottom: 12, color: "#666" }}>Edytuj plik XML dodając pola w parach NAME - VALUE i uzupełnij je. Możesz też użyć, którejś z gotowych konfiguracji pliku. Następnie klikniij przycisk "Nadpisz dane".</p>
+      <p style={{ fontSize: "14px", marginBottom: 12, color: "#666" }}>{t('sc.fe.views.root.steps.edit.description')}</p>
+      {fileData && <Alert message={t('sc.fe.alerts.currentFile', { version: fileData.data.majorVersion })} />}
       <Flex gap="middle" wrap>
         <EditFileForm { ...{ blobFile, file, setUrl, layoutFields, setIsLoading }} />
         <Select
