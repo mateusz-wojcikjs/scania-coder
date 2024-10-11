@@ -1,8 +1,9 @@
 {
-  "name": "types",
+  "name": "@scania-coder/types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint src/**/*.ts"

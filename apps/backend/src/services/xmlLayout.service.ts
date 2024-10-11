@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Layout } from "../entity";
-import { UpdatePayload } from "../types";
+import { UpdatePayload } from "@scania-coder/types";
 
 export class XmlLayoutService {
   static async createLayout(authorId: number, name: string, updates: UpdatePayload[]) {

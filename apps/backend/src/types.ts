@@ -1,17 +1,3 @@
-// TODO: create types available both frontend and backend
-
-export interface UpdatePayload {
-  name: string;
-  newValue: string;
-}
-
-export interface XmlFileMetaData {
-  blockVersion: string;
-  majorVersion: string;
-  minorVersion: string;
-  date: string;
-}
-
 export interface VersionAttributes {
   MajorVersion: string;
   MinorVersion: string;

@@ -1,5 +1,6 @@
 import { Builder, parseStringPromise } from "xml2js";
-import { FPC, ParsedXml, UpdatePayload, VersionBlock, XmlFileMetaData } from "../types";
+import { FPC, ParsedXml, VersionBlock } from "../types";
+import { XmlFileMetaData, UpdatePayload } from "@scania-coder/types";
 
 export class XmlFileService {
     static async editXmlFile(
