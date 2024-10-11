@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { UpdatePayload } from "../types";
+import { UpdatePayload } from "@scania-coder/types";
 
 @Entity({
   name: "LAYOUTS"

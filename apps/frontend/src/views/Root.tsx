@@ -5,6 +5,7 @@ import { TransProps, useTranslation } from "react-i18next";
 import { UseState } from "../types";
 import { UploadChangeParam } from "antd/es/upload";
 import { EditFileForm, Loader } from "../components";
+import { UpdatePayload } from "@scania-coder/types";
 
 
 const { Dragger } = Upload;
@@ -17,7 +18,7 @@ const Root = () => {
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
   const [url, setUrl] = useState("");
   const [layoutFields, setLayoutFields] = useState([]);
-  const [layoutItems, setLayoutItems] = useState([]);
+  const [layoutItems, setLayoutItems]: UseState<UpdatePayload | undefined> = useState();
 
   useEffect(() => {
     (async () => {
