@@ -26,12 +26,16 @@ export const getXmlMetadata = async (req: Request, res: Response, next: NextFunc
 
 export const editXml = async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const { updates } = request.body;
+        const { updates, newMajorVersion } = request.body;
         const file = request.file;
         const parsedUpdates = JSON.parse(updates);
 
+        if (!newMajorVersion) {
+            return response.status(400).json({ error: "No file version provided." });
+        }
+
         if (!file) {
-            return response.status(400).json({ error: "No file uploaded" });
+            return response.status(400).json({ error: "No file uploaded." });
         }
 
         if (!parsedUpdates || !Array.isArray(parsedUpdates)) {
@@ -39,7 +43,7 @@ export const editXml = async (request: Request, response: Response, next: NextFu
         }
 
         const xmlData: string = file.buffer.toString("utf-8");
-        const updatedXml: string = await XmlFileService.editXmlFile(xmlData, parsedUpdates);
+        const updatedXml: string = await XmlFileService.editXmlFile(xmlData, parsedUpdates, newMajorVersion);
 
         response.setHeader("Content-Type", "application/xml");
         response.send(updatedXml);
