@@ -5,7 +5,7 @@ import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
-  const { blobFile, file, setUrl, layoutFields, setIsLoading }: EditFileFormProps = props;
+  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const { t }: TransProps<never> = useTranslation();
   const [form] = Form.useForm();
@@ -26,6 +26,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     // Always send the form data to /api/edit-xml
     const formData = new FormData();
     formData.append("updates", JSON.stringify(values.updates));
+    formData.append("newMajorVersion", newMajorVersion)
     if (blobFile) {
       formData.append("file", blobFile);
     }
@@ -78,7 +79,6 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     <Form
       name="dynamic_form_nest_item"
       onFinish={onFinish}
-      style={{ maxWidth: 600 }}
       autoComplete="off"
       disabled={!file}
       form={form}
@@ -92,6 +92,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                   {...restField}
                   name={[name, "name"]}
                   rules={[{ required: true, message: t("sc.fe.forms.validation.name") }]}
+                  style={{ marginBottom: 0 }}
                 >
                   <Input placeholder={t("sc.fe.forms.inputName")} />
                 </Form.Item>
@@ -99,8 +100,9 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                   {...restField}
                   name={[name, "newValue"]}
                   rules={[{ required: true, message: t("sc.fe.forms.validation.value") }]}
+                  style={{ marginBottom: 0 }}
                 >
-                  <Input placeholder={t("sc.fe.forms.inputValue")} />
+                  <Input placeholder={t("sc.fe.forms.inputValue")} style={{ marginBottom: 0 }} />
                 </Form.Item>
                 <MinusCircleOutlined onClick={() => remove(name)} />
               </Space>

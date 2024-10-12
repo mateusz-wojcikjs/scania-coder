@@ -12,7 +12,7 @@ import { customTheme } from "./theme/antdConfig.ts";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Dashboard from "./views/Dashboard.tsx";
 import { MainTemplate } from "./components/templates/mainTemplate/mainTemplate.component.tsx";
-import Root from "./views/Root.tsx";
+import { Root } from "./views";
 
 const router = createBrowserRouter([
   {

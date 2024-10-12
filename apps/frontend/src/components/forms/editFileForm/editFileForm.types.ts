@@ -6,4 +6,5 @@ export interface EditFileFormProps {
     setUrl: (url: string) => void;
     layoutFields: {name: string; newValue: string}[];
     setIsLoading: (loading: boolean) => void;
+    newMajorVersion: string;
 }
