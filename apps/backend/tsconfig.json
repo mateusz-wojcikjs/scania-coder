@@ -13,6 +13,9 @@
     "target": "ES5",
     "module": "commonjs",
     "outDir": "dist",
+    "paths": {
+      "@scania-coder/types": ["../../packages/types"]
+    },
     "rootDir": "./src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
