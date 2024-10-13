@@ -5,7 +5,7 @@ import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
-  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion }: EditFileFormProps = props;
+  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const { t }: TransProps<never> = useTranslation();
   const [form] = Form.useForm();
@@ -84,36 +84,39 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       form={form}
     >
       <Form.List name="updates">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, "name"]}
-                  rules={[{ required: true, message: t("sc.fe.forms.validation.name") }]}
-                  style={{ marginBottom: 0 }}
-                >
-                  <Input placeholder={t("sc.fe.forms.inputName")} />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, "newValue"]}
-                  rules={[{ required: true, message: t("sc.fe.forms.validation.value") }]}
-                  style={{ marginBottom: 0 }}
-                >
-                  <Input placeholder={t("sc.fe.forms.inputValue")} style={{ marginBottom: 0 }} />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                {t("sc.fe.forms.addFields")}
-              </Button>
-            </Form.Item>
-          </>
-        )}
+        {(fields, { add, remove }) => {
+          setIsFieldAdded(!!fields.length);
+          return (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+                  <Form.Item
+                    {...restField}
+                    name={[name, "name"]}
+                    rules={[{ required: true, message: t("sc.fe.forms.validation.name") }]}
+                    style={{ marginBottom: 0, width: '180px' }}
+                  >
+                    <Input placeholder={t("sc.fe.forms.inputName")}/>
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "newValue"]}
+                    rules={[{ required: true, message: t("sc.fe.forms.validation.value") }]}
+                    style={{ marginBottom: 0, width: '180px' }}
+                  >
+                    <Input placeholder={t("sc.fe.forms.inputValue")} style={{ marginBottom: 0 }}/>
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)}/>
+                </Space>
+              ))}
+              <Form.Item>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>} style={{ width: "368px"}}>
+                  {t("sc.fe.forms.addFields")}
+                </Button>
+              </Form.Item>
+            </>
+          );
+        }}
       </Form.List>
       <Form.Item>
         <Checkbox
