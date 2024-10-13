@@ -8,4 +8,5 @@ export interface EditFileFormProps {
     layoutFields: {name: string; newValue: string}[];
     setIsLoading: (loading: boolean) => void;
     newMajorVersion: string;
+    setIsFieldAdded: (value: boolean) => void;
 }
