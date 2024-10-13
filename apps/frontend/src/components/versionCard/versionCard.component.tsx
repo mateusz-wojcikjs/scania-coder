@@ -2,8 +2,10 @@ import { TransProps, useTranslation } from "react-i18next";
 import { Typography } from "antd";
 import { VersionCardProps } from "./versionCard.types.ts";
 import { FC } from "react";
-import { Label, StyledCard } from "./versionCard.styled.ts";
-import { InputNumber } from "antd/lib";
+import { Description, Label, StyledCard } from "./versionCard.styled.ts";
+import { InputNumber, Tooltip } from "antd/lib";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { theme } from "../../theme/theme.ts";
 const { Text } = Typography;
 
 export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
@@ -11,7 +13,15 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
   const { t }: TransProps<never> = useTranslation();
 
   return (
-    <StyledCard title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}>
+    <StyledCard
+      title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}
+      extra={
+        <Tooltip title={t('sc.fe.steps.upload.card.tooltip')}>
+          <InfoCircleOutlined style={{ color: theme.colors.primary}} />
+        </Tooltip>
+      }
+    >
+      <Description>{t('sc.fe.steps.upload.card.label')}</Description>
       <InputNumber
         addonBefore={t("sc.fe.steps.upload.card.majorVersion")}
         value={newFileVersion}
