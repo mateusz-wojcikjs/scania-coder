@@ -13,8 +13,8 @@ export class XmlFileService {
       const records: FPC[] = parsedXml.Sops.Data[0].FpcBlock[0].FPC || [];
       const currentMajorVersion: number = Number(parsedXml.Sops.Data[0].VersionBlock[0].Version[0].$.MajorVersion);
 
-      if (currentMajorVersion >= Number(newMajorVersion)) {
-        throw new BadRequestError(`New MajorVersion (${newMajorVersion}) should be bigger than current MajorVersion(${currentMajorVersion}).`);
+      if (currentMajorVersion <= 0) {
+        throw new BadRequestError(`New MajorVersion (${newMajorVersion}) should be bigger than 0.`);
       }
 
       parsedXml.Sops.Data[0].VersionBlock[0].Version[0].$.MajorVersion = newMajorVersion;

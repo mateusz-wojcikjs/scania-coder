@@ -1,8 +1,9 @@
 import { TransProps, useTranslation } from "react-i18next";
-import { Input, Typography } from "antd";
+import { Typography } from "antd";
 import { VersionCardProps } from "./versionCard.types.ts";
-import { ChangeEvent, FC } from "react";
+import { FC } from "react";
 import { Label, StyledCard } from "./versionCard.styled.ts";
+import { InputNumber } from "antd/lib";
 const { Text } = Typography;
 
 export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
@@ -11,13 +12,13 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
 
   return (
     <StyledCard title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}>
-      <Input
+      <InputNumber
         addonBefore={t("sc.fe.steps.upload.card.majorVersion")}
         value={newFileVersion}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => setFileVersion(e.target.value)}
+        onChange={(value: string | null): void => setFileVersion(value)}
         placeholder={t("sc.fe.steps.upload.card.inputPlaceholder")}
         maxLength={9}
-        min={0}
+        min='0'
       />
       <Label>
         {t("sc.fe.steps.upload.card.change")}
