@@ -44,7 +44,9 @@
             "majorVersion": "Major Version",
             "inputPlaceholder": "Wpisz cyfrę, by ustawić wersję pliku.",
             "change": "Zmiana:",
-            "noChange": "wersja nie zostanie nadpisana."
+            "noChange": "wersja nie zostanie nadpisana.",
+            "tooltip": "Domyślnie wesja pliku podczas zapisu zostanie zwiększona o 1.",
+            "label": "Wersja pliku:"
           }
         },
         "edit": {
