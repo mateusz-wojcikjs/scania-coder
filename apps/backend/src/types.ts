@@ -41,3 +41,9 @@ export interface Sops {
 export interface ParsedXml {
   Sops: Sops;
 }
+
+export interface XmlFileServiceData {
+  updatedXml: string;
+  updatedFields: string[],
+  errors: string[],
+}

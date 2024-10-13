@@ -10,3 +10,9 @@ export const Label = styled.div`
     display: flex;
     gap: 4px;
 `
+
+export const Description = styled.p`
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #555;
+`;

@@ -16,12 +16,14 @@ import {
   StyledAlert,
   Wrapper
 } from "./root.styled.ts";
+import { useState } from "react";
 
 const { Dragger } = Upload;
 const { Title } = Typography;
 
 export const Root = () => {
   const { t }: TransProps<never> = useTranslation();
+  const [isFieldAdded, setIsFieldAdded] = useState(false);
   const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion }: UseFileEditor = useFileEditor();
 
   return (
@@ -66,14 +68,20 @@ export const Root = () => {
           <InnerWrapper>
             <Box>
               <div>
-                <Row>
-                  <Col span={12}><Label>Nazwa</Label></Col>
-                  <Col><Label>Wartość</Label></Col>
-                </Row>
-                <EditFileForm {...{ blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion: fileVersion || fileData.majorVersion }} />
+                {isFieldAdded ? (
+                  <Row>
+                    <Col span={12}><Label>{t('sc.fe.steps.edit.labels.name')}</Label></Col>
+                    <Col><Label>{t('sc.fe.steps.edit.labels.value')}</Label></Col>
+                  </Row>
+                ) : (
+                  <Row>
+                    <Col span={12}><Label>{t('sc.fe.steps.edit.labels.create')}</Label></Col>
+                  </Row>
+                )}
+                <EditFileForm {...{ blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion: fileVersion || fileData.majorVersion, setIsFieldAdded }} />
               </div>
               <SelectWrapper>
-                <Row><Col><Label>Konfiguracje zapisane jako szablon:</Label></Col></Row>
+                <Row><Col><Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label></Col></Row>
                 <Select
                   options={layoutItems}
                   placeholder={t('sc.fe.steps.edit.chooseLayout')}

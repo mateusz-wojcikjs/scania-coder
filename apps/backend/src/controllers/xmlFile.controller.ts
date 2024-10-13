@@ -43,13 +43,21 @@ export const editXml = async (request: Request, response: Response, next: NextFu
         }
 
         const xmlData: string = file.buffer.toString("utf-8");
-        const updatedXml: string = await XmlFileService.editXmlFile(xmlData, parsedUpdates, newMajorVersion);
+        const { updatedXml, updatedFields, errors } = await XmlFileService.editXmlFile(xmlData, parsedUpdates, newMajorVersion);
+
+        if (errors.length > 0) {
+            return response.status(400).json({
+                error: "Some fields could not be updated.",
+                errors,
+                updatedFields,
+            });
+        }
 
         response.setHeader("Content-Type", "application/xml");
         response.send(updatedXml);
 
     } catch (error) {
-        logger.error("Error during getXmlMetadata()", {
+        logger.error("Error during editXml()", {
             error,
             requestBody: request.body,
         });

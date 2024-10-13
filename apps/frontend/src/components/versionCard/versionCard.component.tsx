@@ -1,8 +1,11 @@
 import { TransProps, useTranslation } from "react-i18next";
-import { Input, Typography } from "antd";
+import { Typography } from "antd";
 import { VersionCardProps } from "./versionCard.types.ts";
-import { ChangeEvent, FC } from "react";
-import { Label, StyledCard } from "./versionCard.styled.ts";
+import { FC } from "react";
+import { Description, Label, StyledCard } from "./versionCard.styled.ts";
+import { InputNumber, Tooltip } from "antd/lib";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { theme } from "../../theme/theme.ts";
 const { Text } = Typography;
 
 export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
@@ -10,14 +13,22 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
   const { t }: TransProps<never> = useTranslation();
 
   return (
-    <StyledCard title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}>
-      <Input
+    <StyledCard
+      title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}
+      extra={
+        <Tooltip title={t('sc.fe.steps.upload.card.tooltip')}>
+          <InfoCircleOutlined style={{ color: theme.colors.primary}} />
+        </Tooltip>
+      }
+    >
+      <Description>{t('sc.fe.steps.upload.card.label')}</Description>
+      <InputNumber
         addonBefore={t("sc.fe.steps.upload.card.majorVersion")}
         value={newFileVersion}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => setFileVersion(e.target.value)}
+        onChange={(value: string | null): void => setFileVersion(value)}
         placeholder={t("sc.fe.steps.upload.card.inputPlaceholder")}
         maxLength={9}
-        min={0}
+        min='0'
       />
       <Label>
         {t("sc.fe.steps.upload.card.change")}
