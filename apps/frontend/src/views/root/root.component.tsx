@@ -83,6 +83,8 @@ export const Root = () => {
               <SelectWrapper>
                 <Row><Col><Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label></Col></Row>
                 <Select
+                  showSearch
+                  optionFilterProp="label"
                   options={layoutItems}
                   placeholder={t('sc.fe.steps.edit.chooseLayout')}
                   onChange={onChange}
