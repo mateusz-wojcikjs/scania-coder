@@ -31,6 +31,9 @@ export const Sidebar  = styled.aside`
   grid-row: 1 / 3;
   box-shadow: 10px 0 10px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
     
   @media ${Breakpoint.Mobile} {
       display: none;
@@ -54,4 +57,13 @@ export const Content = styled.section`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 16px;
   box-shadow: 5px 0 51px 0 rgba(0, 0, 0, 0.05);
+`;
+
+export const BottomBox = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray300};
+    margin-bottom: 32px;
+    padding-top: 32px;
 `;
