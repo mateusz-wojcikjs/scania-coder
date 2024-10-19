@@ -1,7 +1,6 @@
 import express from "express";
 import multer from "multer";
 import { editXml, getXmlMetadata } from "../controllers/xmlFile.controller";
-import { isAuthenticated } from "../middlewares/autentication.middleware";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
