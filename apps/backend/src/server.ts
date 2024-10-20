@@ -14,10 +14,10 @@ import { login } from "./controllers/login.controller";
 import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
-import { isAuthenticated } from "./middlewares/autentication.middleware";
 import { root } from "./routes/root";
 import xmlFileRoute from "./routes/xmlFile.route";
 import xmlLayoutRoute from "./routes/xmlLayout.route";
+import { isAuthenticated } from "./middlewares";
 
 const app: Express = express();
 
@@ -30,8 +30,8 @@ const setupExpress = (): void => {
     app.route("/api").get(root);
     app.route("/api/login").post(login);
 
-    app.use("/api", xmlFileRoute);
-    app.use("/api", xmlLayoutRoute);
+    app.use("/api", isAuthenticated ,xmlFileRoute);
+    app.use("/api", isAuthenticated, xmlLayoutRoute);
 
     app.use(defaultErrorHandler);
 };
