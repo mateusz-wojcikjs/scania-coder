@@ -1,4 +1,4 @@
-import { UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
+import { LayoutData, LayoutItem, UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 import { useEffect, useState } from "react";
 import { message, UploadFile } from "antd";
 import { ApiError, UseState } from "../types";
@@ -11,16 +11,16 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const [blobFile, setBlobFile]: UseState<Blob | undefined> = useState();
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
   const [url, setUrl] = useState("");
-  const [layoutFields, setLayoutFields] = useState([]);
-  const [layoutItems, setLayoutItems]: UseState<UpdatePayload [] | undefined> = useState();
+  const [layoutFields, setLayoutFields]: UseState<UpdatePayload[] | undefined> = useState();
+  const [layoutItems, setLayoutItems]: UseState<LayoutItem[] | undefined> = useState();
   const [fileVersion, setFileVersion] = useState(fileData?.majorVersion);
 
   useEffect(() => {
     (async () => {
       try {
-        const data = await api(`/api/layouts`);
-        const transformedData = data.map((layout: { id: string; name: string; }) => ({
-          value: layout.id,
+        const data: LayoutData[] = await api(`/api/layouts`);
+        const transformedData: LayoutItem[] = data.map((layout: LayoutData): LayoutItem => ({
+          value: layout.id.toString(),
           label: layout.name,
         }));
 
@@ -34,7 +34,7 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const onChange = async (id: number) => {
     setIsLoading(true);
     try {
-      const data = await api<{ updates: UpdatePayload[] }>(`/api/layouts/${id}`);
+      const data: { updates: UpdatePayload[] } = await api<{ updates: UpdatePayload[] }>(`/api/layouts/${id}`);
       setLayoutFields(data.updates);
       message.success('Poprawnie użyto szablonu');
     } catch (err) {

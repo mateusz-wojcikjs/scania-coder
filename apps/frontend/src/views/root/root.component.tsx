@@ -28,11 +28,11 @@ export const Root = () => {
   const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion }: UseFileEditor = useFileEditor();
 
   const customUpload = async (options) => {
-    const { file, onProgress, onSuccess, onError } = options;
+    const { file, onSuccess, onError } = options;
 
     try {
       const data = new FormData();
-      data.append('file', file as any); // Ensure correct typing
+      data.append('file', file as any);
 
       const response = await api('/api/upload-xml', {
         method: 'POST',

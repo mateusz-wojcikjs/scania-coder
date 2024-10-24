@@ -1,5 +1,5 @@
 import { UploadFile } from "antd";
-import { UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
+import { LayoutItem, UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 
 export interface UseFileEditor {
   isLoading: boolean;
@@ -9,11 +9,11 @@ export interface UseFileEditor {
   file: UploadFile<XmlFileMetaData> | undefined;
   fileData: XmlFileMetaData | undefined;
   fileVersion: string | undefined;
-  layoutItems: UpdatePayload[] | undefined
-  layoutFields: UpdatePayload[];
+  layoutItems: LayoutItem[] | undefined
+  layoutFields: UpdatePayload[] | undefined;
   setFile: (file: UploadFile<XmlFileMetaData> | undefined) => void;
   setFileData: (fileData: XmlFileMetaData) => void;
-  setFileVersion: (version: string | null) => void;
+  setFileVersion: (version: string | undefined) => void;
   setBlobFile: (blobFile: Blob | undefined) => void;
   setUrl: (url: string) => void;
   setIsLoading: (loading: boolean) => void;
