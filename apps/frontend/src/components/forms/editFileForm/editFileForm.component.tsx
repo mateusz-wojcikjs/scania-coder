@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
+import { api } from "../../../api.ts";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded }: EditFileFormProps = props;
@@ -32,9 +33,13 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     }
 
     try {
+      const token = localStorage.getItem('authJwtToken');
       const editXmlResponse = await fetch("/api/edit-xml", {
         method: "POST",
         body: formData,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token).token}`
+        }
       });
 
       if (editXmlResponse.ok) {

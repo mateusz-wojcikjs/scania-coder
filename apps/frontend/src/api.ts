@@ -21,6 +21,7 @@ export async function api<T>(
     headers,
   });
 
+
   if (!response.ok) {
     const errorText = await response.text();
     throw new ApiError(response.status, errorText);
