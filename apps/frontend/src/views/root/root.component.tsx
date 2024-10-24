@@ -17,6 +17,7 @@ import {
   Wrapper
 } from "./root.styled.ts";
 import { useState } from "react";
+import { api } from "../../api.ts";
 
 const { Dragger } = Upload;
 const { Title } = Typography;
@@ -25,6 +26,25 @@ export const Root = () => {
   const { t }: TransProps<never> = useTranslation();
   const [isFieldAdded, setIsFieldAdded] = useState(false);
   const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion }: UseFileEditor = useFileEditor();
+
+  const customUpload = async (options) => {
+    const { file, onSuccess, onError } = options;
+
+    try {
+      const data = new FormData();
+      data.append('file', file as any);
+
+      const response = await api('/api/upload-xml', {
+        method: 'POST',
+        body: data,
+        'Content-Type': 'multipart/form-data'
+      });
+
+      onSuccess && onSuccess(response, file);
+    } catch (err) {
+      onError && onError(err);
+    }
+  };
 
   return (
     <Container>
@@ -35,13 +55,14 @@ export const Root = () => {
       </Divider>
       <Dragger
         name='file'
-        action='/api/upload-xml'
+        customRequest={customUpload}
         showUploadList
         onChange={(info: UploadChangeParam<UploadFile<XmlFileMetaData>>) => {
           const { status, originFileObj, name, response } = info.file;
           setBlobFile(originFileObj);
           if (status === "done") {
             message.success(t('sc.fe.forms.upload.success', { fileName: name }));
+            console.log(info);
             setFile(info.file);
 
             if (response) {
@@ -83,6 +104,8 @@ export const Root = () => {
               <SelectWrapper>
                 <Row><Col><Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label></Col></Row>
                 <Select
+                  showSearch
+                  optionFilterProp="label"
                   options={layoutItems}
                   placeholder={t('sc.fe.steps.edit.chooseLayout')}
                   onChange={onChange}
