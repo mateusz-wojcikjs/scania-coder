@@ -3,6 +3,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
+import { UpdatePayload } from "@scania-coder/types";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded }: EditFileFormProps = props;
@@ -13,7 +14,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
   useEffect(() => {
     if (layoutFields.length) {
       form.setFieldsValue({
-        updates: layoutFields.map(update => ({
+        updates: layoutFields.map((update: UpdatePayload): UpdatePayload => ({
           name: update.name,
           newValue: update.newValue
         }))
@@ -23,7 +24,6 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
 
   const onFinish = async (values: any) => {
     setIsLoading(true);
-    // Always send the form data to /api/edit-xml
     const formData = new FormData();
     formData.append("updates", JSON.stringify(values.updates));
     formData.append("newMajorVersion", newMajorVersion)
@@ -32,7 +32,6 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     }
 
     try {
-      // Send to /api/edit-xml
       const editXmlResponse = await fetch("/api/edit-xml", {
         method: "POST",
         body: formData,
