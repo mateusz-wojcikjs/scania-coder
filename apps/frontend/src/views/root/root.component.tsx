@@ -37,6 +37,7 @@ export const Root = () => {
       const response = await api('/api/upload-xml', {
         method: 'POST',
         body: data,
+        'Content-Type': 'multipart/form-data'
       });
 
       onSuccess && onSuccess(response, file);
@@ -61,6 +62,7 @@ export const Root = () => {
           setBlobFile(originFileObj);
           if (status === "done") {
             message.success(t('sc.fe.forms.upload.success', { fileName: name }));
+            console.log(info);
             setFile(info.file);
 
             if (response) {

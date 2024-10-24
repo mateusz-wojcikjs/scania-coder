@@ -11,8 +11,8 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const [blobFile, setBlobFile]: UseState<Blob | undefined> = useState();
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
   const [url, setUrl] = useState("");
-  const [layoutFields, setLayoutFields]: UseState<UpdatePayload[] | undefined> = useState();
-  const [layoutItems, setLayoutItems]: UseState<LayoutItem[] | undefined> = useState();
+  const [layoutFields, setLayoutFields]: UseState<UpdatePayload[]> = useState<UpdatePayload[]>([]);
+  const [layoutItems, setLayoutItems]: UseState<LayoutItem[]> = useState<LayoutItem[]>([]);
   const [fileVersion, setFileVersion] = useState(fileData?.majorVersion);
 
   useEffect(() => {
