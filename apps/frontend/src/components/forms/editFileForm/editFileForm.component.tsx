@@ -62,6 +62,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(token).token}`
           },
           body: JSON.stringify(layoutPayload),
         });
