@@ -28,6 +28,9 @@
         },
         "root": {
           "title": "Edycja XML"
+        },
+        "layoutsList": {
+          "title": "Lista konfiguracji"
         }
       },
       "steps": {
