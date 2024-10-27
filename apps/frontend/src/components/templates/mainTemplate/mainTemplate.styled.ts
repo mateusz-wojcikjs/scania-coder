@@ -18,6 +18,8 @@ export const LogoWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
+  padding-bottom: 16px;
 `;
 
 export const StyledLogo= styled(Logo)`
@@ -66,4 +68,8 @@ export const BottomBox = styled.div`
     border-top: 1px solid ${({ theme }) => theme.colors.gray300};
     margin-bottom: 32px;
     padding-top: 32px;
+`;
+
+export const MenuWrapper = styled.nav`
+  height: 100%;
 `;

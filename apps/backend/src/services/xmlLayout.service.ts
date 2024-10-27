@@ -26,4 +26,9 @@ export class XmlLayoutService {
       .createQueryBuilder("layout")
       .getMany();
   }
+
+  static async deleteLayoutById(id: number) {
+    const layoutRepository = AppDataSource.getRepository(Layout);
+    return await layoutRepository.delete(id);
+  }
 }
