@@ -18,6 +18,8 @@ import {
 } from "./root.styled.ts";
 import { useState } from "react";
 import { api } from "../../api.ts";
+import { UploadProps } from "antd/es/upload/interface";
+import { UploadRequestError } from "rc-upload/lib/interface";
 
 const { Dragger } = Upload;
 const { Title } = Typography;
@@ -27,7 +29,7 @@ export const Root = () => {
   const [isFieldAdded, setIsFieldAdded] = useState(false);
   const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion }: UseFileEditor = useFileEditor();
 
-  const customUpload = async (options) => {
+  const customUpload: UploadProps['customRequest'] = async (options) => {
     const { file, onSuccess, onError } = options;
 
     try {
@@ -42,7 +44,12 @@ export const Root = () => {
 
       onSuccess && onSuccess(response, file);
     } catch (err) {
-      onError && onError(err);
+      const uploadError: UploadRequestError = {
+        name: (err as Error).name,
+        message: (err as Error).message,
+      };
+
+      onError && onError(uploadError);
     }
   };
 
@@ -62,10 +69,10 @@ export const Root = () => {
           setBlobFile(originFileObj);
           if (status === "done") {
             message.success(t('sc.fe.forms.upload.success', { fileName: name }));
-            console.log(info);
             setFile(info.file);
 
             if (response) {
+              console.log(response);
               setFileData(response);
               setFileVersion(String(Number(response.majorVersion) + 1));
             }
