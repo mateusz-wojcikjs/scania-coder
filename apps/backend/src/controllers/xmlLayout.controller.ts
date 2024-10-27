@@ -51,3 +51,33 @@ export const getLayouts = async (request: Request, response: Response, next: Nex
     next(error);
   }
 };
+
+export const deleteLayout = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = request.params;
+
+    const layoutId = Number(id);
+    if (isNaN(layoutId)) {
+      return response.status(400).json({ error: "Invalid layout ID" });
+    }
+
+    const layout = await XmlLayoutService.getLayoutById(layoutId);
+    if (!layout) {
+      return response.status(404).json({ error: "Layout not found" });
+    }
+
+    await XmlLayoutService.deleteLayoutById(layoutId);
+
+    response.status(200).json({ message: "Layout deleted successfully" });
+  } catch (error) {
+    logger.error("Error during deleteLayout()", {
+      error,
+      requestParams: request.params,
+    });
+    next(error);
+  }
+};

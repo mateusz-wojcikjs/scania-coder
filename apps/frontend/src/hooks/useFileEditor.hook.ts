@@ -6,19 +6,19 @@ import { UseFileEditor } from "../interfaces/hooks";
 import { api } from "../api.ts";
 
 export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
-  const [fileData, setFileData]: UseState<XmlFileMetaData | undefined> = useState();
+  const [fileData, setFileData]: UseState<XmlFileMetaData | undefined> = useState<XmlFileMetaData | undefined>();
   const [file, setFile]: UseState<UploadFile<XmlFileMetaData> | undefined> = useState();
   const [blobFile, setBlobFile]: UseState<Blob | undefined> = useState();
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
   const [url, setUrl] = useState("");
   const [layoutFields, setLayoutFields]: UseState<UpdatePayload[]> = useState<UpdatePayload[]>([]);
   const [layoutItems, setLayoutItems]: UseState<LayoutItem[]> = useState<LayoutItem[]>([]);
-  const [fileVersion, setFileVersion] = useState(fileData?.majorVersion);
+  const [fileVersion, setFileVersion]: UseState<string | null> = useState<string | null>(fileData?.majorVersion ?? '0');
 
   useEffect(() => {
     (async () => {
       try {
-        const data: LayoutData[] = await api(`/api/layouts`);
+        const data: LayoutData[] = await api(`/api/layouts`, "GET");
         const transformedData: LayoutItem[] = data.map((layout: LayoutData): LayoutItem => ({
           value: layout.id.toString(),
           label: layout.name,
@@ -34,7 +34,7 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const onChange = async (id: number) => {
     setIsLoading(true);
     try {
-      const data: { updates: UpdatePayload[] } = await api<{ updates: UpdatePayload[] }>(`/api/layouts/${id}`);
+      const data: { updates: UpdatePayload[] } = await api(`/api/layouts/${id}`, 'GET');
       setLayoutFields(data.updates);
       message.success('Poprawnie użyto szablonu');
     } catch (err) {

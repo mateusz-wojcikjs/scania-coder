@@ -8,12 +8,12 @@ export interface UseFileEditor {
   onChange: (id: number) => void;
   file: UploadFile<XmlFileMetaData> | undefined;
   fileData: XmlFileMetaData | undefined;
-  fileVersion: string | undefined;
+  fileVersion: string | null;
   layoutItems: LayoutItem[] | undefined
-  layoutFields: UpdatePayload[] | undefined;
+  layoutFields: UpdatePayload[];
   setFile: (file: UploadFile<XmlFileMetaData> | undefined) => void;
   setFileData: (fileData: XmlFileMetaData) => void;
-  setFileVersion: (version: string | undefined) => void;
+  setFileVersion: (version: string | null) => void;
   setBlobFile: (blobFile: Blob | undefined) => void;
   setUrl: (url: string) => void;
   setIsLoading: (loading: boolean) => void;

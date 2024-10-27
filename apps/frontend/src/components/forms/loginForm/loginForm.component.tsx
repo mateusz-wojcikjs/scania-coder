@@ -20,7 +20,6 @@ export const LoginForm = () => {
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     setLoading(true);
-    console.log("Success:", values);
     const { email, password }: FieldType = values;
     try {
       const response = await fetch("/api/login", {
