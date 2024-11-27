@@ -9,7 +9,7 @@ import { useFileEditor } from "../../hooks";
 import {
   Box,
   Container,
-  Description,
+  Description, FormHeader, FormHeaderCell,
   InnerWrapper,
   Label,
   SelectWrapper,
@@ -94,13 +94,27 @@ export const Root = () => {
         {!!fileData && (<Description>{t("sc.fe.steps.edit.description")}</Description>)}
         {!!fileData && (
           <InnerWrapper>
+            <SelectWrapper>
+              <Row><Col><Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label></Col></Row>
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={layoutItems}
+                placeholder={t('sc.fe.steps.edit.chooseLayout')}
+                onChange={onChange}
+                disabled={!file}
+              />
+            </SelectWrapper>
+            <VersionCard currentFileVersion={fileData.majorVersion} newFileVersion={fileVersion || fileData.majorVersion} setFileVersion={setFileVersion}/>
             <Box>
               <div>
                 {isFieldAdded ? (
-                  <Row>
-                    <Col span={12}><Label>{t('sc.fe.steps.edit.labels.name')}</Label></Col>
-                    <Col><Label>{t('sc.fe.steps.edit.labels.value')}</Label></Col>
-                  </Row>
+                  <FormHeader>
+                    <FormHeaderCell style={{ flex: '1 1 100%' }}><Label>{t('sc.fe.steps.edit.labels.name')}</Label></FormHeaderCell>
+                    <FormHeaderCell style={{ flex: '1 1 100%' }}><Label>{t('sc.fe.steps.edit.labels.value')}</Label></FormHeaderCell>
+                    <FormHeaderCell style={{ flex: '1 1 100%' }}><Label>Usuwanie wiersza</Label></FormHeaderCell>
+                    <FormHeaderCell style={{ flex: '0', maxWidth: '90px' }}><Label>Usuń pola</Label></FormHeaderCell>
+                  </FormHeader>
                 ) : (
                   <Row>
                     <Col span={12}><Label>{t('sc.fe.steps.edit.labels.create')}</Label></Col>
@@ -108,19 +122,7 @@ export const Root = () => {
                 )}
                 <EditFileForm {...{ blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion: fileVersion || fileData.majorVersion, setIsFieldAdded }} />
               </div>
-              <SelectWrapper>
-                <Row><Col><Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label></Col></Row>
-                <Select
-                  showSearch
-                  optionFilterProp="label"
-                  options={layoutItems}
-                  placeholder={t('sc.fe.steps.edit.chooseLayout')}
-                  onChange={onChange}
-                  disabled={!file}
-                />
-              </SelectWrapper>
             </Box>
-            <VersionCard currentFileVersion={fileData.majorVersion} newFileVersion={fileVersion || fileData.majorVersion} setFileVersion={setFileVersion}/>
           </InnerWrapper>
         )}
       </Wrapper>

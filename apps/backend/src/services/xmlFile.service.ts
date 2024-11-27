@@ -28,13 +28,18 @@ export class XmlFileService {
     parsedXml.Sops.Data[0].VersionBlock[0].Version[0].$.MajorVersion = newMajorVersion;
 
     updates.forEach((update: UpdatePayload): void => {
-      const record: FPC | undefined = records.find(
+      const recordIndex: number = records.findIndex(
         (r: FPC): boolean => r.$.Name === update.name,
       );
 
-      if (record) {
-        record.$.Value = update.newValue;
-        updatedFields.push(update.name);
+      if (recordIndex !== -1) {
+        if (update.shouldBeRemoved) {
+          console.log('remove');
+          records.splice(recordIndex, 1);
+        } else {
+          records[recordIndex].$.Value = update.newValue;
+          updatedFields.push(update.name);
+        }
       } else {
         try {
           const newRecord: FPC = {

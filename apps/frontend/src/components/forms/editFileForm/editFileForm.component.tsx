@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
-import { api } from "../../../api.ts";
+import { FormRow } from "./editFileForm.styles.ts";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded }: EditFileFormProps = props;
@@ -17,7 +17,8 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       form.setFieldsValue({
         updates: layoutFields.map((update: UpdatePayload): UpdatePayload => ({
           name: update.name,
-          newValue: update.newValue
+          newValue: update.newValue,
+          shouldBeRemoved: update.shouldBeRemoved,
         }))
       });
     }
@@ -94,28 +95,98 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
           return (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+                <FormRow key={key}>
                   <Form.Item
                     {...restField}
                     name={[name, "name"]}
-                    rules={[{ required: true, message: t("sc.fe.forms.validation.name") }]}
-                    style={{ marginBottom: 0, width: '180px' }}
+                    rules={[
+                      { required: true, message: t("sc.fe.forms.validation.name") },
+                    ]}
+                    style={{
+                      marginBottom: 0,
+                      maxWidth: "180px",
+                      width: "100%",
+                      flex: "1 1 100%",
+                    }}
                   >
-                    <Input placeholder={t("sc.fe.forms.inputName")}/>
+                    <Input placeholder={t("sc.fe.forms.inputName")} />
                   </Form.Item>
+
+                  <Form.Item
+                    shouldUpdate={(prevValues, currentValues) =>
+                      prevValues.updates?.[name]?.shouldBeRemoved !==
+                      currentValues.updates?.[name]?.shouldBeRemoved
+                    }
+                    noStyle
+                  >
+                    {({ getFieldValue }) => {
+                      const shouldBeRemoved = getFieldValue(["updates", name, "shouldBeRemoved"]);
+                      return (
+                        <Form.Item
+                          {...restField}
+                          name={[name, "newValue"]}
+                          rules={[
+                            {
+                              required: !shouldBeRemoved,
+                              message: t("sc.fe.forms.validation.value"),
+                            },
+                          ]}
+                          style={{
+                            marginBottom: 0,
+                            maxWidth: "180px",
+                            width: "100%",
+                            flex: "1 1 100%",
+                          }}
+                        >
+                          <Input
+                            placeholder={t("sc.fe.forms.inputValue")}
+                            disabled={shouldBeRemoved}
+                          />
+                        </Form.Item>
+                      );
+                    }}
+                  </Form.Item>
+
                   <Form.Item
                     {...restField}
-                    name={[name, "newValue"]}
-                    rules={[{ required: true, message: t("sc.fe.forms.validation.value") }]}
-                    style={{ marginBottom: 0, width: '180px' }}
+                    name={[name, "shouldBeRemoved"]}
+                    valuePropName="checked"
+                    style={{
+                      marginBottom: 0,
+                      maxWidth: "180px",
+                      width: "100%",
+                      flex: "1 1 100%",
+                    }}
                   >
-                    <Input placeholder={t("sc.fe.forms.inputValue")} style={{ marginBottom: 0 }}/>
+                    <Checkbox
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        if (isChecked) {
+                          form.setFields([
+                            {
+                              name: ["updates", name, "newValue"],
+                              value: undefined,
+                            },
+                          ]);
+                        }
+                      }}
+                    >
+                      Oznacz do usunięcia
+                    </Checkbox>
                   </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(name)}/>
-                </Space>
+                  <div style={{ width: "90px" }}>
+                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  </div>
+                </FormRow>
               ))}
               <Form.Item>
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>} style={{ width: "368px"}}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                  style={{ width: "100%", marginTop: "12px", maxWidth: "716px" }}
+                >
                   {t("sc.fe.forms.addFields")}
                 </Button>
               </Form.Item>
