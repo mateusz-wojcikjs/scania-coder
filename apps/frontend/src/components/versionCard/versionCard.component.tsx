@@ -29,6 +29,7 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
         placeholder={t("sc.fe.steps.upload.card.inputPlaceholder")}
         maxLength={9}
         min='0'
+        style={{ width: '100%' }}
       />
       <Label>
         {t("sc.fe.steps.upload.card.change")}
