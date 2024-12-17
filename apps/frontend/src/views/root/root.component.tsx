@@ -65,7 +65,7 @@ export const Root = () => {
         customRequest={customUpload}
         showUploadList
         onChange={(info: UploadChangeParam<UploadFile<XmlFileMetaData>>) => {
-          const { status, originFileObj, name, response } = info.file;
+          const { status, originFileObj, name, response, error } = info.file;
           setBlobFile(originFileObj);
           if (status === "done") {
             message.success(t('sc.fe.forms.upload.success', { fileName: name }));
@@ -77,7 +77,10 @@ export const Root = () => {
               setFileVersion(String(Number(response.majorVersion) + 1));
             }
           } else if (status === "error") {
+            const parsedError = JSON.parse(error.message).error;
+            console.log(JSON.parse(error.message).error.errorCode);
             message.error(t('sc.fe.forms.upload.error', { fileName: name }));
+            message.error(t('sc.api.errors.ERR_INVALID_FILE_STRUCTURE'));
           }
         }}
         onRemove={() => setFile(undefined)}

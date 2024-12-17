@@ -1,3 +1,4 @@
+export { ErrorCodes } from './errorCodes.types';
 export { XmlFileMetaData } from './xmlFileMetaData.types';
 export { UpdatePayload } from './updatePayload.types';
 export { LayoutItem } from './layoutItem.types';

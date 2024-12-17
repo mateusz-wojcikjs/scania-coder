@@ -1,8 +1,10 @@
+import { ErrorCodes } from "@scania-coder/types";
+
 export class CustomError extends Error {
     public statusCode: number;
-    public errorCode: string;
+    public errorCode: ErrorCodes;
 
-    constructor(message: string, statusCode: number, errorCode: string) {
+    constructor(message: string, statusCode: number, errorCode: ErrorCodes) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
 
@@ -14,19 +16,19 @@ export class CustomError extends Error {
 }
 
 export class BadRequestError extends CustomError {
-    constructor(errorCode: string) {
+    constructor(errorCode: ErrorCodes) {
         super("Bad Request", 400, errorCode);
     }
 }
 
 export class UnauthorizedError extends CustomError {
-    constructor(errorCode: string) {
+    constructor(errorCode: ErrorCodes) {
         super("Unauthorized", 401, errorCode);
     }
 }
 
 export class InternalServerError extends CustomError {
-    constructor(errorCode: string) {
+    constructor(errorCode: ErrorCodes) {
         super("Internal Server Error", 500, errorCode);
     }
 }
