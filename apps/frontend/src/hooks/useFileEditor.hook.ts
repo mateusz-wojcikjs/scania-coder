@@ -1,6 +1,6 @@
 import { LayoutData, LayoutItem, UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 import { useEffect, useState } from "react";
-import { message, UploadFile } from "antd";
+import { Form, message, UploadFile } from "antd";
 import { ApiError, UseState } from "../types";
 import { UseFileEditor } from "../interfaces/hooks";
 import { api } from "../api.ts";
@@ -14,6 +14,19 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const [layoutFields, setLayoutFields]: UseState<UpdatePayload[]> = useState<UpdatePayload[]>([]);
   const [layoutItems, setLayoutItems]: UseState<LayoutItem[]> = useState<LayoutItem[]>([]);
   const [fileVersion, setFileVersion]: UseState<string | null> = useState<string | null>(fileData?.majorVersion ?? '0');
+  const [isFieldAdded, setIsFieldAdded] = useState(false);
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const clearForm = () => {
+    setFile(undefined);
+    setIsFieldAdded(false);
+    setFileData(null);
+    setUrl("");
+    setFileList([]);
+    form.resetFields();
+    setLayoutFields([])
+  };
 
   useEffect(() => {
     (async () => {
@@ -69,5 +82,11 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
     setIsLoading,
     fileVersion,
     setFileVersion,
+    isFieldAdded,
+    fileList,
+    clearForm,
+    setIsFieldAdded,
+    form,
+    setFileList,
   }
 }
