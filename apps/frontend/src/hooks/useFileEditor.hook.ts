@@ -6,7 +6,7 @@ import { UseFileEditor } from "../interfaces/hooks";
 import { api } from "../api.ts";
 
 export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
-  const [fileData, setFileData]: UseState<XmlFileMetaData | undefined> = useState<XmlFileMetaData | undefined>();
+  const [fileData, setFileData]: UseState<XmlFileMetaData | null> = useState<XmlFileMetaData | null>(null);
   const [file, setFile]: UseState<UploadFile<XmlFileMetaData> | undefined> = useState();
   const [blobFile, setBlobFile]: UseState<Blob | undefined> = useState();
   const [isLoading, setIsLoading]: UseState<boolean> = useState(false);
