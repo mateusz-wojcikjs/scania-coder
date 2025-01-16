@@ -14,7 +14,7 @@
     "module": "commonjs",
     "outDir": "dist",
     "paths": {
-      "@scania-coder/types": ["../../packages/types"]
+      "@scania-coder/types": ["../../packages/types/dist"]
     },
     "rootDir": "./src",
     "esModuleInterop": true,
@@ -25,4 +25,8 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"],
+  "ts-node": {
+    "files": true,
+    "transpileOnly": true
+  }
 }

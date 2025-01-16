@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Space } from "antd";
+import { Button, Checkbox, Form, Input } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";

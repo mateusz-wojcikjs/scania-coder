@@ -68,6 +68,11 @@
         "uploadSuccessful": "Poprawnie załadowano plik XML.",
         "editSuccessful": "Poprawnie edytowano plik XML."
       }
+    },
+    "api": {
+      "errors": {
+        "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych."
+      }
     }
   }
 }
