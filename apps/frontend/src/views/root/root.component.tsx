@@ -1,5 +1,5 @@
 import { Alert, Button, Divider, message, Typography, Upload, UploadFile, Select, Row, Col } from "antd";
-import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
+import { DownloadOutlined, InboxOutlined, RedoOutlined } from "@ant-design/icons";
 import { TransProps, useTranslation } from "react-i18next";
 import { UploadChangeParam } from "antd/es/upload";
 import { XmlFileMetaData } from "@scania-coder/types";
@@ -9,14 +9,15 @@ import { useFileEditor } from "../../hooks";
 import {
   Box,
   Container,
-  Description, FormHeader, FormHeaderCell,
+  Description,
+  FormHeader,
+  FormHeaderCell,
   InnerWrapper,
   Label,
   SelectWrapper,
   StyledAlert,
   Wrapper
 } from "./root.styled.ts";
-import { useState } from "react";
 import { api } from "../../api.ts";
 import { UploadProps } from "antd/es/upload/interface";
 import { UploadRequestError } from "rc-upload/lib/interface";
@@ -26,8 +27,8 @@ const { Title } = Typography;
 
 export const Root = () => {
   const { t }: TransProps<never> = useTranslation();
-  const [isFieldAdded, setIsFieldAdded] = useState(false);
-  const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion }: UseFileEditor = useFileEditor();
+  const { isLoading, file, blobFile, onChange, url, setUrl, setBlobFile, setFile, setFileData, layoutFields, layoutItems, setIsLoading, fileData, fileVersion, setFileVersion, fileList, clearForm, isFieldAdded, setIsFieldAdded, form, setFileList }: UseFileEditor = useFileEditor();
+
 
   const customUpload: UploadProps['customRequest'] = async (options) => {
     const { file, onSuccess, onError } = options;
@@ -64,8 +65,19 @@ export const Root = () => {
         name='file'
         customRequest={customUpload}
         showUploadList
+        maxCount={1}
+        fileList={fileList}
+        beforeUpload={(file) => {
+          const isXml = file.type === 'text/xml' || file.name.endsWith('.xml');
+          if (!isXml) {
+            message.error(t('sc.fe.forms.upload.invalidType'));
+          }
+          return isXml || Upload.LIST_IGNORE;
+        }}
         onChange={(info: UploadChangeParam<UploadFile<XmlFileMetaData>>) => {
+          const { fileList: updatedFileList } = info;
           const { status, originFileObj, name, response, error } = info.file;
+          setFileList(updatedFileList);
           setBlobFile(originFileObj);
           if (status === "done") {
             message.success(t('sc.fe.forms.upload.success', { fileName: name }));
@@ -123,7 +135,7 @@ export const Root = () => {
                     <Col span={12}><Label>{t('sc.fe.steps.edit.labels.create')}</Label></Col>
                   </Row>
                 )}
-                <EditFileForm {...{ blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion: fileVersion || fileData.majorVersion, setIsFieldAdded }} />
+                <EditFileForm {...{ blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion: fileVersion || fileData.majorVersion, setIsFieldAdded, form, setFile, setFileData }} />
               </div>
             </Box>
           </InnerWrapper>
@@ -136,12 +148,22 @@ export const Root = () => {
       <Button
         type="primary"
         href={url}
-        icon={<DownloadOutlined/>}
+        icon={<DownloadOutlined />}
         download={file && `modified-${file.name}`}
         disabled={!url}
       >
         {t("sc.fe.steps.download")}
       </Button>
+      {url && (
+        <Button
+          type="default"
+          icon={<RedoOutlined />}
+          style={{ marginLeft: 8 }}
+          onClick={clearForm}
+        >
+          {t("sc.fe.steps.clearForm")}
+        </Button>
+      )}
     </Container>
   );
 };

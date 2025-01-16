@@ -18,7 +18,8 @@
         "inputValue": "Pole \"value\"",
         "upload": {
           "success": "Poprawnie załadowano plik {{fileName}}",
-          "error": "Nie udało się załadować pliku {{fileName}}"
+          "error": "Nie udało się załadować pliku {{fileName}}",
+          "invalidType": "Nie właściwy format pliku. Plik powinien być typu XML."
         }
       },
       "views": {
@@ -62,7 +63,8 @@
             "savedLayouts": "Konfiguracje zapisane jako szablon:"
           }
         },
-        "download": "Pobierz"
+        "download": "Pobierz",
+        "clearForm": "Zacznij od nowa"
       },
       "alerts": {
         "uploadSuccessful": "Poprawnie załadowano plik XML.",

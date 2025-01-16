@@ -11,7 +11,7 @@ import { ConfigProvider } from "antd";
 import { customTheme } from "./theme/antdConfig.ts";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Dashboard from "./views/Dashboard.tsx";
-import { MainTemplate } from "./components/templates/mainTemplate/mainTemplate.component.tsx";
+import { MainTemplate } from "./components";
 import { Root } from "./views";
 import { LayoutsList } from "./views/layoutsList/layoutsList.component.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
