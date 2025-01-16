@@ -1,5 +1,5 @@
 import { Builder, parseStringPromise } from "xml2js";
-import { FPC, ParsedXml, VersionBlock, XmlFileServiceData } from "../types";
+import { FPC, ParsedXml, XmlFileServiceData } from "../types";
 import { XmlFileMetaData, UpdatePayload, ErrorCodes } from "@scania-coder/types";
 import { BadRequestError, CustomError } from "../errors";
 import { findInsertionIndex } from "../utils";
@@ -34,7 +34,6 @@ export class XmlFileService {
 
       if (recordIndex !== -1) {
         if (update.shouldBeRemoved) {
-          console.log('remove');
           records.splice(recordIndex, 1);
         } else {
           records[recordIndex].$.Value = update.newValue;
