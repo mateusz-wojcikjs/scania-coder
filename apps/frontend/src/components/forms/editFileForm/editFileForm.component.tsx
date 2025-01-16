@@ -7,10 +7,9 @@ import { UpdatePayload } from "@scania-coder/types";
 import { FormRow } from "./editFileForm.styles.ts";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
-  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded }: EditFileFormProps = props;
+  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const { t }: TransProps<never> = useTranslation();
-  const [form] = Form.useForm();
 
   useEffect(() => {
     if (layoutFields.length) {
@@ -39,7 +38,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${JSON.parse(token).token}`
+          Authorization: `Bearer ${JSON.parse(token!).token}`
         }
       });
 
@@ -63,7 +62,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(token).token}`
+            Authorization: `Bearer ${JSON.parse(token!).token}`
           },
           body: JSON.stringify(layoutPayload),
         });
@@ -159,7 +158,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                     }}
                   >
                     <Checkbox
-                      onChange={(e) => {
+                      onChange={(e): void => {
                         const isChecked = e.target.checked;
                         if (isChecked) {
                           form.setFields([

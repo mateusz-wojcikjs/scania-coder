@@ -1,5 +1,6 @@
 import { UploadFile } from "antd";
 import { UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
+import { FormInstance } from "antd/lib";
 
 export interface EditFileFormProps {
     blobFile: Blob | undefined;
@@ -9,4 +10,7 @@ export interface EditFileFormProps {
     setIsLoading: (loading: boolean) => void;
     newMajorVersion: string;
     setIsFieldAdded: (value: boolean) => void;
+    setFile: (file: UploadFile<XmlFileMetaData> | undefined) => void;
+    setFileData: (fileData: XmlFileMetaData | null) => void;
+    form: FormInstance;
 }
