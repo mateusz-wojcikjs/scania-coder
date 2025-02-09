@@ -3,16 +3,17 @@ import { message, Space, Typography } from "antd";
 import { TransProps, useTranslation } from "react-i18next";
 import { Popconfirm, Table, TableProps } from "antd/lib";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteLayout, getLayouts } from "../../api.ts";
+import { getLayouts, deleteLayout } from "../../api";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Layout } from "../../types/layout.type.ts";
+import { ApiMutation } from "../../types";
+import { Layout, LayoutRemove } from "../../interfaces";
 const { Title } = Typography;
 
-export const LayoutsList = () => {
+export const LayoutsList = (): JSX.Element => {
   const { t }: TransProps<never> = useTranslation();
   const queryClient = useQueryClient()
   const { isPending, data: layouts } = useQuery({ queryKey: ['layouts'], queryFn: getLayouts});
-  const removeLayout = useMutation({
+  const removeLayout: ApiMutation<LayoutRemove, number> = useMutation({
     mutationFn: deleteLayout,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['layouts'] })
@@ -21,27 +22,27 @@ export const LayoutsList = () => {
 
   const confirm = async (layout: Layout) => {
     removeLayout.mutate(layout.id);
-    removeLayout.isSuccess && message.success(`Konfiguracja ${layout.name} została usunięta`);
-    removeLayout.isError && message.error(`Błąd podczas usuwania konfiguracji.`);
+    removeLayout.isSuccess && message.success(t('sc.fe.alerts.layout.remove', { name: layout.name }));
+    removeLayout.isError && message.error(t('sc.fe.alerts.layout.removeError'));
   };
 
   const columns: TableProps<Layout>['columns'] = [
     {
-      title: 'Nazwa',
+      title: t('sc.fe.table.column.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Akcje',
+      title: t('sc.fe.table.column.actions'),
       key: 'action',
-      render: (_, record) => (
+      render: (_: unknown, record: Layout): JSX.Element => (
         <Space size="middle">
           <Popconfirm
-            title={`Usuń konfigurację ${record.name}`}
-            description="Czy na pewno chcesz usunąć?"
+            title={t('sc.fe.popup.layoutRemove', { name: record.name })}
+            description={t('sc.fe.popup.removeConfirm')}
             onConfirm={() => confirm(record)}
-            okText="Tak"
-            cancelText="Nie"
+            okText={t('sc.fe.global.yes')}
+            cancelText={t('sc.fe.global.no')}
             okButtonProps={{ loading: removeLayout.isPending }}
           >
             <DeleteOutlined style={{ color: "red" }} />
@@ -50,7 +51,7 @@ export const LayoutsList = () => {
       ),
     },
     {
-      title: 'Data utworzenia',
+      title: t('sc.fe.table.column.createdAt'),
       key: 'createdAt',
       dataIndex: 'createdAt',
     }

@@ -8,7 +8,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import { theme } from "../../theme/theme.ts";
 const { Text } = Typography;
 
-export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
+export const VersionCard: FC<VersionCardProps> = (props: VersionCardProps): JSX.Element => {
   const { currentFileVersion, newFileVersion, setFileVersion }: VersionCardProps = props;
   const { t }: TransProps<never> = useTranslation();
 

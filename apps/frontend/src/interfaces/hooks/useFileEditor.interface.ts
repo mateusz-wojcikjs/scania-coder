@@ -1,21 +1,20 @@
 import { UploadFile } from "antd";
 import { LayoutItem, UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 import { FormInstance } from "antd/lib";
+import { UploadChangeParam } from "antd/es/upload";
 
 export interface UseFileEditor {
   isLoading: boolean;
   url: string;
   blobFile: Blob | undefined;
-  onChange: (id: number) => void;
   file: UploadFile<XmlFileMetaData> | undefined;
   fileData: XmlFileMetaData | null;
   fileVersion: string | null;
-  layoutItems: LayoutItem[] | undefined
+  layouts: LayoutItem[] | undefined
   layoutFields: UpdatePayload[];
   setFile: (file: UploadFile<XmlFileMetaData> | undefined) => void;
   setFileData: (fileData: XmlFileMetaData | null) => void;
   setFileVersion: (version: string | null) => void;
-  setBlobFile: (blobFile: Blob | undefined) => void;
   setUrl: (url: string) => void;
   setIsLoading: (loading: boolean) => void;
   isFieldAdded: boolean;
@@ -23,5 +22,6 @@ export interface UseFileEditor {
   clearForm: () => void;
   setIsFieldAdded: (value: boolean) => void;
   form: FormInstance;
-  setFileList: (fileList: UploadFile[]) => void;
+  handleChangeFile: (info: UploadChangeParam<UploadFile<XmlFileMetaData>>) => void;
+  onLayoutChangeMutation: any;
 }

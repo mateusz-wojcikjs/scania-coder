@@ -1,10 +1,14 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
 import { FormRow } from "./editFileForm.styles.ts";
+import { createLayout, editXml } from "../../../api";
+import { useMutation } from "@tanstack/react-query";
+import { ApiMutation, LayoutItemData } from "../../../types";
+import { Layout } from "../../../interfaces";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
@@ -23,6 +27,28 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     }
   }, [form, layoutFields]);
 
+  const editXmlMutation = useMutation({
+    mutationFn: editXml,
+    onError: (error) => {
+      message.error('Failed to modify XML file.');
+      console.error('Failed to modify XML file:', error);
+      setIsLoading(false);
+    },
+  });
+
+  const saveLayoutMutation: ApiMutation<Layout, LayoutItemData> = useMutation({
+    mutationFn: createLayout,
+    onSuccess: (data: Layout) => {
+      message.success(t('sc.fe.alerts.layouts.created', { name: data.name }));
+      setIsLoading(false);
+    },
+    onError: (error) => {
+      console.error('Failed to save layout configuration:', error);
+      message.error('Błąd podczas zapisu szablonu.');
+      setIsLoading(false);
+    }
+  });
+
   const onFinish = async (values: any) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -32,52 +58,22 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       formData.append("file", blobFile);
     }
 
-    try {
-      const token = localStorage.getItem('authJwtToken');
-      const editXmlResponse = await fetch("/api/edit-xml", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${JSON.parse(token!).token}`
-        }
-      });
-
-      if (editXmlResponse.ok) {
-        const xmlText = await editXmlResponse.text();
-        const blob = new Blob([xmlText], { type: "application/xml" });
-        setUrl(window.URL.createObjectURL(blob));
+    editXmlMutation.mutate(formData, {
+      onSuccess: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        setUrl(url);
         setIsLoading(false);
-      } else {
-        console.error("Failed to modify XML file");
-        setIsLoading(false);
-      }
+        message.success(t('sc.fe.alerts.editSuccessfulName', { name: file?.name }));
 
-      if (isCheckboxChecked && values.layoutName) {
-        const layoutPayload = {
-          layoutName: values.layoutName,
-          updates: values.updates
-        };
-
-        const layoutResponse = await fetch("/api/layouts", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(token!).token}`
-          },
-          body: JSON.stringify(layoutPayload),
-        });
-        setIsLoading(false);
-
-        if (!layoutResponse.ok) {
-          console.error("Failed to save layout configuration");
-          setIsLoading(false);
+        if (isCheckboxChecked && values.layoutName) {
+          const layoutPayload: LayoutItemData = {
+            layoutName: values.layoutName,
+            updates: values.updates
+          };
+          saveLayoutMutation.mutate(layoutPayload);
         }
       }
-
-    } catch (error) {
-      console.error("An error occurred while submitting the form:", error);
-      setIsLoading(false);
-    }
+    });
   };
 
   return (
@@ -159,8 +155,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                   >
                     <Checkbox
                       onChange={(e): void => {
-                        const isChecked = e.target.checked;
-                        if (isChecked) {
+                        if (e.target.checked) {
                           form.setFields([
                             {
                               name: ["updates", name, "newValue"],
@@ -170,7 +165,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                         }
                       }}
                     >
-                      Oznacz do usunięcia
+                      {t('sc.fe.steps.edit.labels.checkToRemove')}
                     </Checkbox>
                   </Form.Item>
                   <div style={{ width: "90px" }}>
@@ -202,10 +197,10 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       {isCheckboxChecked && (
         <Form.Item
           name="layoutName"
-          label='Nazwa konfiguracji'
-          rules={[{ required: true, message: "Nazwa jest wymagana lub odznacz, że chcesz zapisać konfigurację" }]}
+          label={t('sc.fe.steps.edit.labels.layoutName')}
+          rules={[{ required: true, message: t('sc.fe.steps.edit.messages.layoutNameRequired') }]}
         >
-          <Input placeholder='Nazwa konfiguracji' />
+          <Input placeholder={t('sc.fe.steps.edit.labels.layoutName')} />
         </Form.Item>
       )}
       <Form.Item>
