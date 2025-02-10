@@ -33,7 +33,7 @@ export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): J
         </Button>
       </TopMenuWrapper>
       <Sidebar handleLogout={handleLogout}>
-        <Menu defaultSelectedKeys={['editor']} mode="inline" items={items} />
+        <Menu defaultSelectedKeys={["editor"]} mode="inline" items={items} />
       </Sidebar>
       <Space />
       <Main>
@@ -43,7 +43,7 @@ export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): J
       </Main>
       {isMobile && (
         <StyledDrawer onClose={() => handleDrawer(false)} open={isOpen} placement="left">
-          <Menu defaultSelectedKeys={['editor']} mode="inline" items={items} />
+          <Menu defaultSelectedKeys={["editor"]} mode="inline" items={items} />
         </StyledDrawer>
       )}
     </Container>

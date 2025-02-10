@@ -8,4 +8,4 @@ export const App: () => JSX.Element = (): JSX.Element => {
       <RouterProvider router={router} />
     </AppProvider>
   );
-}
+};

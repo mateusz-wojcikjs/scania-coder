@@ -47,14 +47,14 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
             <SelectWrapper>
               <Row>
                 <Col>
-                  <Label>{t('sc.fe.steps.edit.labels.savedLayouts')}</Label>
+                  <Label>{t("sc.fe.steps.edit.labels.savedLayouts")}</Label>
                 </Col>
               </Row>
               <Select
                 showSearch
                 optionFilterProp="label"
                 options={layouts}
-                placeholder={t('sc.fe.steps.edit.chooseLayout')}
+                placeholder={t("sc.fe.steps.edit.chooseLayout")}
                 onChange={(id: number) => onLayoutChangeMutation.mutate(id)}
                 disabled={!file}
               />
@@ -68,23 +68,23 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
               <div>
                 {isFieldAdded ? (
                   <FormHeader>
-                    <FormHeaderCell style={{ flex: '1 1 100%' }}>
-                      <Label>{t('sc.fe.steps.edit.labels.name')}</Label>
+                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
+                      <Label>{t("sc.fe.steps.edit.labels.name")}</Label>
                     </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: '1 1 100%' }}>
-                      <Label>{t('sc.fe.steps.edit.labels.value')}</Label>
+                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
+                      <Label>{t("sc.fe.steps.edit.labels.value")}</Label>
                     </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: '1 1 100%' }}>
-                      <Label>{t('sc.fe.steps.edit.labels.removeRow')}</Label>
+                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
+                      <Label>{t("sc.fe.steps.edit.labels.removeRow")}</Label>
                     </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: '0', maxWidth: '90px' }}>
-                      <Label>{t('sc.fe.steps.edit.labels.removeFields')}</Label>
+                    <FormHeaderCell style={{ flex: "0", maxWidth: "90px" }}>
+                      <Label>{t("sc.fe.steps.edit.labels.removeFields")}</Label>
                     </FormHeaderCell>
                   </FormHeader>
                 ) : (
                   <Row>
                     <Col span={12}>
-                      <Label>{t('sc.fe.steps.edit.labels.create')}</Label>
+                      <Label>{t("sc.fe.steps.edit.labels.create")}</Label>
                     </Col>
                   </Row>
                 )}
@@ -107,7 +107,7 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
           </InnerWrapper>
         )}
       </Wrapper>
-      {url && <Alert message={t('sc.fe.alerts.editSuccessful')} type="success" showIcon />}
+      {url && <Alert message={t("sc.fe.alerts.editSuccessful")} type="success" showIcon />}
     </>
   );
 };

@@ -1,1 +1,1 @@
-export { useFileEditorContext } from './fileEditor.context.tsx'
+export { useFileEditorContext } from "./fileEditor.context.tsx";

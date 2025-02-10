@@ -2,6 +2,9 @@ import { UploadFile } from "antd";
 import { LayoutItem, UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 import { FormInstance } from "antd/lib";
 import { UploadChangeParam } from "antd/es/upload";
+import { ApiMutation, LayoutItemData } from "../../types";
+import { Layout } from "../api";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export interface UseFileEditor {
   isLoading: boolean;
@@ -23,5 +26,8 @@ export interface UseFileEditor {
   setIsFieldAdded: (value: boolean) => void;
   form: FormInstance;
   handleChangeFile: (info: UploadChangeParam<UploadFile<XmlFileMetaData>>) => void;
-  onLayoutChangeMutation: any;
+  onLayoutChangeMutation: ApiMutation<Layout, number>;
+  editXmlMutation: ApiMutation<Blob, FormData>;
+  saveLayoutMutation: ApiMutation<Layout, LayoutItemData>;
+  onCheckToRemove: (e: CheckboxChangeEvent, name: number) => void;
 }

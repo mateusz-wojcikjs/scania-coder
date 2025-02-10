@@ -1,5 +1,5 @@
 export { ApiError } from "./apiError.type.ts";
-export type { ApiMethod } from './apiMethod.type.ts';
+export type { ApiMethod } from "./apiMethod.type.ts";
 export type { ApiMutation } from "./apiMutation.type.ts";
 export type { FastOmit } from "./fastOmit.type";
 export type { LayoutItemData } from "./layoutData.type.ts";

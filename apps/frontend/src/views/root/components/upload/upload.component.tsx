@@ -26,9 +26,9 @@ export const Upload: () => JSX.Element = (): JSX.Element => {
         maxCount={1}
         fileList={fileList}
         beforeUpload={(file: RcFile) => {
-          const isXml: boolean = file.type === 'text/xml' || file.name.endsWith('.xml');
+          const isXml: boolean = file.type === "text/xml" || file.name.endsWith(".xml");
           if (!isXml) {
-            message.error(t('sc.fe.forms.upload.invalidType'));
+            message.error(t("sc.fe.forms.upload.invalidType"));
           }
           return isXml || ANTDUpload.LIST_IGNORE;
         }}
@@ -41,5 +41,5 @@ export const Upload: () => JSX.Element = (): JSX.Element => {
       </Dragger>
       {!!file && <StyledAlert message={t("sc.fe.alerts.uploadSuccessful")} type="success" showIcon /> }
     </>
-  )
-}
+  );
+};

@@ -34,7 +34,7 @@ export const useLoginForm: () => UseLoginFormReturnType = (): UseLoginFormReturn
         onError: (error: AxiosError<ApiError>): void => {
           const statusCode = error.response?.data?.error.statusCode;
           if (statusCode === 401) {
-            setValidationMessage(t('sc.api.errors.ERR_INVALID_CREDENTIALS'))
+            setValidationMessage(t("sc.api.errors.ERR_INVALID_CREDENTIALS"));
           }
           setLoading(false);
         },
@@ -46,5 +46,5 @@ export const useLoginForm: () => UseLoginFormReturnType = (): UseLoginFormReturn
     onFinish,
     loading,
     validationMessage,
-  }
-}
+  };
+};

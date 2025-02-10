@@ -1,2 +1,2 @@
-export { router } from './routes';
-export { ROUTE_PATHS } from './paths';
+export { router } from "./routes";
+export { ROUTE_PATHS } from "./paths";

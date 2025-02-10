@@ -1,4 +1,4 @@
 export enum QueryKey {
-  UploadXml = 'uploadXml',
-  Layouts = 'layouts',
+  UploadXml = "uploadXml",
+  Layouts = "layouts",
 }

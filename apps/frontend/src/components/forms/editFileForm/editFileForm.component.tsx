@@ -4,13 +4,13 @@ import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
-import { FormRow } from "./editFileForm.styles.ts";
-import { createLayout, editXml } from "../../../api";
-import { useMutation } from "@tanstack/react-query";
-import { ApiMutation, LayoutItemData } from "../../../types";
-import { Layout } from "../../../interfaces";
+import { FormRow, IconWrapper, StyledButton, StyledFormItem } from "./editFileForm.styles.ts";
+import { LayoutItemData } from "../../../types";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { useFileEditor } from "../../../hooks";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
+  const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const { t }: TransProps<never> = useTranslation();
@@ -27,33 +27,11 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     }
   }, [form, layoutFields]);
 
-  const editXmlMutation = useMutation({
-    mutationFn: editXml,
-    onError: (error) => {
-      message.error('Failed to modify XML file.');
-      console.error('Failed to modify XML file:', error);
-      setIsLoading(false);
-    },
-  });
-
-  const saveLayoutMutation: ApiMutation<Layout, LayoutItemData> = useMutation({
-    mutationFn: createLayout,
-    onSuccess: (data: Layout) => {
-      message.success(t('sc.fe.alerts.layouts.created', { name: data.name }));
-      setIsLoading(false);
-    },
-    onError: (error) => {
-      console.error('Failed to save layout configuration:', error);
-      message.error('Błąd podczas zapisu szablonu.');
-      setIsLoading(false);
-    }
-  });
-
   const onFinish = async (values: any) => {
     setIsLoading(true);
     const formData = new FormData();
     formData.append("updates", JSON.stringify(values.updates));
-    formData.append("newMajorVersion", newMajorVersion)
+    formData.append("newMajorVersion", newMajorVersion);
     if (blobFile) {
       formData.append("file", blobFile);
     }
@@ -63,7 +41,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
         const url = window.URL.createObjectURL(blob);
         setUrl(url);
         setIsLoading(false);
-        message.success(t('sc.fe.alerts.editSuccessfulName', { name: file?.name }));
+        message.success(t("sc.fe.alerts.editSuccessfulName", { name: file?.name }));
 
         if (isCheckboxChecked && values.layoutName) {
           const layoutPayload: LayoutItemData = {
@@ -85,28 +63,19 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       form={form}
     >
       <Form.List name="updates">
-        {(fields, { add, remove }) => {
+        {(fields, { add, remove }): JSX.Element => {
           setIsFieldAdded(!!fields.length);
           return (
             <>
-              {fields.map(({ key, name, ...restField }) => (
+              {fields.map(({ key, name, ...restField }): JSX.Element => (
                 <FormRow key={key}>
-                  <Form.Item
+                  <StyledFormItem
                     {...restField}
                     name={[name, "name"]}
-                    rules={[
-                      { required: true, message: t("sc.fe.forms.validation.name") },
-                    ]}
-                    style={{
-                      marginBottom: 0,
-                      maxWidth: "180px",
-                      width: "100%",
-                      flex: "1 1 100%",
-                    }}
+                    rules={[ { required: true, message: t("sc.fe.forms.validation.name") } ]}
                   >
                     <Input placeholder={t("sc.fe.forms.inputName")} />
-                  </Form.Item>
-
+                  </StyledFormItem>
                   <Form.Item
                     shouldUpdate={(prevValues, currentValues) =>
                       prevValues.updates?.[name]?.shouldBeRemoved !==
@@ -117,90 +86,47 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                     {({ getFieldValue }) => {
                       const shouldBeRemoved = getFieldValue(["updates", name, "shouldBeRemoved"]);
                       return (
-                        <Form.Item
+                        <StyledFormItem
                           {...restField}
                           name={[name, "newValue"]}
-                          rules={[
-                            {
-                              required: !shouldBeRemoved,
-                              message: t("sc.fe.forms.validation.value"),
-                            },
-                          ]}
-                          style={{
-                            marginBottom: 0,
-                            maxWidth: "180px",
-                            width: "100%",
-                            flex: "1 1 100%",
-                          }}
+                          rules={[ { required: !shouldBeRemoved,message: t("sc.fe.forms.validation.value") } ]}
                         >
-                          <Input
-                            placeholder={t("sc.fe.forms.inputValue")}
-                            disabled={shouldBeRemoved}
-                          />
-                        </Form.Item>
+                          <Input placeholder={t("sc.fe.forms.inputValue")} disabled={shouldBeRemoved} />
+                        </StyledFormItem>
                       );
                     }}
                   </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "shouldBeRemoved"]}
-                    valuePropName="checked"
-                    style={{
-                      marginBottom: 0,
-                      maxWidth: "180px",
-                      width: "100%",
-                      flex: "1 1 100%",
-                    }}
-                  >
-                    <Checkbox
-                      onChange={(e): void => {
-                        if (e.target.checked) {
-                          form.setFields([
-                            {
-                              name: ["updates", name, "newValue"],
-                              value: undefined,
-                            },
-                          ]);
-                        }
-                      }}
-                    >
-                      {t('sc.fe.steps.edit.labels.checkToRemove')}
+                  <StyledFormItem {...restField} name={[name, "shouldBeRemoved"]} valuePropName="checked">
+                    <Checkbox onChange={(e: CheckboxChangeEvent): void => onCheckToRemove(e, name)}>
+                      {t("sc.fe.steps.edit.labels.checkToRemove")}
                     </Checkbox>
-                  </Form.Item>
-                  <div style={{ width: "90px" }}>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </div>
+                  </StyledFormItem>
+                  <IconWrapper>
+                    <MinusCircleOutlined onClick={(): void => remove(name)} />
+                  </IconWrapper>
                 </FormRow>
               ))}
               <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                  style={{ width: "100%", marginTop: "12px", maxWidth: "716px" }}
-                >
+                <StyledButton type="dashed" onClick={(): void => add()} icon={<PlusOutlined />}>
                   {t("sc.fe.forms.addFields")}
-                </Button>
+                </StyledButton>
               </Form.Item>
             </>
           );
         }}
       </Form.List>
       <Form.Item>
-        <Checkbox
-          onChange={(e) => setIsCheckboxChecked(e.target.checked)}
-        >{t("sc.fe.forms.saveConfig")}
+        <Checkbox onChange={(e: CheckboxChangeEvent): void => setIsCheckboxChecked(e.target.checked)}>
+          {t("sc.fe.forms.saveConfig")}
         </Checkbox>
       </Form.Item>
       {isCheckboxChecked && (
         <Form.Item
           name="layoutName"
-          label={t('sc.fe.steps.edit.labels.layoutName')}
-          rules={[{ required: true, message: t('sc.fe.steps.edit.messages.layoutNameRequired') }]}
+          label={t("sc.fe.steps.edit.labels.layoutName")}
+          rules={[{ required: true, message: t("sc.fe.steps.edit.messages.layoutNameRequired") }]}
         >
-          <Input placeholder={t('sc.fe.steps.edit.labels.layoutName')} />
+          <Input placeholder={t("sc.fe.steps.edit.labels.layoutName")} />
         </Form.Item>
       )}
       <Form.Item>

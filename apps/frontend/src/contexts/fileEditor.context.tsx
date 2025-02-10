@@ -10,7 +10,7 @@ export const FileEditorProvider: React.FC<{ value: UseFileEditor; children: Reac
 export const useFileEditorContext = (): UseFileEditor => {
   const context = useContext(FileEditorContext);
   if (!context) {
-    throw new Error('useFileEditorContext must be used within a FileEditorProvider');
+    throw new Error("useFileEditorContext must be used within a FileEditorProvider");
   }
   return context;
 };

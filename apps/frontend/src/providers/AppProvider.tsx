@@ -23,4 +23,4 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }): JSX.Element =>
       </ThemeProvider>
     </I18nextProvider>
   );
-}
+};

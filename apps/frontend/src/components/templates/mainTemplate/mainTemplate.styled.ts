@@ -69,4 +69,4 @@ export const StyledDrawer: typeof Drawer= styled(Drawer)`
   .ant-drawer-body {
     padding: 0;
   }
-`
+`;

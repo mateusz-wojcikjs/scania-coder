@@ -10,24 +10,26 @@ export const useUpload = () => {
   const mutation = useMutation({
     mutationFn: uploadXml,
     onError: (error: Error): void => {
-      const errorMessage: string = t('sc.fe.forms.upload.error');
+      const errorMessage: string = t("sc.fe.forms.upload.error");
       message.error(errorMessage);
       console.log(error);
     },
   });
 
-  const customUpload: UploadProps['customRequest'] = async (options): Promise<void> => {
+  const customUpload: UploadProps["customRequest"] = async (options): Promise<void> => {
     const { file, onSuccess, onError } = options;
 
     try {
       mutation.mutate(file as File, {
         onSuccess: (data): void => {
-          onSuccess && onSuccess(data, file);
+          if (onSuccess) {
+            onSuccess(data, file);
+          }
         },
         onError: (error: any): void => {
           const uploadError = {
-            name: error.name || 'Error',
-            message: error.message || 'Upload failed',
+            name: error.name || "Error",
+            message: error.message || "Upload failed",
           };
           onError && onError(uploadError);
         },
@@ -43,5 +45,5 @@ export const useUpload = () => {
 
   return {
     customUpload,
-  }
-}
+  };
+};

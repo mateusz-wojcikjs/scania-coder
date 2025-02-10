@@ -19,9 +19,9 @@ export const Sidebar: FC<SidebarProps> = (props: SidebarProps): JSX.Element => {
       </MenuWrapper>
       <BottomBox>
         <Button onClick={handleLogout} icon={<LogoutOutlined />}>
-          {t('sc.fe.global.logOut')}
+          {t("sc.fe.global.logOut")}
         </Button>
       </BottomBox>
     </Container>
-  )
-}
+  );
+};
