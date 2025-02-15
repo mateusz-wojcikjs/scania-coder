@@ -1,52 +1,14 @@
-import { Form, FormProps, Input } from "antd";
+import { Form, Input } from "antd";
+import { ReactElement } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { Container, StyledAlertError, StyledButton } from "./loginForm.styled.ts";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { LoginData } from "@scania-coder/types";
+import { useLoginForm } from "./loginForm.hooks.tsx";
+import { UseLoginFormReturnType } from "./loginForm.types.ts";
 
-type FieldType = {
-    email?: string;
-    password?: string;
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-export const LoginForm = () => {
+export const LoginForm: () => ReactElement = (): ReactElement => {
   const { t }: TransProps<never> = useTranslation();
-  const [loading, setLoading] = useState(false);
-  const [validationMessage, setValidationMessage] = useState("");
-  const navigate = useNavigate();
-
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    setLoading(true);
-    const { email, password }: FieldType = values;
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        setValidationMessage(error.error.errorCode);
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      localStorage.setItem("authJwtToken", JSON.stringify({ token: data.authJwtToken }));
-      setLoading(false);
-      navigate("/");
-    } catch (error) {
-      if (error instanceof Error) {
-        setLoading(false);
-        console.log(error.message);
-      }
-    }
-  };
+  const { onFinish, loading, validationMessage }: UseLoginFormReturnType = useLoginForm();
 
   return (
     <Container>
@@ -54,19 +16,17 @@ export const LoginForm = () => {
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         layout="vertical"
         className='custom-form-label'
       >
-        <Form.Item<FieldType>
+        <Form.Item<LoginData>
           label={t("sc.fe.forms.email")}
           name="email"
           rules={[{ required: true, message: t("sc.fe.forms.validation.email") }]}
         >
           <Input />
         </Form.Item>
-
-        <Form.Item<FieldType>
+        <Form.Item<LoginData>
           label={t("sc.fe.forms.password")}
           name="password"
           rules={[{ required: true, message: t("sc.fe.forms.validation.password") }]}
@@ -80,7 +40,6 @@ export const LoginForm = () => {
           </StyledButton>
         </Form.Item>
       </Form>
-
     </Container>
   );
 };

@@ -1,3 +1,3 @@
 export enum Breakpoint {
-  Mobile = '(max-width: 768px)',
+  Mobile = "(max-width: 768px)",
 }

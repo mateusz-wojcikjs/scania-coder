@@ -60,20 +60,61 @@
             "name": "Nazwa",
             "value": "Wartość",
             "create": "Utwórz konfigurację",
-            "savedLayouts": "Konfiguracje zapisane jako szablon:"
+            "savedLayouts": "Konfiguracje zapisane jako szablon:",
+            "removeRow": "Usuwanie wiersza",
+            "removeFields": "Usuń pola",
+            "layoutName": "Nazwa konfiguracji",
+            "checkToRemove": "Oznacz do usunięcia"
+          },
+          "messages": {
+            "layoutSuccess": "Poprawnie wczytano szablon",
+            "layoutNameRequired": "Wpisz nazwę lub odznacz, że chcesz zapisać konfigurację."
           }
         },
         "download": "Pobierz",
         "clearForm": "Zacznij od nowa"
       },
       "alerts": {
+        "editSuccessfulName": "Pomyślnie zmodyfikowano plik: {{name}}",
         "uploadSuccessful": "Poprawnie załadowano plik XML.",
-        "editSuccessful": "Poprawnie edytowano plik XML."
+        "editSuccessful": "Poprawnie edytowano plik XML.",
+        "layouts": {
+          "created": "Utworzono nowy szablon: {{name}}"
+        },
+        "layout": {
+          "remove": "Konfiguracja {{name}} została usunięta",
+          "removeError": "Błąd podczas usuwania konfiguracji."
+        }
+      },
+      "global": {
+        "logOut": "Wyloguj się",
+        "yes": "Tak",
+        "no": "Nie"
+      },
+      "menu": {
+        "editor": "Edytor plików",
+        "layouts": {
+          "main": "Konfiguracje",
+          "list": "Lista konfiguracji"
+        }
+      },
+      "table": {
+        "column": {
+          "actions": "Akcje",
+          "name": "Nazwa",
+          "createdAt": "Data utworzenia"
+        }
+      },
+      "popup": {
+        "removeConfirm": "Czy na pewno chcesz usunąć?",
+        "layoutRemove": "Usuń konfigurację {{name}}"
       }
     },
     "api": {
       "errors": {
-        "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych."
+        "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych.",
+        "ERR_INVALID_CREDENTIALS": "Nie poprawne dane logowania.",
+        "UNKNOWN_ERROR": "Wystąpił nieznany błąd."
       }
     }
   }

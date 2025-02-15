@@ -8,7 +8,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import { theme } from "../../theme/theme.ts";
 const { Text } = Typography;
 
-export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
+export const VersionCard: FC<VersionCardProps> = (props: VersionCardProps): JSX.Element => {
   const { currentFileVersion, newFileVersion, setFileVersion }: VersionCardProps = props;
   const { t }: TransProps<never> = useTranslation();
 
@@ -16,12 +16,12 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
     <StyledCard
       title={t("sc.fe.steps.upload.card.currentFile", { version: currentFileVersion })}
       extra={
-        <Tooltip title={t('sc.fe.steps.upload.card.tooltip')}>
-          <InfoCircleOutlined style={{ color: theme.colors.primary}} />
+        <Tooltip title={t("sc.fe.steps.upload.card.tooltip")}>
+          <InfoCircleOutlined style={{ color: theme.colors.primary }} />
         </Tooltip>
       }
     >
-      <Description>{t('sc.fe.steps.upload.card.label')}</Description>
+      <Description>{t("sc.fe.steps.upload.card.label")}</Description>
       <InputNumber
         addonBefore={t("sc.fe.steps.upload.card.majorVersion")}
         value={newFileVersion}
@@ -29,13 +29,13 @@ export const VersionCard: FC<VersionCardProps> = (props): JSX.Element => {
         placeholder={t("sc.fe.steps.upload.card.inputPlaceholder")}
         maxLength={9}
         min='0'
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
       />
       <Label>
         {t("sc.fe.steps.upload.card.change")}
         {Number(currentFileVersion) === Number(newFileVersion)
           ? (
-              <> {t("sc.fe.steps.upload.card.noChange")}</>
+            <> {t("sc.fe.steps.upload.card.noChange")}</>
           ) : (
             <>
               <Text type="danger">{currentFileVersion}</Text>
