@@ -89,11 +89,6 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
       message.success(t("sc.fe.alerts.layouts.created", { name: data.name }));
       setIsLoading(false);
     },
-    onError: (error) => {
-      console.error("Failed to save layout configuration:", error);
-      message.error("Błąd podczas zapisu szablonu.");
-      setIsLoading(false);
-    }
   });
 
   const onCheckToRemove:  (e: CheckboxChangeEvent, name: number) => void = (e: CheckboxChangeEvent, name: number): void => {
