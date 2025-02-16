@@ -13,6 +13,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
   const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [layoutError, setLayoutError] = useState<string | null>(null);
   const { t }: TransProps<never> = useTranslation();
 
   useEffect(() => {
@@ -36,22 +37,47 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       formData.append("file", blobFile);
     }
 
-    editXmlMutation.mutate(formData, {
-      onSuccess: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        setUrl(url);
-        setIsLoading(false);
-        message.success(t("sc.fe.alerts.editSuccessfulName", { name: file?.name }));
+    if (isCheckboxChecked && values.layoutName) {
+      const layoutPayload: LayoutItemData = {
+        layoutName: values.layoutName,
+        updates: values.updates
+      };
 
-        if (isCheckboxChecked && values.layoutName) {
-          const layoutPayload: LayoutItemData = {
-            layoutName: values.layoutName,
-            updates: values.updates
-          };
-          saveLayoutMutation.mutate(layoutPayload);
+      saveLayoutMutation.mutate(layoutPayload, {
+        onSuccess: () => {
+          editXmlMutation.mutate(formData, {
+            onSuccess: (blob: Blob) => {
+              handleEditSuccess(blob);
+            }
+          });
+        },
+        onError: (err) => {
+          const errorKey = `sc.api.errors.${err.response?.data?.error?.errorCode}`;
+          message.error(t(errorKey, "sc.api.errors.UNKNOWN_ERROR"));
+          setLayoutError(t('sc.fe.forms.validation.changeName'));
+          setIsLoading(false);
         }
-      }
-    });
+      });
+    } else {
+      editXmlMutation.mutate(formData, {
+        onSuccess: (blob: Blob) => {
+          handleEditSuccess(blob);
+        }
+      });
+    }
+  };
+
+  const handleEditSuccess = (blob: Blob) => {
+    const url = window.URL.createObjectURL(blob);
+    setUrl(url);
+    setIsLoading(false);
+    message.success(t("sc.fe.alerts.editSuccessfulName", { name: file?.name }));
+  };
+
+  const handleLayoutNameChange = () => {
+    if (layoutError) {
+      setLayoutError(null);
+    }
   };
 
   return (
@@ -125,8 +151,10 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
           name="layoutName"
           label={t("sc.fe.steps.edit.labels.layoutName")}
           rules={[{ required: true, message: t("sc.fe.steps.edit.messages.layoutNameRequired") }]}
+          validateStatus={layoutError ? "error" : ""}
+          help={layoutError}
         >
-          <Input placeholder={t("sc.fe.steps.edit.labels.layoutName")} />
+          <Input placeholder={t("sc.fe.steps.edit.labels.layoutName")} onChange={handleLayoutNameChange} />
         </Form.Item>
       )}
       <Form.Item>

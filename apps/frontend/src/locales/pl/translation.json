@@ -8,7 +8,8 @@
           "email": "Wprowadź swój mail.",
           "password": "Wprowadź hasło.",
           "name": "Wprowadź \"name\"",
-          "value": "Wprowadź \"value\""
+          "value": "Wprowadź \"value\"",
+          "changeName": "Zmień nazwę"
         },
         "login": "Zaloguj się",
         "submit": "Nadpisz dane",
@@ -114,7 +115,8 @@
       "errors": {
         "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych.",
         "ERR_INVALID_CREDENTIALS": "Nie poprawne dane logowania.",
-        "UNKNOWN_ERROR": "Wystąpił nieznany błąd."
+        "UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
+        "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje."
       }
     }
   }

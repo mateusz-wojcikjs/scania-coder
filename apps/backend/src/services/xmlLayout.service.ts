@@ -1,10 +1,17 @@
 import { AppDataSource } from "../data-source";
 import { Layout } from "../entity";
 import { UpdatePayload } from "@scania-coder/types";
+import { CustomError } from "../errors";
 
 export class XmlLayoutService {
   static async createLayout(authorId: number, name: string, updates: UpdatePayload[]) {
     const layoutRepository = AppDataSource.getRepository(Layout);
+    const layout = await layoutRepository.findOne({ where: { name, authorId }});
+
+    if (layout) {
+      throw new CustomError(`Layout already exists`, 409, "ERR_ALREADY_EXISTS");
+    }
+
     const newLayout = layoutRepository.create({
       name,
       authorId,
