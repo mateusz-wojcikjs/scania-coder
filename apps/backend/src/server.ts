@@ -18,6 +18,7 @@ import { root } from "./routes/root";
 import xmlFileRoute from "./routes/xmlFile.route";
 import xmlLayoutRoute from "./routes/xmlLayout.route";
 import { isAuthenticated } from "./middlewares";
+import usersRoute from "./routes/users.route";
 
 const app: Express = express();
 
@@ -32,6 +33,7 @@ const setupExpress = (): void => {
 
     app.use("/api", isAuthenticated ,xmlFileRoute);
     app.use("/api", isAuthenticated, xmlLayoutRoute);
+    app.use("/api", isAuthenticated, usersRoute);
 
     app.use(defaultErrorHandler);
 };
