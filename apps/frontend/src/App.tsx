@@ -1,11 +1,11 @@
-import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import { AppProvider } from "./providers";
+import { router } from "./constants";
 
-function App() {
+export const App: () => JSX.Element = (): JSX.Element => {
   return (
-    <>
-        test
-    </>
+    <AppProvider>
+      <RouterProvider router={router} />
+    </AppProvider>
   );
-}
-
-export default App;
+};

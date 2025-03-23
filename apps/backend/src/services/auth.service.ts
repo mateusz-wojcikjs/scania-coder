@@ -4,11 +4,12 @@ import { User } from "../entity";
 import { ErrorCodes, UserRole } from "../enums";
 import { BadRequestError, UnauthorizedError } from "../errors";
 import { calculatePasswordHash } from "../utils";
+import { LoginResponse } from "@scania-coder/types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret";
 
 export class AuthService {
-    static async login(email: string, password: string) {
+    static async login(email: string, password: string): Promise<LoginResponse> {
         if (!email || !password) {
             throw new BadRequestError(ErrorCodes.ERR_EMAIL_PASSWORD_REQUIRED);
         }

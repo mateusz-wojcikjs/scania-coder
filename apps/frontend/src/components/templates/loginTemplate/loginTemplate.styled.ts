@@ -3,29 +3,29 @@ import { Logo } from "../../logo/logo.component.tsx";
 import { Breakpoint } from "../../../enums";
 
 export const Container = styled.div`
-    display: grid;
-    grid-template-columns: 1fr minmax(min-content, 53.5rem) 1fr;
-    grid-template-rows: 33vh 1fr;
-    min-height: 100vh;
-    justify-items: center;
-    column-gap: 16px;
-    
-    @media ${Breakpoint.Mobile} {
-        grid-template-rows: 25vh 1fr;
-    }
+  display: grid;
+  grid-template-columns: 1fr minmax(min-content, 53.5rem) 1fr;
+  grid-template-rows: 33vh 1fr;
+  min-height: 100vh;
+  justify-items: center;
+  column-gap: 16px;
+  
+  @media ${Breakpoint.Mobile} {
+    grid-template-rows: 25vh 1fr;
+  }
 
-    .custom-form-label {
-        .ant-form-item-label {
-            margin-left: 12.5%;
+  .custom-form-label {
+    .ant-form-item-label {
+      margin-left: 12.5%;
 
-            label {
-                color: ${({ theme }) => theme.colors.black};
-                font-size: ${({ theme }) => theme.fontSize.l};
-                font-weight: 600;
-                letter-spacing: 0.09em;
-            }
-        }
+      label {
+        color: ${({ theme }) => theme.colors.black};
+        font-size: ${({ theme }) => theme.fontSize.l};
+        font-weight: 600;
+        letter-spacing: 0.09em;
+      }
     }
+  }
 `;
 
 export const LoginWrapper = styled.div`
@@ -39,6 +39,6 @@ export const StyledLogo = styled(Logo)`
   grid-column: 2;
 
   @media ${Breakpoint.Mobile} {
-      margin-top: 0;
+    margin-top: 0;
   }
 `;

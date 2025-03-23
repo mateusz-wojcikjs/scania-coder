@@ -1,4 +1,4 @@
-export interface Layout {
+export interface LayoutData {
   id: number;
   name: string;
   authorId: number;

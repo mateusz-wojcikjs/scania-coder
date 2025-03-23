@@ -1,5 +1,10 @@
 export { ApiError } from "./apiError.type.ts";
-export type { ApiMethod } from './apiMethod.type.ts';
-export type { UseState } from "./useState.type.ts";
+export type { ApiMethod } from "./apiMethod.type.ts";
+export type { ApiMutation } from "./apiMutation.type.ts";
 export type { FastOmit } from "./fastOmit.type";
+export type { LayoutItemData } from "./layoutData.type.ts";
+export type { LayoutData } from "./layout.type.ts";
+export type { MenuItem } from "./menuItem.type.ts";
+export type { RoutePath } from "./routePath.type.ts";
 export type { Substitute } from "./substitute.types";
+export type { UseState } from "./useState.type.ts";

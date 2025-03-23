@@ -1,14 +1,19 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
-import { FormRow } from "./editFileForm.styles.ts";
+import { FormRow, IconWrapper, StyledButton, StyledFormItem } from "./editFileForm.styles.ts";
+import { LayoutItemData } from "../../../types";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { useFileEditor } from "../../../hooks";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
+  const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [layoutError, setLayoutError] = useState<string | null>(null);
   const { t }: TransProps<never> = useTranslation();
 
   useEffect(() => {
@@ -27,56 +32,51 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     setIsLoading(true);
     const formData = new FormData();
     formData.append("updates", JSON.stringify(values.updates));
-    formData.append("newMajorVersion", newMajorVersion)
+    formData.append("newMajorVersion", newMajorVersion);
     if (blobFile) {
       formData.append("file", blobFile);
     }
 
-    try {
-      const token = localStorage.getItem('authJwtToken');
-      const editXmlResponse = await fetch("/api/edit-xml", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${JSON.parse(token!).token}`
-        }
-      });
+    if (isCheckboxChecked && values.layoutName) {
+      const layoutPayload: LayoutItemData = {
+        layoutName: values.layoutName,
+        updates: values.updates
+      };
 
-      if (editXmlResponse.ok) {
-        const xmlText = await editXmlResponse.text();
-        const blob = new Blob([xmlText], { type: "application/xml" });
-        setUrl(window.URL.createObjectURL(blob));
-        setIsLoading(false);
-      } else {
-        console.error("Failed to modify XML file");
-        setIsLoading(false);
-      }
-
-      if (isCheckboxChecked && values.layoutName) {
-        const layoutPayload = {
-          layoutName: values.layoutName,
-          updates: values.updates
-        };
-
-        const layoutResponse = await fetch("/api/layouts", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(token!).token}`
-          },
-          body: JSON.stringify(layoutPayload),
-        });
-        setIsLoading(false);
-
-        if (!layoutResponse.ok) {
-          console.error("Failed to save layout configuration");
+      saveLayoutMutation.mutate(layoutPayload, {
+        onSuccess: () => {
+          editXmlMutation.mutate(formData, {
+            onSuccess: (blob: Blob) => {
+              handleEditSuccess(blob);
+            }
+          });
+        },
+        onError: (err) => {
+          const errorKey = `sc.api.errors.${err.response?.data?.error?.errorCode}`;
+          message.error(t(errorKey, "sc.api.errors.UNKNOWN_ERROR"));
+          setLayoutError(t('sc.fe.forms.validation.changeName'));
           setIsLoading(false);
         }
-      }
+      });
+    } else {
+      editXmlMutation.mutate(formData, {
+        onSuccess: (blob: Blob) => {
+          handleEditSuccess(blob);
+        }
+      });
+    }
+  };
 
-    } catch (error) {
-      console.error("An error occurred while submitting the form:", error);
-      setIsLoading(false);
+  const handleEditSuccess = (blob: Blob) => {
+    const url = window.URL.createObjectURL(blob);
+    setUrl(url);
+    setIsLoading(false);
+    message.success(t("sc.fe.alerts.editSuccessfulName", { name: file?.name }));
+  };
+
+  const handleLayoutNameChange = () => {
+    if (layoutError) {
+      setLayoutError(null);
     }
   };
 
@@ -89,28 +89,19 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       form={form}
     >
       <Form.List name="updates">
-        {(fields, { add, remove }) => {
+        {(fields, { add, remove }): JSX.Element => {
           setIsFieldAdded(!!fields.length);
           return (
             <>
-              {fields.map(({ key, name, ...restField }) => (
+              {fields.map(({ key, name, ...restField }): JSX.Element => (
                 <FormRow key={key}>
-                  <Form.Item
+                  <StyledFormItem
                     {...restField}
                     name={[name, "name"]}
-                    rules={[
-                      { required: true, message: t("sc.fe.forms.validation.name") },
-                    ]}
-                    style={{
-                      marginBottom: 0,
-                      maxWidth: "180px",
-                      width: "100%",
-                      flex: "1 1 100%",
-                    }}
+                    rules={[ { required: true, message: t("sc.fe.forms.validation.name") } ]}
                   >
                     <Input placeholder={t("sc.fe.forms.inputName")} />
-                  </Form.Item>
-
+                  </StyledFormItem>
                   <Form.Item
                     shouldUpdate={(prevValues, currentValues) =>
                       prevValues.updates?.[name]?.shouldBeRemoved !==
@@ -121,91 +112,49 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
                     {({ getFieldValue }) => {
                       const shouldBeRemoved = getFieldValue(["updates", name, "shouldBeRemoved"]);
                       return (
-                        <Form.Item
+                        <StyledFormItem
                           {...restField}
                           name={[name, "newValue"]}
-                          rules={[
-                            {
-                              required: !shouldBeRemoved,
-                              message: t("sc.fe.forms.validation.value"),
-                            },
-                          ]}
-                          style={{
-                            marginBottom: 0,
-                            maxWidth: "180px",
-                            width: "100%",
-                            flex: "1 1 100%",
-                          }}
+                          rules={[ { required: !shouldBeRemoved,message: t("sc.fe.forms.validation.value") } ]}
                         >
-                          <Input
-                            placeholder={t("sc.fe.forms.inputValue")}
-                            disabled={shouldBeRemoved}
-                          />
-                        </Form.Item>
+                          <Input placeholder={t("sc.fe.forms.inputValue")} disabled={shouldBeRemoved} />
+                        </StyledFormItem>
                       );
                     }}
                   </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "shouldBeRemoved"]}
-                    valuePropName="checked"
-                    style={{
-                      marginBottom: 0,
-                      maxWidth: "180px",
-                      width: "100%",
-                      flex: "1 1 100%",
-                    }}
-                  >
-                    <Checkbox
-                      onChange={(e): void => {
-                        const isChecked = e.target.checked;
-                        if (isChecked) {
-                          form.setFields([
-                            {
-                              name: ["updates", name, "newValue"],
-                              value: undefined,
-                            },
-                          ]);
-                        }
-                      }}
-                    >
-                      Oznacz do usunięcia
+                  <StyledFormItem {...restField} name={[name, "shouldBeRemoved"]} valuePropName="checked">
+                    <Checkbox onChange={(e: CheckboxChangeEvent): void => onCheckToRemove(e, name)}>
+                      {t("sc.fe.steps.edit.labels.checkToRemove")}
                     </Checkbox>
-                  </Form.Item>
-                  <div style={{ width: "90px" }}>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </div>
+                  </StyledFormItem>
+                  <IconWrapper>
+                    <MinusCircleOutlined onClick={(): void => remove(name)} />
+                  </IconWrapper>
                 </FormRow>
               ))}
               <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                  style={{ width: "100%", marginTop: "12px", maxWidth: "716px" }}
-                >
+                <StyledButton type="dashed" onClick={(): void => add()} icon={<PlusOutlined />}>
                   {t("sc.fe.forms.addFields")}
-                </Button>
+                </StyledButton>
               </Form.Item>
             </>
           );
         }}
       </Form.List>
       <Form.Item>
-        <Checkbox
-          onChange={(e) => setIsCheckboxChecked(e.target.checked)}
-        >{t("sc.fe.forms.saveConfig")}
+        <Checkbox onChange={(e: CheckboxChangeEvent): void => setIsCheckboxChecked(e.target.checked)}>
+          {t("sc.fe.forms.saveConfig")}
         </Checkbox>
       </Form.Item>
       {isCheckboxChecked && (
         <Form.Item
           name="layoutName"
-          label='Nazwa konfiguracji'
-          rules={[{ required: true, message: "Nazwa jest wymagana lub odznacz, że chcesz zapisać konfigurację" }]}
+          label={t("sc.fe.steps.edit.labels.layoutName")}
+          rules={[{ required: true, message: t("sc.fe.steps.edit.messages.layoutNameRequired") }]}
+          validateStatus={layoutError ? "error" : ""}
+          help={layoutError}
         >
-          <Input placeholder='Nazwa konfiguracji' />
+          <Input placeholder={t("sc.fe.steps.edit.labels.layoutName")} onChange={handleLayoutNameChange} />
         </Form.Item>
       )}
       <Form.Item>

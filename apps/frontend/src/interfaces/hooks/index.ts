@@ -1,1 +1,1 @@
-export type { UseFileEditor } from './useFileEditor.interface.ts';
+export type { UseFileEditor } from "./useFileEditor.interface.ts";
