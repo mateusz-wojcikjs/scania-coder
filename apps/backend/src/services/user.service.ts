@@ -1,9 +1,9 @@
+import crypto from "crypto";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity";
 import { UserRole } from "../enums";
 import { CustomError } from "../errors";
-import crypto from "crypto";
 import { calculatePasswordHash } from "../utils";
 
 export class UserService {
@@ -44,20 +44,20 @@ export class UserService {
       limit,
       totalPages: Math.ceil(total / limit),
     };
-  };
+  }
 
   static async getUser(id: number) {
-    return await AppDataSource.getRepository(User).findOneBy({ id })
-  };
+    return await AppDataSource.getRepository(User).findOneBy({ id });
+  }
 
   static async createUser(username: string, email: string, password: string, role: UserRole) {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { email } });
     if (user) {
-      throw new CustomError(`User already exists`, 409, "ERR_ALREADY_EXISTS");
+      throw new CustomError("User already exists", 409, "ERR_ALREADY_EXISTS");
     }
 
-    const passwordSalt = crypto.randomBytes(64).toString('hex');
+    const passwordSalt = crypto.randomBytes(64).toString("hex");
     const passwordHash = await calculatePasswordHash(password, passwordSalt);
 
     const newUser = userRepository.create({
@@ -69,18 +69,18 @@ export class UserService {
     });
 
     return await userRepository.save(newUser);
-  };
+  }
 
   static async updateUser(id: number, updateData: Partial<any>) {
     const userRepository = AppDataSource.getRepository(User);
 
     await userRepository.update(id, updateData);
     return userRepository.findOne({ where: { id } });
-  };
+  }
 
   static async deleteUserById(id: number) {
     const userRepository: Repository<User> = AppDataSource.getRepository(User);
     return await userRepository.delete(id);
-  };
+  }
 
 }

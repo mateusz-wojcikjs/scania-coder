@@ -1,10 +1,10 @@
+import { LoginResponse } from "@scania-coder/types";
 import jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity";
 import { ErrorCodes, UserRole } from "../enums";
 import { BadRequestError, UnauthorizedError } from "../errors";
 import { calculatePasswordHash } from "../utils";
-import { LoginResponse } from "@scania-coder/types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret";
 

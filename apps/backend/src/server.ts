@@ -14,11 +14,11 @@ import { login } from "./controllers/login.controller";
 import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
+import { isAuthenticated } from "./middlewares";
 import { root } from "./routes/root";
+import usersRoute from "./routes/users.route";
 import xmlFileRoute from "./routes/xmlFile.route";
 import xmlLayoutRoute from "./routes/xmlLayout.route";
-import { isAuthenticated } from "./middlewares";
-import usersRoute from "./routes/users.route";
 
 const app: Express = express();
 

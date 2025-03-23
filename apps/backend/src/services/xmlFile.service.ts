@@ -1,7 +1,7 @@
-import { Builder, parseStringPromise } from "xml2js";
-import { FPC, ParsedXml, XmlFileServiceData } from "../types";
 import { XmlFileMetaData, UpdatePayload, ErrorCodes } from "@scania-coder/types";
+import { Builder, parseStringPromise } from "xml2js";
 import { BadRequestError, CustomError } from "../errors";
+import { FPC, ParsedXml, XmlFileServiceData } from "../types";
 import { findInsertionIndex } from "../utils";
 
 export class XmlFileService {
@@ -45,7 +45,7 @@ export class XmlFileService {
             $: {
               Name: update.name,
               Value: update.newValue,
-              Updated: 'false',
+              Updated: "false",
             },
           };
 
@@ -59,11 +59,11 @@ export class XmlFileService {
     });
 
     const builder: Builder = new Builder({
-      xmldec: { version: '1.0', encoding: undefined, standalone: undefined },
+      xmldec: { version: "1.0", encoding: undefined, standalone: undefined },
     });
 
     let updatedXml: string = builder.buildObject(parsedXml);
-    updatedXml = updatedXml.replace(/<(\w+)([^>]*)\/>/g, '<$1$2 />');
+    updatedXml = updatedXml.replace(/<(\w+)([^>]*)\/>/g, "<$1$2 />");
 
     return {
       updatedXml,

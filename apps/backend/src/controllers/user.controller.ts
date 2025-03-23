@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
+import { UserRole } from "../enums";
 import { logger } from "../logger";
 import { UserService } from "../services/user.service";
-import { UserRole } from "../enums";
 
 export const getUsers = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug(`Called getUsers()`);
+    logger.debug("Called getUsers()");
     const page = parseInt(request.query.page as string) || 1;
     const limit = parseInt(request.query.limit as string) || 10;
     const sortBy = (request.query.sortBy as string) || "createdAt";
@@ -38,7 +38,7 @@ export const getUsers = async (request: Request, response: Response, next: NextF
 
 export const getUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug(`Called getUser()`);
+    logger.debug("Called getUser()");
     const { id } = request.params;
     const user = await UserService.getUser(Number(id));
 
@@ -58,15 +58,15 @@ export const getUser = async (request: Request, response: Response, next: NextFu
 
 export const createUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug(`Called createUser()`);
+    logger.debug("Called createUser()");
     const { email, password, role, username } = request.body;
 
     if (!email) {
-      throw "Could not extract the email from the request, aborting."
+      throw "Could not extract the email from the request, aborting.";
     }
 
     if (!password) {
-      throw "Could not extract the plain text password from the request, aborting."
+      throw "Could not extract the plain text password from the request, aborting.";
     }
 
     const user = await UserService.createUser(email, username, password, role);
@@ -84,8 +84,8 @@ export const createUser = async (request: Request, response: Response, next: Nex
 
 export const updateUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug(`Called updateUser()`);
-    const { id, email, password, role, username } = request.body;
+    logger.debug("Called updateUser()");
+    const { id, password, role, username } = request.body;
 
     const updatedUser = await UserService.updateUser(Number(id), { password, role, username });
     logger.info(`User ${updatedUser?.email} has been created.`);
@@ -102,7 +102,7 @@ export const updateUser = async (request: Request, response: Response, next: Nex
 
 export const deleteUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug(`Called deleteUser()`);
+    logger.debug("Called deleteUser()");
     const { id } = request.params;
     const userId: number = Number(id);
 
@@ -119,4 +119,4 @@ export const deleteUser = async (request: Request, response: Response, next: Nex
     });
     next(error);
   }
-}
+};

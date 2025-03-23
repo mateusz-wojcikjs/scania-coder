@@ -1,1 +1,1 @@
-export { isAuthenticated } from './authentication.middleware';
+export { isAuthenticated } from "./authentication.middleware";
