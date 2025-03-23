@@ -62,6 +62,10 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       editXmlMutation.mutate(formData, {
         onSuccess: (blob: Blob) => {
           handleEditSuccess(blob);
+        },
+        onError: () => {
+          message.error(t('sc.fe.steps.edit.error'));
+          setIsLoading(false);
         }
       });
     }

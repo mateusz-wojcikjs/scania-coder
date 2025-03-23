@@ -19,9 +19,15 @@ export class XmlFileService {
     const updatedFields: string[] = [];
     const errors: string[] = [];
 
-    if (currentMajorVersion <= 0) {
+    if (currentMajorVersion < 0) {
       throw new BadRequestError(
-        `New MajorVersion (${newMajorVersion}) should be bigger than 0.` as ErrorCodes,
+        'Wrong version of the file' as ErrorCodes
+      );
+    }
+
+    if (Number(newMajorVersion) < 0) {
+      throw new BadRequestError(
+        `New MajorVersion (${newMajorVersion}) should be positive integer.` as ErrorCodes,
       );
     }
 

@@ -70,7 +70,8 @@
           "messages": {
             "layoutSuccess": "Poprawnie wczytano szablon",
             "layoutNameRequired": "Wpisz nazwę lub odznacz, że chcesz zapisać konfigurację."
-          }
+          },
+          "error": "Nie udało się zmodyfikować pliku."
         },
         "download": "Pobierz",
         "clearForm": "Zacznij od nowa"
