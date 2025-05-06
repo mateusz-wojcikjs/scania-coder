@@ -13,26 +13,6 @@ export const Description = styled.p`
   color: #555;
 `;
 
-export const FormHeader = styled.div`
-    border-radius: 8px 8px 0 0;
-    border: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    min-height: 56px;
-    margin-bottom: -1px;
-    padding: 0 24px;
-    color: rgba(0, 0, 0, 0.88);
-    font-weight: 600;
-    font-size: 16px;
-    gap: 12px;
-`;
-
-export const FormHeaderCell = styled.div`
-  max-width: 180px;
-  width: 180px;
-  min-width: 90px;
-`;
-
 export const Wrapper = styled.div``;
 
 export const InnerWrapper = styled.div`
