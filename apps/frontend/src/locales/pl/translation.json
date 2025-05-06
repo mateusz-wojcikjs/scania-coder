@@ -50,7 +50,7 @@
             "inputPlaceholder": "Wpisz cyfrę, by ustawić wersję pliku.",
             "change": "Zmiana:",
             "noChange": "wersja nie zostanie nadpisana.",
-            "tooltip": "Domyślnie wesja pliku podczas zapisu zostanie zwiększona o 1.",
+            "tooltip": "Domyślnie wersja pliku podczas zapisu zostanie zwiększona o 1.",
             "label": "Wersja pliku:"
           }
         },
@@ -60,17 +60,25 @@
           "labels": {
             "name": "Nazwa",
             "value": "Wartość",
-            "create": "Utwórz konfigurację",
+            "newValue": "Nowa wartość",
+            "create": "Edytuj blok FPC",
             "savedLayouts": "Konfiguracje zapisane jako szablon:",
             "removeRow": "Usuwanie wiersza",
             "removeFields": "Usuń pola",
             "layoutName": "Nazwa konfiguracji",
-            "checkToRemove": "Oznacz do usunięcia"
+            "checkToRemove": "Oznacz do usunięcia",
+            "editCableList": "Edytuj blok Cable List",
+            "addCableListFields": "Dodaj pola do edycji Cable List" ,
+            "newNameValue": "Nowa wartość \"name\""
+          },
+          "tooltips": {
+            "newValue": "Jeśli chcesz dodać nowe pole to 'Wartość' i 'Nowa wartość' muszą być identyczne."
           },
           "messages": {
             "layoutSuccess": "Poprawnie wczytano szablon",
             "layoutNameRequired": "Wpisz nazwę lub odznacz, że chcesz zapisać konfigurację."
-          }
+          },
+          "error": "Nie udało się zmodyfikować pliku."
         },
         "download": "Pobierz",
         "clearForm": "Zacznij od nowa"

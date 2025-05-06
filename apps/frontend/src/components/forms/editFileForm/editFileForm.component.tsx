@@ -1,37 +1,58 @@
 import { Button, Checkbox, Form, Input, message } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC, useEffect, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
-import { FormRow, IconWrapper, StyledButton, StyledFormItem } from "./editFileForm.styles.ts";
 import { LayoutItemData } from "../../../types";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useFileEditor } from "../../../hooks";
+import { FormList } from "./components";
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
-  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, setIsFieldAdded, form }: EditFileFormProps = props;
+  const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [layoutError, setLayoutError] = useState<string | null>(null);
   const { t }: TransProps<never> = useTranslation();
 
   useEffect(() => {
-    if (layoutFields.length) {
-      form.setFieldsValue({
-        updates: layoutFields.map((update: UpdatePayload): UpdatePayload => ({
-          name: update.name,
-          newValue: update.newValue,
-          shouldBeRemoved: update.shouldBeRemoved,
-        }))
-      });
+    if (!layoutFields || layoutFields.length === 0) {
+      form.setFieldsValue({ updates: [], cableList: [] });
+      return;
     }
-  }, [form, layoutFields]);
+
+    const updates = layoutFields
+      .filter(f => f.blockType !== "CableList")
+      .map(({ name, newValue, shouldBeRemoved }) => ({
+        name,
+        newValue,
+        shouldBeRemoved,
+      }));
+
+    const cableList = layoutFields
+      .filter(f => f.blockType === "CableList")
+      .map(({ name, newValue, shouldBeRemoved }) => ({
+        name,
+        newValue,
+        shouldBeRemoved,
+        blockType: "CableList",
+      }));
+
+    form.setFieldsValue({
+      updates,
+      cableList,
+    });
+  }, [layoutFields, form]);
 
   const onFinish = async (values: any) => {
     setIsLoading(true);
+    const allUpdates: UpdatePayload[] = [
+      ...(values.updates || []),
+      ...(values.cableList || []),
+    ];
+
     const formData = new FormData();
-    formData.append("updates", JSON.stringify(values.updates));
+    formData.append("updates", JSON.stringify(allUpdates));
     formData.append("newMajorVersion", newMajorVersion);
     if (blobFile) {
       formData.append("file", blobFile);
@@ -40,13 +61,13 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     if (isCheckboxChecked && values.layoutName) {
       const layoutPayload: LayoutItemData = {
         layoutName: values.layoutName,
-        updates: values.updates
+        updates: allUpdates
       };
 
       saveLayoutMutation.mutate(layoutPayload, {
-        onSuccess: () => {
+        onSuccess: (): void => {
           editXmlMutation.mutate(formData, {
-            onSuccess: (blob: Blob) => {
+            onSuccess: (blob: Blob): void => {
               handleEditSuccess(blob);
             }
           });
@@ -62,6 +83,10 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       editXmlMutation.mutate(formData, {
         onSuccess: (blob: Blob) => {
           handleEditSuccess(blob);
+        },
+        onError: () => {
+          message.error(t('sc.fe.steps.edit.error'));
+          setIsLoading(false);
         }
       });
     }
@@ -88,59 +113,8 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       disabled={!file}
       form={form}
     >
-      <Form.List name="updates">
-        {(fields, { add, remove }): JSX.Element => {
-          setIsFieldAdded(!!fields.length);
-          return (
-            <>
-              {fields.map(({ key, name, ...restField }): JSX.Element => (
-                <FormRow key={key}>
-                  <StyledFormItem
-                    {...restField}
-                    name={[name, "name"]}
-                    rules={[ { required: true, message: t("sc.fe.forms.validation.name") } ]}
-                  >
-                    <Input placeholder={t("sc.fe.forms.inputName")} />
-                  </StyledFormItem>
-                  <Form.Item
-                    shouldUpdate={(prevValues, currentValues) =>
-                      prevValues.updates?.[name]?.shouldBeRemoved !==
-                      currentValues.updates?.[name]?.shouldBeRemoved
-                    }
-                    noStyle
-                  >
-                    {({ getFieldValue }) => {
-                      const shouldBeRemoved = getFieldValue(["updates", name, "shouldBeRemoved"]);
-                      return (
-                        <StyledFormItem
-                          {...restField}
-                          name={[name, "newValue"]}
-                          rules={[ { required: !shouldBeRemoved,message: t("sc.fe.forms.validation.value") } ]}
-                        >
-                          <Input placeholder={t("sc.fe.forms.inputValue")} disabled={shouldBeRemoved} />
-                        </StyledFormItem>
-                      );
-                    }}
-                  </Form.Item>
-                  <StyledFormItem {...restField} name={[name, "shouldBeRemoved"]} valuePropName="checked">
-                    <Checkbox onChange={(e: CheckboxChangeEvent): void => onCheckToRemove(e, name)}>
-                      {t("sc.fe.steps.edit.labels.checkToRemove")}
-                    </Checkbox>
-                  </StyledFormItem>
-                  <IconWrapper>
-                    <MinusCircleOutlined onClick={(): void => remove(name)} />
-                  </IconWrapper>
-                </FormRow>
-              ))}
-              <Form.Item>
-                <StyledButton type="dashed" onClick={(): void => add()} icon={<PlusOutlined />}>
-                  {t("sc.fe.forms.addFields")}
-                </StyledButton>
-              </Form.Item>
-            </>
-          );
-        }}
-      </Form.List>
+      <FormList name="updates" onCheckToRemove={onCheckToRemove} />
+      <FormList name="cableList" isCableList onCheckToRemove={onCheckToRemove} />
       <Form.Item>
         <Checkbox onChange={(e: CheckboxChangeEvent): void => setIsCheckboxChecked(e.target.checked)}>
           {t("sc.fe.forms.saveConfig")}

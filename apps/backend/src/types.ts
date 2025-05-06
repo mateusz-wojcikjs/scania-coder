@@ -28,9 +28,21 @@ export interface FpcBlock {
   FPC: FPC[];
 }
 
+export interface CableList {
+  $: {
+    Name: string;
+  };
+}
+
+export interface CableListBlock {
+  $: { Version: string };
+  CableList: CableList[];
+}
+
 export interface Data {
   FpcBlock: FpcBlock[];
   VersionBlock: VersionBlock[];
+  CableListBlock: CableListBlock[];
 }
 
 export interface Sops {
