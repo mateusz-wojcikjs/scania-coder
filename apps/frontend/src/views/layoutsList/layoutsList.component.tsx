@@ -21,14 +21,12 @@ export const LayoutsList = (): JSX.Element => {
   });
 
   const confirm = async (layout: Layout) => {
-    removeLayout.mutate(layout.id);
-    if (removeLayout.isSuccess) {
+    try {
+      await removeLayout.mutateAsync(layout.id);
       message.success(t("sc.fe.alerts.layout.remove", { name: layout.name }));
-    }
-    if (removeLayout.isError) {
+    } catch (error) {
       message.error(t("sc.fe.alerts.layout.removeError"));
     }
-
   };
 
   const columns: TableProps<Layout>["columns"] = [
@@ -68,6 +66,7 @@ export const LayoutsList = (): JSX.Element => {
       <Title level={1}>{t("sc.fe.views.layoutsList.title")}</Title>
       {layouts && <Table<Layout>
         columns={columns}
+        rowKey={(record) => record.id}
         dataSource={layouts}
         // TODO: apply pagination when ready
         pagination={false}

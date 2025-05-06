@@ -9,7 +9,6 @@ export interface EditFileFormProps {
     layoutFields: UpdatePayload[];
     setIsLoading: (loading: boolean) => void;
     newMajorVersion: string;
-    setIsFieldAdded: (value: boolean) => void;
     setFile: (file: UploadFile<XmlFileMetaData> | undefined) => void;
     setFileData: (fileData: XmlFileMetaData | null) => void;
     form: FormInstance;

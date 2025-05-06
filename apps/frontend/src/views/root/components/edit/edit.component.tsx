@@ -5,8 +5,6 @@ import { EditFileForm, VersionCard } from "../../../../components";
 import {
   Box,
   Description,
-  FormHeader,
-  FormHeaderCell,
   InnerWrapper,
   Label,
   SelectWrapper,
@@ -23,8 +21,6 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
     setFileVersion,
     fileVersion,
     form,
-    isFieldAdded,
-    setIsFieldAdded,
     blobFile,
     setFile,
     setFileData,
@@ -66,28 +62,6 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
             />
             <Box>
               <div>
-                {isFieldAdded ? (
-                  <FormHeader>
-                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
-                      <Label>{t("sc.fe.steps.edit.labels.name")}</Label>
-                    </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
-                      <Label>{t("sc.fe.steps.edit.labels.value")}</Label>
-                    </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: "1 1 100%" }}>
-                      <Label>{t("sc.fe.steps.edit.labels.removeRow")}</Label>
-                    </FormHeaderCell>
-                    <FormHeaderCell style={{ flex: "0", maxWidth: "90px" }}>
-                      <Label>{t("sc.fe.steps.edit.labels.removeFields")}</Label>
-                    </FormHeaderCell>
-                  </FormHeader>
-                ) : (
-                  <Row>
-                    <Col span={12}>
-                      <Label>{t("sc.fe.steps.edit.labels.create")}</Label>
-                    </Col>
-                  </Row>
-                )}
                 <EditFileForm
                   {...{
                     blobFile,
@@ -96,7 +70,6 @@ export const Edit: () => JSX.Element = (): JSX.Element => {
                     layoutFields,
                     setIsLoading,
                     newMajorVersion: fileVersion || fileData.majorVersion,
-                    setIsFieldAdded,
                     form,
                     setFile,
                     setFileData,
