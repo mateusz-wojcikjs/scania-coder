@@ -3,6 +3,13 @@ import { UserRole } from "../enums";
 import { logger } from "../logger";
 import { UserService } from "../services/user.service";
 
+const validatePassword = (password: string): boolean => {
+  const hasMinLength = password.length >= 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  return hasMinLength && hasUpperCase && hasNumber;
+};
+
 export const getUsers = async (request: Request, response: Response, next: NextFunction) => {
   try {
     logger.debug("Called getUsers()");
@@ -59,17 +66,13 @@ export const getUser = async (request: Request, response: Response, next: NextFu
 export const createUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
     logger.debug("Called createUser()");
-    const { email, password, role, username } = request.body;
+    const { email, role, username } = request.body;
 
     if (!email) {
       throw "Could not extract the email from the request, aborting.";
     }
 
-    if (!password) {
-      throw "Could not extract the plain text password from the request, aborting.";
-    }
-
-    const user = await UserService.createUser(email, username, password, role);
+    const user = await UserService.createUser(username, email, role);
     logger.info(`User ${user.email} has been created.`);
 
     response.status(201).json(user);
@@ -87,12 +90,18 @@ export const updateUser = async (request: Request, response: Response, next: Nex
     logger.debug("Called updateUser()");
     const { id, password, role, username } = request.body;
 
-    const updatedUser = await UserService.updateUser(Number(id), { password, role, username });
-    logger.info(`User ${updatedUser?.email} has been created.`);
+    if (password && !validatePassword(password)) {
+      return response.status(400).json({ 
+        message: "Password must be at least 8 characters long and contain at least one uppercase letter and one number" 
+      });
+    }
 
-    response.status(201).json(updatedUser);
+    const updatedUser = await UserService.updateUser(Number(id), { password, role, username });
+    logger.info(`User ${updatedUser?.email} has been updated.`);
+
+    response.status(200).json(updatedUser);
   } catch (error) {
-      logger.error("Error during createUser()", {
+      logger.error("Error during updateUser()", {
       error,
       requestBody: request.body,
     });
@@ -114,6 +123,34 @@ export const deleteUser = async (request: Request, response: Response, next: Nex
     response.status(200).json({ message: "User deleted successfully" });
   }  catch (error) {
     logger.error("Error during deleteUser()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};
+
+export const setupPassword = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called setupPassword()");
+    const { token, password } = request.body;
+
+    if (!token || !password) {
+      return response.status(400).json({ message: "Token and password are required" });
+    }
+
+    if (!validatePassword(password)) {
+      return response.status(400).json({ 
+        message: "Password must be at least 8 characters long and contain at least one uppercase letter and one number" 
+      });
+    }
+
+    const user = await UserService.setupPassword(token, password);
+    logger.info(`Password has been set for user ${user.email}`);
+
+    response.status(200).json({ message: "Password set successfully" });
+  } catch (error) {
+    logger.error("Error during setupPassword()", {
       error,
       requestBody: request.body,
     });

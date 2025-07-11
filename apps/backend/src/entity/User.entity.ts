@@ -15,11 +15,17 @@ export class User {
     @Column({ unique: true })
     email: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     password: string;
 
-    @Column()
+    @Column({ nullable: true })
     passwordSalt: string;
+
+    @Column({ nullable: true })
+    passwordResetToken: string;
+
+    @Column({ nullable: true })
+    passwordResetExpires: Date;
 
     @Column({
         type: "enum",

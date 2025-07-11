@@ -4,13 +4,19 @@
       "forms": {
         "email": "E-mail",
         "password": "Hasło",
+        "newPassword": "Nowe hasło",
+        "confirmPassword": "Potwierdź hasło",
         "validation": {
           "email": "Wprowadź swój mail.",
           "password": "Wprowadź hasło.",
+          "passwordLength": "Hasło musi mieć co najmniej 8 znaków.",
+          "passwordMismatch": "Hasła nie są identyczne.",
+          "confirmPassword": "Potwierdź hasło.",
           "name": "Wprowadź \"name\"",
           "value": "Wprowadź \"value\"",
           "changeName": "Zmień nazwę"
         },
+        "setupPassword": "Ustaw hasło",
         "login": "Zaloguj się",
         "submit": "Nadpisz dane",
         "addFields": "Dodaj Pola",
@@ -25,14 +31,17 @@
       },
       "views": {
         "login": {
-          "title": "Login Page Title",
-          "button": "Login"
+          "title": "Logowanie",
+          "button": "Zaloguj się"
         },
         "root": {
           "title": "Edycja XML"
         },
         "layoutsList": {
           "title": "Lista konfiguracji"
+        },
+        "setupPassword": {
+          "title": "Ustaw hasło"
         }
       },
       "steps": {
@@ -93,6 +102,11 @@
         "layout": {
           "remove": "Konfiguracja {{name}} została usunięta",
           "removeError": "Błąd podczas usuwania konfiguracji."
+        },
+        "password": {
+          "setupSuccess": "Hasło zostało ustawione pomyślnie.",
+          "setupError": "Wystąpił błąd podczas ustawiania hasła.",
+          "invalidToken": "Nieprawidłowy lub wygasły token."
         }
       },
       "global": {
@@ -105,6 +119,11 @@
         "layouts": {
           "main": "Konfiguracje",
           "list": "Lista konfiguracji"
+        },
+        "users": {
+          "main": "Użytkownicy",
+          "list": "Lista użytkowników",
+          "add": "Dodaj użytkownika"
         }
       },
       "table": {

@@ -17,7 +17,7 @@ import { Breakpoint } from "../../../enums";
 
 export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): JSX.Element => {
   const { children }: MainTemplateProps = props;
-  const { handleDrawer, items, isOpen, handleLogout }:UseMenuReturnType =  useMenu();
+  const { handleDrawer, items, isOpen, handleLogout, selectedKeys, openKeys, onOpenChange }: UseMenuReturnType = useMenu();
   const isMobile: boolean = useMediaQuery({ query: Breakpoint.Mobile });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): J
         </Button>
       </TopMenuWrapper>
       <Sidebar handleLogout={handleLogout}>
-        <Menu defaultSelectedKeys={["editor"]} mode="inline" items={items} />
+        <Menu selectedKeys={selectedKeys} openKeys={openKeys} onOpenChange={onOpenChange} mode="inline" items={items} />
       </Sidebar>
       <Space />
       <Main>
@@ -43,7 +43,7 @@ export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): J
       </Main>
       {isMobile && (
         <StyledDrawer onClose={() => handleDrawer(false)} open={isOpen} placement="left">
-          <Menu defaultSelectedKeys={["editor"]} mode="inline" items={items} />
+          <Menu selectedKeys={selectedKeys} openKeys={openKeys} onOpenChange={onOpenChange} mode="inline" items={items} />
         </StyledDrawer>
       )}
     </Container>

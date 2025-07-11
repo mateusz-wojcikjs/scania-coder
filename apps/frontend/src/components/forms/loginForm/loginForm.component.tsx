@@ -1,7 +1,7 @@
 import { Form, Input } from "antd";
 import { ReactElement } from "react";
 import { TransProps, useTranslation } from "react-i18next";
-import { Container, StyledAlertError, StyledButton } from "./loginForm.styled.ts";
+import { Container, StyledAlertError, StyledButton, Heading } from "./loginForm.styles.ts";
 import { LoginData } from "@scania-coder/types";
 import { useLoginForm } from "./loginForm.hooks.tsx";
 import { UseLoginFormReturnType } from "./loginForm.types.ts";
@@ -12,6 +12,7 @@ export const LoginForm: () => ReactElement = (): ReactElement => {
 
   return (
     <Container>
+      <Heading>{t("sc.fe.views.login.title")}</Heading>
       <Form
         name="basic"
         initialValues={{ remember: true }}
@@ -24,16 +25,16 @@ export const LoginForm: () => ReactElement = (): ReactElement => {
           name="email"
           rules={[{ required: true, message: t("sc.fe.forms.validation.email") }]}
         >
-          <Input />
+          <Input/>
         </Form.Item>
         <Form.Item<LoginData>
           label={t("sc.fe.forms.password")}
           name="password"
           rules={[{ required: true, message: t("sc.fe.forms.validation.password") }]}
         >
-          <Input.Password />
+          <Input.Password/>
         </Form.Item>
-        {validationMessage && <StyledAlertError message={validationMessage} type="error" showIcon />}
+        {validationMessage && <StyledAlertError message={validationMessage} type="error" showIcon/>}
         <Form.Item>
           <StyledButton className="login-button" type="primary" htmlType="submit" loading={loading}>
             {t("sc.fe.forms.login")}
