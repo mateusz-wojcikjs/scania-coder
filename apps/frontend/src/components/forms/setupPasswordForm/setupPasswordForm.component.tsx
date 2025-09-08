@@ -8,75 +8,77 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { FormData } from "./setupPasswordForm.types";
 
 export const SetupPasswordForm = () => {
-    const { t }: TransProps<never> = useTranslation();
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const token = searchParams.get("token");
+  const { t }: TransProps<never> = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
-    const setupPasswordMutation = useMutation({
-      mutationFn: setupPassword,
-      onSuccess: () => {
-        message.success(t("sc.fe.alerts.password.setupSuccess"));
-        navigate("/login");
-      },
-      onError: () => {
-        message.error(t("sc.fe.alerts.password.setupError"));
-      },
-    });
+  const setupPasswordMutation = useMutation({
+    mutationFn: setupPassword,
+    onSuccess: (data) => {
+      message.success(t("sc.fe.alerts.password.setupSuccess"));
+      // Auto-login after successful password setup
+      localStorage.setItem("authJwtToken", JSON.stringify({ token: data.authJwtToken }));
+      navigate("/");
+    },
+    onError: () => {
+      message.error(t("sc.fe.alerts.password.setupError"));
+    },
+  });
 
-    const onFinish = (values: FormData) => {
-      if (values.password !== values.confirmPassword) {
-        message.error(t("sc.fe.forms.validation.passwordMismatch"));
-        return;
-      }
+  const onFinish = (values: FormData) => {
+    if (values.password !== values.confirmPassword) {
+      message.error(t("sc.fe.forms.validation.passwordMismatch"));
+      return;
+    }
 
-      if (!token) {
-        message.error(t("sc.fe.alerts.password.invalidToken"));
-        return;
-      }
+    if (!token) {
+      message.error(t("sc.fe.alerts.password.invalidToken"));
+      return;
+    }
 
-      setupPasswordMutation.mutate({ token, password: values.password });
-    };
+    setupPasswordMutation.mutate({ token, password: values.password });
+  };
 
-    return (
-      <Container>
-        <Heading>{t("sc.fe.views.setupPassword.title")}</Heading>
-        <Form
-          name="setupPassword"
-          onFinish={onFinish}
-          layout="vertical"
+  return (
+    <Container>
+      <Heading>{t("sc.fe.views.setupPassword.title")}</Heading>
+      <Form
+        name="setupPassword"
+        onFinish={onFinish}
+        layout="vertical"
+      >
+        <Form.Item
+          label={t("sc.fe.forms.newPassword")}
+          name="password"
+          rules={[
+            { required: true, message: t("sc.fe.forms.validation.password") },
+            { min: 8, message: t("sc.fe.forms.validation.passwordLength") }
+          ]}
         >
-          <Form.Item
-            label={t("sc.fe.forms.newPassword")}
-            name="password"
-            rules={[
-              { required: true, message: t("sc.fe.forms.validation.password") },
-              { min: 8, message: t("sc.fe.forms.validation.passwordLength") }
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
+          <Input.Password />
+        </Form.Item>
 
-          <Form.Item
-            label={t("sc.fe.forms.confirmPassword")}
-            name="confirmPassword"
-            rules={[
-              { required: true, message: t("sc.fe.forms.validation.confirmPassword") }
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
+        <Form.Item
+          label={t("sc.fe.forms.confirmPassword")}
+          name="confirmPassword"
+          rules={[
+            { required: true, message: t("sc.fe.forms.validation.confirmPassword") }
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-          <Form.Item>
-            <StyledButton
-              type="primary"
-              htmlType="submit"
-              loading={setupPasswordMutation.isPending}
-            >
-              {t("sc.fe.forms.setupPassword")}
-            </StyledButton>
-          </Form.Item>
-        </Form>
-      </Container>
-    );
-}
+        <Form.Item>
+          <StyledButton
+            type="primary"
+            htmlType="submit"
+            loading={setupPasswordMutation.isPending}
+          >
+            {t("sc.fe.forms.setupPassword")}
+          </StyledButton>
+        </Form.Item>
+      </Form>
+    </Container>
+  );
+};

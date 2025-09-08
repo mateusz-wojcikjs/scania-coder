@@ -1,4 +1,4 @@
-import { ErrorCodes } from "@scania-coder/types";
+import { ErrorCodes } from "./enums";
 
 export class CustomError extends Error {
     public statusCode: number;

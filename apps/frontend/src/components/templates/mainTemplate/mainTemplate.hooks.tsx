@@ -34,15 +34,13 @@ export const useMenu = (): UseMenuReturnType => {
   const getOpenKeys = useCallback(() => {
     const path = location.pathname;
     const routeBasedOpenKeys: string[] = [];
-    
+
     if (path === ROUTE_PATHS.Layouts) {
       routeBasedOpenKeys.push("layouts");
     }
     if (path === ROUTE_PATHS.Users || path === ROUTE_PATHS.UsersAdd) {
       routeBasedOpenKeys.push("users");
     }
-    
-    // Merge route-based open keys with manually opened submenus
     return [...new Set([...routeBasedOpenKeys, ...openSubMenus])];
   }, [location.pathname, openSubMenus]);
 

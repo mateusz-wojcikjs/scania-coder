@@ -27,6 +27,18 @@ export class User {
     @Column({ nullable: true })
     passwordResetExpires: Date;
 
+    @Column({ nullable: true })
+    invitationToken: string;
+
+    @Column({ nullable: true })
+    invitationExpires: Date;
+
+    @Column({ default: false })
+    isInvited: boolean;
+
+    @Column({ default: false })
+    isActive: boolean;
+
     @Column({
         type: "enum",
         enum: UserRole,

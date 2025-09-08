@@ -130,30 +130,70 @@ export const deleteUser = async (request: Request, response: Response, next: Nex
   }
 };
 
-export const setupPassword = async (request: Request, response: Response, next: NextFunction) => {
+export const toggleUserActiveStatus = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    logger.debug("Called setupPassword()");
-    const { token, password } = request.body;
+    logger.debug("Called toggleUserActiveStatus()");
+    const { id } = request.params;
+    const userId: number = Number(id);
 
-    if (!token || !password) {
-      return response.status(400).json({ message: "Token and password are required" });
+    if (isNaN(userId)) {
+      return response.status(400).json({ error: "Invalid userId" });
     }
 
-    if (!validatePassword(password)) {
-      return response.status(400).json({ 
-        message: "Password must be at least 8 characters long and contain at least one uppercase letter and one number" 
-      });
-    }
+    const user = await UserService.toggleUserActiveStatus(userId);
+    logger.info(`User ${user.email} active status toggled to ${user.isActive}`);
 
-    const user = await UserService.setupPassword(token, password);
-    logger.info(`Password has been set for user ${user.email}`);
-
-    response.status(200).json({ message: "Password set successfully" });
+    response.status(200).json(user);
   } catch (error) {
-    logger.error("Error during setupPassword()", {
+    logger.error("Error during toggleUserActiveStatus()", {
       error,
       requestBody: request.body,
     });
     next(error);
   }
 };
+
+export const resendInvitation = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called resendInvitation()");
+    const { email } = request.body;
+
+    if (!email) {
+      return response.status(400).json({ error: "Email is required" });
+    }
+
+    const user = await UserService.resendInvitation(email);
+    logger.info(`Invitation resent to user ${user.email}`);
+
+    response.status(200).json({ message: "Invitation resent successfully", user });
+  } catch (error) {
+    logger.error("Error during resendInvitation()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};
+
+export const getInvitationStatus = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called getInvitationStatus()");
+    const { email } = request.query;
+
+    if (!email || typeof email !== "string") {
+      return response.status(400).json({ error: "Email query parameter is required" });
+    }
+
+    const status = await UserService.getInvitationStatus(email);
+    logger.info(`Invitation status checked for ${email}: ${status.status}`);
+
+    response.status(200).json(status);
+  } catch (error) {
+    logger.error("Error during getInvitationStatus()", {
+      error,
+      requestQuery: request.query,
+    });
+    next(error);
+  }
+};
+

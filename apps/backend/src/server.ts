@@ -1,4 +1,6 @@
+import cors from "cors";
 import dotenv, { DotenvConfigOutput } from "dotenv";
+import express, { Express } from "express";
 
 const result: DotenvConfigOutput = dotenv.config();
 
@@ -7,14 +9,12 @@ if (result.error) {
     process.exit(1);
 }
 
-import express, { Express } from "express";
-import cors from "cors";
-
 import { login } from "./controllers/login.controller";
 import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
-import { isAuthenticated } from "./middlewares";
+import { isAuthenticated, requireAdmin } from "./middlewares";
+import invitationRoute from "./routes/invitation.route";
 import { root } from "./routes/root";
 import usersRoute from "./routes/users.route";
 import xmlFileRoute from "./routes/xmlFile.route";
@@ -31,9 +31,11 @@ const setupExpress = (): void => {
     app.route("/api").get(root);
     app.route("/api/login").post(login);
 
-    app.use("/api", isAuthenticated ,xmlFileRoute);
+    app.use("/api", invitationRoute);
+
+    app.use("/api", isAuthenticated, xmlFileRoute);
     app.use("/api", isAuthenticated, xmlLayoutRoute);
-    app.use("/api", isAuthenticated, usersRoute);
+    app.use("/api", isAuthenticated, requireAdmin, usersRoute);
 
     app.use(defaultErrorHandler);
 };
