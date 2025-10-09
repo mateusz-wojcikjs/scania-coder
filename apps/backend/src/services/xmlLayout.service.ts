@@ -21,21 +21,22 @@ export class XmlLayoutService {
     return await layoutRepository.save(newLayout);
   }
 
-  static async getLayoutById(id: number) {
+  static async getLayoutById(id: number, authorId: number) {
     return await AppDataSource
       .getRepository(Layout)
-      .findOneBy({ id });
+      .findOne({ where: { id, authorId } });
   }
 
-  static async getAllLayouts() {
+  static async getAllLayouts(authorId: number) {
     return await AppDataSource
       .getRepository(Layout)
       .createQueryBuilder("layout")
+      .where("layout.authorId = :authorId", { authorId })
       .getMany();
   }
 
-  static async deleteLayoutById(id: number) {
+  static async deleteLayoutById(id: number, authorId: number) {
     const layoutRepository = AppDataSource.getRepository(Layout);
-    return await layoutRepository.delete(id);
+    return await layoutRepository.delete({ id, authorId });
   }
 }

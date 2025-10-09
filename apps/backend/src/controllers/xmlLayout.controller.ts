@@ -5,10 +5,7 @@ import { XmlLayoutService } from "../services/xmlLayout.service";
 export const createLayout = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { layoutName, updates } = request.body;
-    // TODO: apply userId when frontend implementation will be ready
-    // const userId: number = response.locals.user.userId
-    const userId: number = 1;
-
+    const userId: number = response.locals.user.userId;
     const savedLayout = await XmlLayoutService.createLayout(userId, layoutName, updates);
 
     response.status(201).json(savedLayout);
@@ -24,8 +21,9 @@ export const createLayout = async (request: Request, response: Response, next: N
 export const getLayoutById = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { id } = request.params;
-    // TODO: Handle id type; apply types
-    const layout = await XmlLayoutService.getLayoutById(Number(id));
+    const userId: number = response.locals.user.userId;
+    
+    const layout = await XmlLayoutService.getLayoutById(Number(id), userId);
     if (!layout) {
       return response.status(404).json({ error: "Layout not found" });
     }
@@ -41,7 +39,8 @@ export const getLayoutById = async (request: Request, response: Response, next: 
 
 export const getLayouts = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const layouts = await XmlLayoutService.getAllLayouts();
+    const userId: number = response.locals.user.userId;
+    const layouts = await XmlLayoutService.getAllLayouts(userId);
     response.status(200).json(layouts);
   } catch (error) {
     logger.error("Error during getLayouts()", {
@@ -59,18 +58,19 @@ export const deleteLayout = async (
 ) => {
   try {
     const { id } = request.params;
+    const userId: number = response.locals.user.userId;
 
     const layoutId = Number(id);
     if (isNaN(layoutId)) {
       return response.status(400).json({ error: "Invalid layout ID" });
     }
 
-    const layout = await XmlLayoutService.getLayoutById(layoutId);
+    const layout = await XmlLayoutService.getLayoutById(layoutId, userId);
     if (!layout) {
       return response.status(404).json({ error: "Layout not found" });
     }
 
-    await XmlLayoutService.deleteLayoutById(layoutId);
+    await XmlLayoutService.deleteLayoutById(layoutId, userId);
 
     response.status(200).json({ message: "Layout deleted successfully" });
   } catch (error) {
