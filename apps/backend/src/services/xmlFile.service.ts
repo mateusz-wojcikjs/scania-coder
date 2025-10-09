@@ -1,9 +1,15 @@
+import { UpdatePayload, XmlFileMetaData } from "@scania-coder/types";
 import { Builder, parseStringPromise } from "xml2js";
-import { FPC, ParsedXml, XmlFileServiceData, CableList } from "../types";
-import { XmlFileMetaData, UpdatePayload, ErrorCodes } from "@scania-coder/types";
+import { ErrorCodes } from "../enums";
 import { BadRequestError, CustomError } from "../errors";
+import { CableList, FPC, ParsedXml, XmlFileServiceData } from "../types";
 import { findInsertionIndex } from "../utils";
-import { BlockType } from "@scania-coder/types";
+
+
+enum BlockType {
+  FPC = "FPC",
+  CableList = "CableList",
+}
 
 export class XmlFileService {
   static async editXmlFile(
@@ -23,7 +29,7 @@ export class XmlFileService {
 
     if (currentMajorVersion < 0) {
       throw new BadRequestError(
-        'Wrong version of the file' as ErrorCodes
+        "Wrong version of the file" as ErrorCodes
       );
     }
 
@@ -43,7 +49,7 @@ export class XmlFileService {
     }
 
     updates.forEach((update: UpdatePayload): void => {
-      if (update.blockType === 'FPC' || !update.blockType) {
+      if (update.blockType === BlockType.FPC || !update.blockType) {
         const recordIndex: number = fpcRecords.findIndex(
           (r: FPC): boolean => r.$.Name === update.name,
         );
@@ -61,7 +67,7 @@ export class XmlFileService {
               $: {
                 Name: update.name,
                 Value: update.newValue,
-                Updated: 'false',
+                Updated: "false",
               },
             };
 
@@ -70,11 +76,15 @@ export class XmlFileService {
             updatedFields.push(update.name);
           } catch (error) {
             errors.push(`Failed to add or update FPC field: ${update.name}`);
+            console.error("Error during editXmlFile()", {
+              error,
+              update,
+            });
           }
         }
       }
-      
-      if (update.blockType === 'CableList') {
+
+      if (update.blockType === BlockType.CableList) {
         const cableListIndex: number = cableListRecords.findIndex(
           (c: CableList): boolean => c.$.Name === update.name,
         );
@@ -100,17 +110,21 @@ export class XmlFileService {
             updatedFields.push(update.name);
           } catch (error) {
             errors.push(`Failed to add or update CableList: ${update.name}`);
+            console.error("Error during editXmlFile()", {
+              error,
+              update,
+            });
           }
         }
       }
     });
 
     const builder: Builder = new Builder({
-      xmldec: { version: '1.0', encoding: undefined, standalone: undefined },
+      xmldec: { version: "1.0", encoding: undefined, standalone: undefined },
     });
 
     let updatedXml: string = builder.buildObject(parsedXml);
-    updatedXml = updatedXml.replace(/<(\w+)([^>]*)\/>/g, '<$1$2 />');
+    updatedXml = updatedXml.replace(/<(\w+)([^>]*)\/>/g, "<$1$2 />");
 
     return {
       updatedXml,
@@ -127,7 +141,7 @@ export class XmlFileService {
         throw new CustomError(
           "The provided XML does not match the expected structure.",
           400,
-          "ERR_INVALID_FILE_STRUCTURE"
+          ErrorCodes.ERR_INVALID_FILE_STRUCTURE,
         );
       }
 
@@ -142,7 +156,7 @@ export class XmlFileService {
         throw new CustomError(
           "One or more required attributes are missing in the XML data.",
           400,
-          "ERR_MISSING_ATTRIBUTES",
+          ErrorCodes.ERR_MISSING_ATTRIBUTES,
         );
       }
 
@@ -162,7 +176,7 @@ export class XmlFileService {
       throw new CustomError(
         "Failed to parse the XML data. Ensure the input is valid XML.",
         500,
-        "ERR_XML_PARSE_ERROR",
+        ErrorCodes.ERR_XML_PARSE_ERROR,
       );
     }
   }
