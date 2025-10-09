@@ -5,12 +5,6 @@ import { BadRequestError, CustomError } from "../errors";
 import { CableList, FPC, ParsedXml, XmlFileServiceData } from "../types";
 import { findInsertionIndex } from "../utils";
 
-
-enum BlockType {
-  FPC = "FPC",
-  CableList = "CableList",
-}
-
 export class XmlFileService {
   static async editXmlFile(
     xmlData: string,
@@ -49,7 +43,7 @@ export class XmlFileService {
     }
 
     updates.forEach((update: UpdatePayload): void => {
-      if (update.blockType === BlockType.FPC || !update.blockType) {
+      if (update.blockType === "FPC" || !update.blockType) {
         const recordIndex: number = fpcRecords.findIndex(
           (r: FPC): boolean => r.$.Name === update.name,
         );
@@ -84,7 +78,7 @@ export class XmlFileService {
         }
       }
 
-      if (update.blockType === BlockType.CableList) {
+      if (update.blockType === "CableList") {
         const cableListIndex: number = cableListRecords.findIndex(
           (c: CableList): boolean => c.$.Name === update.name,
         );
