@@ -18,7 +18,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.error("Unauthorized! Redirecting to login...");
-      // TODO: refresh token or redirect to login. Create refresh token logic
+    }
+    if (error.response?.status === 403) {
+      console.error("Forbidden! Redirecting to login...");
     }
     return Promise.reject(error);
   }

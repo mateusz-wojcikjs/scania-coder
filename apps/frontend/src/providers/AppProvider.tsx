@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 import { customTheme } from "../theme/antdConfig.ts";
 import { FC, PropsWithChildren } from "react";
+import { AuthContextProvider } from "./authContextProvider.component.tsx";
 
 export const AppProvider: FC<PropsWithChildren> = ({ children }): JSX.Element => {
   const queryClient = new QueryClient();
@@ -16,9 +17,11 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }): JSX.Element =>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <QueryClientProvider client={queryClient}>
-          <ConfigProvider theme={customTheme}>
-            {children}
-          </ConfigProvider>
+          <AuthContextProvider>
+            <ConfigProvider theme={customTheme}>
+              {children}
+            </ConfigProvider>
+          </AuthContextProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </I18nextProvider>

@@ -25,6 +25,7 @@ export const LayoutsList = (): JSX.Element => {
       await removeLayout.mutateAsync(layout.id);
       message.success(t("sc.fe.alerts.layout.remove", { name: layout.name }));
     } catch (error) {
+      console.error(error);
       message.error(t("sc.fe.alerts.layout.removeError"));
     }
   };

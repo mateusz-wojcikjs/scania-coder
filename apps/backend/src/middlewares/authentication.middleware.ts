@@ -47,14 +47,14 @@ export const requireAdmin = async (request: Request, response: Response, next: N
 
         if (!user.isAdmin) {
             logger.info(`User ${user.email} with isAdmin=${user.isAdmin} attempted to access admin-only resource, access denied.`);
-            return response.status(401).json({ message: "Access denied. Admin privileges required." });
+            return response.status(403).json({ message: "Access denied. Admin privileges required." });
         }
 
         logger.info(`Admin access granted to user ${user.email}`);
         next();
     } catch (error) {
         logger.error("Error during admin authorization check:", error);
-        response.status(401).json({ message: "Access denied. Authorization check failed." });
+        response.status(403).json({ message: "Access denied. Authorization check failed." });
     }
 };
 
