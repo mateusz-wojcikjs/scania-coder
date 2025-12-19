@@ -7,15 +7,16 @@ export const Container = styled.div`
     background-color: ${({ theme }): string => theme.colors.white};
     border-radius: 16px;
     box-shadow: 6px 7px 9px -5px rgba(229, 229, 229, 0.41);
-    
+
     @media ${Breakpoint.Mobile} {
         padding: 24px;
     }
 `;
 
 export const StyledButton = styled(Button)`
-    background-color: ${({ theme }): string => theme.colors.primary};
+    background-color: ${({ theme, type }): string => type === "primary" ? theme.colors.primary : "transparent"};
     padding: 16px 24px;
+    text-decoration: ${({ type }): string => type === "text" ? "underline" : "none"};
 `;
 
 export const StyledAlertError = styled(Alert)`

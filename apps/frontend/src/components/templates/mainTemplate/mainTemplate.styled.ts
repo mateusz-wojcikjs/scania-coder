@@ -8,19 +8,19 @@ export const Container = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 256px 1fr;
-  grid-template-rows: 90px 1fr;
+  grid-template-rows: 7rem 1fr;
   margin: 0;
   padding: 0;
 `;
 
-export const StyledLogo= styled(Logo)`
+export const StyledLogo = styled(Logo)`
   max-height: 100%;
   max-width: 12.5rem;
   margin-top: 1rem;
 `;
 
 export const Main  = styled.main`
-  grid-row: 1 /-1;
+  grid-row: 2;
   overflow-y: auto;
 
   @media ${Breakpoint.Mobile} {
@@ -37,6 +37,8 @@ export const Content = styled.section`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 16px;
   box-shadow: 5px 0 51px 0 rgba(0, 0, 0, 0.05);
+  grid-column: 2;
+  grid-row: 2;
 
   @media ${Breakpoint.Mobile} {
     padding: 1rem;
@@ -69,4 +71,47 @@ export const StyledDrawer: typeof Drawer= styled(Drawer)`
   .ant-drawer-body {
     padding: 0;
   }
+`;
+
+export const Header = styled.header`
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  padding: 0 2.4rem;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
+`;
+
+export const ProfileButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.primary};
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary100};
+  }
+`;
+
+export const ProfileName = styled.span`
+  color: ${({ theme }) => theme.colors.gray700};
+  font-size: 16px;
+`;
+
+export const ProfileWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.primary};
 `;

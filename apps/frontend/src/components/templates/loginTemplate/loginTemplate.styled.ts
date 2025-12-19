@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Logo } from "../../logo/logo.component.tsx";
 import { Breakpoint } from "../../../enums";
 
 export const Container = styled.div`
@@ -33,7 +32,7 @@ export const LoginWrapper = styled.div`
   grid-column: 2;
 `;
 
-export const StyledLogo = styled(Logo)`
+export const LogoWrapper = styled.div`
   margin-top: 50px;
   align-self: center;
   grid-column: 2;

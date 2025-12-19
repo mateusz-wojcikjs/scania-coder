@@ -10,6 +10,8 @@ import { QueryKey } from "../enums";
 import { Layout, UseFileEditor } from "../interfaces";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 
+const INCREMENT_VERSION: number = 1;
+
 export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
   const [fileData, setFileData]: UseState<XmlFileMetaData | null> = useState<XmlFileMetaData | null>(null);
   const [file, setFile]: UseState<UploadFile<XmlFileMetaData> | undefined> = useState();
@@ -65,7 +67,7 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
 
       if (response) {
         setFileData(response);
-        setFileVersion(String(Number(response.majorVersion) + 1));
+        setFileVersion(String(Number(response.majorVersion) + INCREMENT_VERSION));
       }
     } else if (status === "error") {
       console.log(JSON.parse(error.message).error.errorCode);

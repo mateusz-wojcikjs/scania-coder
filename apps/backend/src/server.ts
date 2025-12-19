@@ -9,7 +9,9 @@ if (result.error) {
     process.exit(1);
 }
 
+import { changePassword } from "./controllers/changePassword.controller";
 import { login } from "./controllers/login.controller";
+import { remindPassword } from "./controllers/remindPassword.controller";
 import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
@@ -30,8 +32,11 @@ const setupExpress = (): void => {
 
     app.route("/api").get(root);
     app.route("/api/login").post(login);
+    app.route("/api/remind-password").post(remindPassword);
 
     app.use("/api", invitationRoute);
+
+    app.route("/api/change-password").patch(isAuthenticated, changePassword);
 
     app.use("/api", isAuthenticated, xmlFileRoute);
     app.use("/api", isAuthenticated, xmlLayoutRoute);

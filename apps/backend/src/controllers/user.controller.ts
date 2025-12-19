@@ -88,7 +88,8 @@ export const createUser = async (request: Request, response: Response, next: Nex
 export const updateUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
     logger.debug("Called updateUser()");
-    const { id, password, role, username } = request.body;
+    const { id } = request.params;
+    const { password, role, username } = request.body;
 
     if (password && !validatePassword(password)) {
       return response.status(400).json({ 
@@ -192,6 +193,29 @@ export const getInvitationStatus = async (request: Request, response: Response, 
     logger.error("Error during getInvitationStatus()", {
       error,
       requestQuery: request.query,
+    });
+    next(error);
+  }
+};
+
+export const deactivateUser = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called deactivateUser()");
+    const { id } = request.params;
+    const userId: number = Number(id);
+
+    if (isNaN(userId)) {
+      return response.status(400).json({ error: "Invalid userId" });
+    }
+
+    const user = await UserService.deactivateUser(userId);
+    logger.info(`User ${user.email} has been deactivated`);
+
+    response.status(200).json(user);
+  } catch (error) {
+    logger.error("Error during deactivateUser()", {
+      error,
+      requestBody: request.body,
     });
     next(error);
   }

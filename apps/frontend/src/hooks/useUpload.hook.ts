@@ -26,12 +26,12 @@ export const useUpload = () => {
             onSuccess(data, file);
           }
         },
-        onError: (error: any): void => {
+        onError: (error: Error): void => {
           const uploadError = {
             name: error.name || "Error",
             message: error.message || "Upload failed",
           };
-          onError && onError(uploadError);
+          if (onError) onError(uploadError);
         },
       });
     } catch (err) {
@@ -39,7 +39,7 @@ export const useUpload = () => {
         name: (err as Error).name,
         message: (err as Error).message,
       };
-      onError && onError(uploadError);
+      if (onError) onError(uploadError);
     }
   };
 

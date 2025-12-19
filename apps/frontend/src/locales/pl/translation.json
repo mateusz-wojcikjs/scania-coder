@@ -1,6 +1,9 @@
 {
   "sc": {
     "fe": {
+      "mainTemplate": {
+        "welcome": "Witaj, {{name}}"
+      },
       "forms": {
         "email": "E-mail",
         "password": "Hasło",
@@ -14,7 +17,8 @@
           "confirmPassword": "Potwierdź hasło.",
           "name": "Wprowadź \"name\"",
           "value": "Wprowadź \"value\"",
-          "changeName": "Zmień nazwę"
+          "changeName": "Zmień nazwę",  
+          "role": "Wybierz rolę"
         },
         "setupPassword": "Ustaw hasło",
         "login": "Zaloguj się",
@@ -23,10 +27,14 @@
         "saveConfig": "Zapisz powyższą konfigurację jako szablon.",
         "inputName": "Pole \"name\"",
         "inputValue": "Pole \"value\"",
+        "send": "Wyślij",
         "upload": {
           "success": "Poprawnie załadowano plik {{fileName}}",
           "error": "Nie udało się załadować pliku {{fileName}}",
           "invalidType": "Nie właściwy format pliku. Plik powinien być typu XML."
+        },
+        "changePassword": {
+          "submit": "Zapisz hasło"
         }
       },
       "views": {
@@ -42,6 +50,50 @@
         },
         "setupPassword": {
           "title": "Ustaw hasło"
+        },
+        "websiteError": {
+          "title": "Błąd strony",
+          "button": "Wróć do strony głównej"
+        },
+        "usersList": {
+          "title": "Lista użytkowników"
+        },
+        "usersAdd": {
+          "title": "Dodaj użytkownika",
+          "role": {
+            "user": "Użytkownik",
+            "admin": "Administrator"
+          },
+          "button": "Wyślij zaproszenie",
+          "success": "Wysłano zaproszenie na e-mail {{email}}",
+          "error": "Wystąpił błąd podczas dodawania użytkownika",
+          "description": "Aby dodać użytkownika, należy wysłać mu zaproszenie na e-mail do założenia konta.",
+          "form": {
+            "username": "Nazwa użytkownika",
+            "email": "E-mail",
+            "role": "Rola"
+          }
+        },
+        "remindPassword": {
+          "title": "Odzyskaj hasło",
+          "helperText": "Wpisz swój adres e-mail, aby otrzymać link do resetowania hasła.",
+          "successMessage": "Jeśli podany adres e-mail istnieje w systemie, link do resetowania hasła został wysłany.",
+          "button": "Wróć do strony logowania"
+        },
+        "usersDetails": {
+          "title": "Szczegóły użytkownika", 
+          "update": {
+            "success": "Użytkownik został pomyślnie zaktualizowany.",
+            "error": "Wystąpił błąd podczas aktualizacji użytkownika."
+          }
+        },
+        "profile": {
+          "title": "Profil użytkownika",
+          "userData": "Dane użytkownika",
+          "data": "Dane",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "changePassword": "Zmiana hasła"
         }
       },
       "steps": {
@@ -106,7 +158,11 @@
         "password": {
           "setupSuccess": "Hasło zostało ustawione pomyślnie.",
           "setupError": "Wystąpił błąd podczas ustawiania hasła.",
-          "invalidToken": "Nieprawidłowy lub wygasły token."
+          "invalidToken": "Nieprawidłowy lub wygasły token.",
+          "userDeactivated": "Konto użytkownika zostało dezaktywowane. Zaproszenie nie jest już ważne.",
+          "tokenExpired": "Token zaproszenia wygasł.",
+          "changeSuccess": "Hasło zostało zmienione pomyślnie.",
+          "changeError": "Wystąpił błąd podczas zmiany hasła."
         }
       },
       "global": {
@@ -130,8 +186,23 @@
         "column": {
           "actions": "Akcje",
           "name": "Nazwa",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "role": "Rola",
+          "status": "Status",
           "createdAt": "Data utworzenia"
         }
+      },
+      "user": {
+        "status": {
+          "invited": "Zaproszony",
+          "active": "Aktywny",
+          "deactivated": "Dezaktywowany"
+        },
+        "deactivate": "Dezaktywuj",
+        "deactivateConfirm": "Czy na pewno chcesz dezaktywować użytkownika {{username}}?",
+        "deactivateSuccess": "Użytkownik {{username}} został dezaktywowany",
+        "deactivateError": "Błąd podczas dezaktywacji użytkownika"
       },
       "popup": {
         "removeConfirm": "Czy na pewno chcesz usunąć?",
@@ -143,7 +214,12 @@
         "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych.",
         "ERR_INVALID_CREDENTIALS": "Nie poprawne dane logowania.",
         "UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
-        "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje."
+        "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje.",
+        "ERR_EMAIL_PASSWORD_REQUIRED": "E-mail i hasło są wymagane.",
+        "ERR_UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
+        "ERR_USER_DEACTIVATED": "Konto użytkownika zostało dezaktywowane. Zaproszenie nie jest już ważne.",
+        "ERR_TOKEN_EXPIRED": "Token zaproszenia wygasł.",
+        "ERR_INVALID_TOKEN": "Nieprawidłowy lub wygasły token."
       }
     }
   }

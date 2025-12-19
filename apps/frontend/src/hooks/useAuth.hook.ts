@@ -1,128 +1,46 @@
-import { AuthContext } from "contexts";
+import { AuthContext, AuthDispatchContext } from "../contexts";
 import { AuthContextState } from "interfaces/common/authContextState.interface";
 import { Dispatch, useContext } from "react";
 import { AuthReducerActions } from "types";
 import { UseLocalStorage, useLocalStorage } from "./useLocalStorage.hook";
-import { AuthReducerAction, LocalStorageKey } from "enums";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
-import { UseRedirect } from "interfaces/hooks";
-import { useRedirect } from "./useRedirect.hook";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { UseAuth } from "../interfaces";
+import { AuthReducerAction, LocalStorageKey, RoutingPath } from "../enums";
+import { User } from "@scania-coder/types";
+import { setAuthToken } from "../api";
 
-export interface UseAuth {
-    signIn: (userData: User, token: string, expiration: number) => void;
-    signOut: (redirectPath?: string, withRedirect?: boolean) => void;
-    signOutCleanup: (redirectPath?: string) => void;
-    isUserLoggedIn: () => boolean;
-    updateUserData: (userData: Partial<User>) => void;
-    token: string | null;
-    expiration: number | null;
-    userData: User | null;
-  }
+const TIMEOUT_DELAY: number = 0;
 
-export const useAuth = () => {
+export const useAuth: () => UseAuth = (): UseAuth => {
   const state: AuthContextState = useContext(AuthContext);
   const dispatch: Dispatch<AuthReducerActions> = useContext(AuthDispatchContext);
-
   const [, storeAuthData]: UseLocalStorage<AuthContextState | null> = useLocalStorage<AuthContextState | null>(LocalStorageKey.AuthData, null);
-  const location: Location = useLocation();
   const navigate: NavigateFunction = useNavigate();
-  const { redirect }: UseRedirect = useRedirect();
 
-  const signIn: (
+  const signIn = (userData: User, token: string, expiration: number): void => {
+    setAuthToken(token);
+    dispatch({ type: AuthReducerAction.Login, payload: { user: { ...userData }, token, expiration } });
+    storeAuthData({ user: { ...userData }, token, expiration });
+  };
 
-        userData: User, token: string, expiration: number
-    
-      ) => void = (
-    
-        userData: User, token: string, expiration: number
-    
-      ): void => {
-    
-        setAuthToken(token);
-    
-        dispatch({ type: AuthReducerAction.SignIn, payload: { userData, token, expiration } });
-    
-        storeAuthData({ userData, token, expiration });
-    
-    
-    
-        const pathnameAfterSignIn: string = (location.state as LocationState)?.from?.pathname
-    
-          ? (location.state as LocationState)?.from?.pathname
-    
-          : getRouteDetailsByName(RouteNameEnum.Subscriptions)?.url ?? '/';
-    
-    
-        redirect({ targetRoute: pathnameAfterSignIn });
-    
-      };
-    
-    
-  const signOutCleanup: (redirectPath?: string, withRedirect?: boolean) => void = (
-    redirectPath?: string, withRedirect: boolean = true
-  ): void => {
-    dispatch({ type: AuthReducerAction.SignOut, payload: null });
-    storeAuthData(null);
+  const signOutCleanup: () => void = (): void => {
     setAuthToken(null);
-    
-    if (withRedirect) {
-      setTimeout((): void => navigate(redirectPath ?? getRouteDetailsByName(RouteNameEnum.Home)?.url ?? '/'), 0);
-    }
+    storeAuthData(null);
+    dispatch({ type: AuthReducerAction.Logout, payload: null });
+    setTimeout((): void => navigate(RoutingPath.Login), TIMEOUT_DELAY);
   };
-    
-  const signOut: (redirectPath?: string, withRedirect?: boolean) => void = (
-    redirectPath?: string, withRedirect: boolean = true
-  ): void => {
-    if (state.expiration && state.expiration > Date.now()) {
-      void logoutRequest()
-        .then((): void => signOutCleanup(redirectPath, withRedirect))
-        .catch((): void => signOutCleanup(redirectPath, withRedirect));
-    
-    } else {
-    
-      signOutCleanup(redirectPath, withRedirect);
-    
-    }
-    
+
+  const signOut: () => void = (): void => {
+    signOutCleanup();
   };
-    
-    
-  const isUserLoggedIn: () => boolean = (): boolean => {
-    
-    return !!state?.userData?.hash && !!state.token;
-    
-  };
-    
-    
-  const updateUserData: (userData: Partial<User>) => void = (userData: Partial<User>): void => {
-    
-    dispatch({ type: AuthReducerAction.UpdateUserData, payload: userData });
-    
-    if (state.userData) {
-    
-      storeAuthData({
-    
-        userData: { ...state.userData, ...userData },
-    
-        token: state.token, expiration:
-    
-            state.expiration
-    
-      });
-    
-    }
-    
-  };
-    
-    
+
   return {
     signIn,
     signOut,
     signOutCleanup,
-    isUserLoggedIn,
-    updateUserData,
+    isUserLoggedIn: !!state?.user?.email && !!state.token,
     token: state?.token ?? null,
     expiration: state?.expiration ?? null,
-    userData: state?.userData ?? null
+    userData: state?.user ?? null
   };
 };

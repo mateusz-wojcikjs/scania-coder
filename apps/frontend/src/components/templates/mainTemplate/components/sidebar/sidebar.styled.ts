@@ -37,6 +37,7 @@ export const LogoWrapper = styled.div`
   align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
   padding-bottom: 16px;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 export const StyledLogo= styled(Logo)`

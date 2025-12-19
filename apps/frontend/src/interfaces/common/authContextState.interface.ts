@@ -1,6 +1,7 @@
+import { User } from "@scania-coder/types";
+
 export interface AuthContextState {
-  user: unknown | null; // TODO: Replace with User type
-  isAuthenticated: boolean;
+  user: User | null;
   token: string | null;
   expiration: number | null;
 }

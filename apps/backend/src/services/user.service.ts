@@ -127,6 +127,18 @@ export class UserService {
     return await userRepository.save(user);
   }
 
+  static async deactivateUser(id: number) {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new CustomError("User not found", 404, ErrorCodes.ERR_USER_NOT_FOUND);
+    }
+
+    user.isActive = false;
+    return await userRepository.save(user);
+  }
+
   static async getInvitationStatus(email: string) {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { email } });

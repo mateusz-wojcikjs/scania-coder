@@ -32,3 +32,9 @@ export class InternalServerError extends CustomError {
         super("Internal Server Error", 500, errorCode);
     }
 }
+
+export class NotFoundError extends CustomError {
+    constructor(errorCode: ErrorCodes) {
+        super("Not Found", 404, errorCode);
+    }
+}

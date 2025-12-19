@@ -25,6 +25,10 @@ export class InvitationService {
       throw new CustomError("User is not in invited state", 400, ErrorCodes.ERR_INVALID_TOKEN);
     }
 
+    if (!user.isActive) {
+      throw new CustomError("User account has been deactivated. The invitation is no longer valid.", 400, ErrorCodes.ERR_USER_DEACTIVATED);
+    }
+
     const passwordSalt = crypto.randomBytes(64).toString("hex");
     const passwordHash = await calculatePasswordHash(password, passwordSalt);
 

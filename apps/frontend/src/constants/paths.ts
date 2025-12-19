@@ -5,4 +5,7 @@ export const ROUTE_PATHS = {
   SetupPassword: "/ustaw-haslo",
   Users: "/uzytkownicy",
   UsersAdd: "/uzytkownicy/dodaj",
+  ForgotPassword: "/odzyskaj-haslo",
+  UsersDetails: "/uzytkownicy/:id",
+  Profile: "/profil",
 };

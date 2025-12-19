@@ -7,12 +7,14 @@ export const authReducer = (state: AuthContextState, action: AuthReducerActions)
   case AuthReducerAction.Login:
     return {
       ...state,
-      user: action.payload,
+      ...action.payload,
     };
   case AuthReducerAction.Logout:
     return {
       ...state,
       user: null,
+      token: null,
+      expiration: null,
     };
   default:
     return state;
