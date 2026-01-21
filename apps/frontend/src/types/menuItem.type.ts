@@ -1,4 +1,4 @@
 import { MenuProps } from "antd/lib";
-import { PermissionScopeName } from "../enums";
+import { UserRole } from "@scania-coder/types";
 
-export type MenuItem = Required<MenuProps>["items"][number] & { permissionScope?: PermissionScopeName[] };
+export type MenuItem = Required<MenuProps>["items"][number] & { permissionScope?: UserRole[] };

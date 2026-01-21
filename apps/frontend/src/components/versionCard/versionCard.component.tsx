@@ -5,7 +5,7 @@ import { FC } from "react";
 import { Description, Label, StyledCard } from "./versionCard.styled.ts";
 import { InputNumber, Tooltip } from "antd/lib";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { theme } from "../../theme/theme.ts";
+import { theme } from "../../theme";
 const { Text } = Typography;
 
 export const VersionCard: FC<VersionCardProps> = (props: VersionCardProps): JSX.Element => {

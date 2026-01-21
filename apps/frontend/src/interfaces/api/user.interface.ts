@@ -1,5 +1,5 @@
-import { PermissionScopeName, PreferredLanguage, UserStatus } from "enums";
-import { User } from "@scania-coder/types";
+import { PreferredLanguage, UserStatus } from "enums";
+import { User, UserRole } from "@scania-coder/types";
 
 
 export interface UserPermissionObject<PermissionId> {
@@ -8,12 +8,11 @@ export interface UserPermissionObject<PermissionId> {
 }
 
 export interface UserData extends User {
-  role: PermissionScopeName;
+  role: UserRole;
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
-  isAdmin: boolean;
   status: UserStatus;
   preferredLanguage: PreferredLanguage;
-  permissions: UserPermissionObject<PermissionScopeName>[];
+  permissions: UserPermissionObject<UserRole>[];
 }

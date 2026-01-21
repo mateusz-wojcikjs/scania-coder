@@ -32,6 +32,7 @@ export class AuthService {
             userId: user.id,
             email: user.email,
             isAdmin: user.role === UserRole.ADMIN,
+            tokenVersion: user.tokenVersion,
         };
 
         const authJwtToken = jwt.sign(authJwt, JWT_SECRET);
@@ -40,7 +41,7 @@ export class AuthService {
             user: {
                 id: user.id.toString(),
                 email: user.email,
-                name: user.username,
+                username: user.username,
                 isAdmin: user.role === UserRole.ADMIN
             },
             authJwtToken,

@@ -16,12 +16,7 @@ import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
 import { isAuthenticated, requireAdmin } from "./middlewares";
-import invitationRoute from "./routes/invitation.route";
-import { root } from "./routes/root";
-import usersRoute from "./routes/users.route";
-import xmlFileRoute from "./routes/xmlFile.route";
-import xmlLayoutRoute from "./routes/xmlLayout.route";
-
+import { invitationRoute, meRoute, userRoute, xmlFileRoute, xmlLayoutRoute } from "./routes";
 const app: Express = express();
 
 const setupExpress = (): void => {
@@ -30,7 +25,6 @@ const setupExpress = (): void => {
 
     app.use(express.json());
 
-    app.route("/api").get(root);
     app.route("/api/login").post(login);
     app.route("/api/remind-password").post(remindPassword);
 
@@ -38,9 +32,10 @@ const setupExpress = (): void => {
 
     app.route("/api/change-password").patch(isAuthenticated, changePassword);
 
+    app.use("/api", isAuthenticated, meRoute);
     app.use("/api", isAuthenticated, xmlFileRoute);
     app.use("/api", isAuthenticated, xmlLayoutRoute);
-    app.use("/api", isAuthenticated, requireAdmin, usersRoute);
+    app.use("/api", isAuthenticated, requireAdmin, userRoute);
 
     app.use(defaultErrorHandler);
 };

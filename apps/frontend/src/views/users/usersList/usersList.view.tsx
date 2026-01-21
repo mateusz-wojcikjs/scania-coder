@@ -1,60 +1,37 @@
-import { Loader } from "../../../components";
-import { useQuery, UseQueryResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUsers, deactivateUser } from "../../../api";
-import { PaginatedUsersResponse } from "@scania-coder/types";
+import { User } from "@scania-coder/types";
 import { Table, TableProps } from "antd/lib";
 import { TransProps, useTranslation } from "react-i18next";
-import { message, Popconfirm, Space } from "antd";
-import { useTitle } from "../../../hooks";
-import { ApiMutation } from "../../../types";
+import { Alert, Popconfirm, Space, Tag } from "antd";
 import { Link } from "react-router-dom";
-import { FormOutlined } from "@ant-design/icons";
+import { CloseCircleFilled, DeleteOutlined, FormOutlined, StopOutlined, SyncOutlined } from "@ant-design/icons";
 import { RoutingPath } from "../../../enums";
-
-type UserListItem = PaginatedUsersResponse["users"][number];
-
-type UserStatus = "invited" | "active" | "deactivated";
-
-const getUserStatus = (user: UserListItem): UserStatus => {
-  if (user.isInvited) {
-    return "invited";
-  }
-  if (user.isActive) {
-    return "active";
-  }
-  return "deactivated";
-};
+import { getUserStatus } from "../../../utils";
+import { useAuth, useTitle, useUsers } from "../../../hooks";
+import { Loader } from "../../../components";
+import { UserStatus } from "../../../types";
+import { UseAuth, UseUsers } from "../../../interfaces";
+import { SemanticColors } from "../../../theme";
 
 export const UsersList = (): JSX.Element => {
-  const { isPending, data, error }: UseQueryResult<PaginatedUsersResponse, Error> = useQuery({ queryKey: ["users"], queryFn: getUsers });
+  const { users, isLoading, actionLoading, error, handleDeactivate, handleCancelInvitation, handleResendInvitation, handleDeleteUser }: UseUsers = useUsers();
+  const { userData }: UseAuth = useAuth();
   const { t }: TransProps<never> = useTranslation();
-  const queryClient = useQueryClient();
   useTitle(t("sc.fe.views.usersList.title"));
 
-  const deactivateUserMutation: ApiMutation<void, number> = useMutation({
-    mutationFn: deactivateUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: () => {
-      message.error(t("sc.fe.user.deactivateError"));
-    },
-  });
-
-  const handleDeactivate = async (user: UserListItem) => {
-    try {
-      await deactivateUserMutation.mutateAsync(user.id);
-      message.success(t("sc.fe.user.deactivateSuccess", { username: user.username }));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const columns: TableProps<UserListItem>["columns"] = [
+  const columns: TableProps<User>["columns"] = [
     {
       title: t("sc.fe.table.column.username"),
-      dataIndex: "username",
       key: "username",
+      render: (_: unknown, record: User): JSX.Element => {
+        const isCurrentUser: boolean = Number(userData?.id) === record.id;
+
+        return (
+          <Space>
+            <Link to={`${RoutingPath.UsersDetails.replace(":id", record.id.toString())}`}>{record.username}</Link>
+            {isCurrentUser && <Tag color="blue">{t("sc.fe.user.currentUser")}</Tag>}
+          </Space>
+        );
+      },
     },
     {
       title: t("sc.fe.table.column.email"),
@@ -69,17 +46,25 @@ export const UsersList = (): JSX.Element => {
     {
       title: t("sc.fe.table.column.status"),
       key: "status",
-      render: (_: unknown, record: UserListItem): string => {
-        const status = getUserStatus(record);
-        return t(`sc.fe.user.status.${status}`);
+      render: (_: unknown, record: User): JSX.Element => {
+        const status: UserStatus = getUserStatus(record);
+        return (
+          <Tag color={status === "invited" ? "blue" : status === "active" ? "green" : "red"}>
+            {t(`sc.fe.user.status.${status}`)}
+          </Tag>
+        );
       },
     },
     {
       title: t("sc.fe.table.column.actions"),
       key: "action",
-      render: (_: unknown, record: UserListItem): JSX.Element => {
-        const status = getUserStatus(record);
-        const canDeactivate = status === "active";
+      render: (_: unknown, record: User): JSX.Element => {
+        const status: UserStatus = getUserStatus(record);
+        const canDeactivate: boolean = status === "active";
+        const canCancelInvitation: boolean = status === "invited";
+        const canResendInvitation: boolean = status === "invited";
+        const canDeleteUser: boolean = status === "deactivated";
+        const isCurrentUser: boolean = Number(userData?.id) === record.id;
         
         return (
           <Space size="middle">
@@ -93,9 +78,47 @@ export const UsersList = (): JSX.Element => {
                 onConfirm={() => handleDeactivate(record)}
                 okText={t("sc.fe.global.yes")}
                 cancelText={t("sc.fe.global.no")}
-                okButtonProps={{ loading: deactivateUserMutation.isPending }}
+                okButtonProps={{ loading: actionLoading }}
+                disabled={isCurrentUser}
+
               >
-                <a style={{ color: "red" }}>{t("sc.fe.user.deactivate")}</a>
+                <CloseCircleFilled style={{ color: isCurrentUser ? SemanticColors.disabled : SemanticColors.danger, cursor: isCurrentUser ? "not-allowed" : "pointer" }} />
+              </Popconfirm>
+            )}
+            {canCancelInvitation && (
+              <Popconfirm
+                title={t("sc.fe.user.cancelInvitationConfirm", { username: record.username })}
+                description={t("sc.fe.user.cancelInvitationDescription")}
+                onConfirm={() => handleCancelInvitation(record)}
+                okText={t("sc.fe.global.yes")}
+                cancelText={t("sc.fe.global.no")}
+                okButtonProps={{ loading: actionLoading }}
+              >
+                <StopOutlined style={{ color: SemanticColors.danger }} />
+              </Popconfirm>
+            )}
+            {canResendInvitation && (
+              <Popconfirm
+                title={t("sc.fe.user.resendInvitationConfirm", { username: record.username })}
+                description={t("sc.fe.user.resendInvitationDescription")}
+                onConfirm={() => handleResendInvitation(record)}
+                okText={t("sc.fe.global.yes")}
+                cancelText={t("sc.fe.global.no")}
+                okButtonProps={{ loading: actionLoading }}
+              >
+                <SyncOutlined style={{ color: SemanticColors.primary }} />
+              </Popconfirm>
+            )}
+            {canDeleteUser && (
+              <Popconfirm
+                title={t("sc.fe.user.deleteUserConfirm", { username: record.username })}
+                description={t("sc.fe.user.deleteUserDescription")}
+                onConfirm={() => handleDeleteUser(record)}
+                okText={t("sc.fe.global.yes")}
+                cancelText={t("sc.fe.global.no")}
+                okButtonProps={{ loading: actionLoading }}
+              >
+                <DeleteOutlined style={{ color: SemanticColors.danger }} />
               </Popconfirm>
             )}
           </Space>
@@ -106,15 +129,15 @@ export const UsersList = (): JSX.Element => {
 
   return (
     <>
-      {isPending && <Loader />}
-      {data && <Table<UserListItem>
+      {isLoading && <Loader />}
+      {users && <Table<User>
         columns={columns}
-        rowKey={(record) => record.id}
-        dataSource={data.users}
+        rowKey={(record: User): number => record.id}
+        dataSource={users}
         // TODO: apply pagination when ready
         pagination={false}
       />}
-      {error && <div>{error.message}</div>}
+      {error && <Alert message={t("sc.fe.alerts.usersListError")} type="error" />}
     </>
   );
 };

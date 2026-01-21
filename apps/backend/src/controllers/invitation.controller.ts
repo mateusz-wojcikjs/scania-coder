@@ -36,3 +36,48 @@ export const setupPassword = async (request: Request, response: Response, next: 
     next(error);
   }
 };
+
+export const cancelInvitation = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called cancelInvitation()");
+    const { id } = request.params;
+    const userId: number = Number(id);
+
+    if (isNaN(userId)) {
+      return response.status(400).json({ error: "Invalid userId" });
+    }
+
+    const user = await InvitationService.cancelInvitation(userId);
+    logger.info(`Invitation cancelled for userId ${userId}`);
+
+    response.status(200).json(user);
+  } catch (error) {
+    logger.error("Error during cancelInvitation()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};
+
+export const resendInvitation = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called resendInvitation()");
+    const { email } = request.body;
+
+    if (!email) {
+      return response.status(400).json({ error: "Email is required" });
+    }
+
+    const user = await InvitationService.resendInvitation(email);
+    logger.info(`Invitation resent to user ${user.email}`);
+
+    response.status(200).json({ message: "Invitation resent successfully", user });
+  } catch (error) {
+    logger.error("Error during resendInvitation()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};

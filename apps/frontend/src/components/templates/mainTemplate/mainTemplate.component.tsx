@@ -39,10 +39,10 @@ export const MainTemplate: FC<MainTemplateProps> = (props: MainTemplateProps): J
   return (
     <Container>
       <Header>
-        {!!title && <Title>{t(`${title}`)}</Title>}
+        {!!title && <Title>{t(title as never)}</Title>}
         <ProfileWrapper>
           <ProfileName>
-            {t("sc.fe.mainTemplate.welcome", { name: userData?.name })}
+            {t("sc.fe.mainTemplate.welcome", { name: userData?.username })}
           </ProfileName>
           <ProfileButton onClick={() => redirect({ targetRoute: ROUTE_PATHS.Profile })}>
             <UserOutlined style={{ color: "white", fontSize: "20px" }} />

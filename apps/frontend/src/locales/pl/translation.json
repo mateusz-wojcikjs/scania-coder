@@ -85,7 +85,34 @@
           "update": {
             "success": "Użytkownik został pomyślnie zaktualizowany.",
             "error": "Wystąpił błąd podczas aktualizacji użytkownika."
-          }
+          },
+          "data": "Dane",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "role": "Rola",
+          "status": "Status",
+          "createdAt": "Data utworzenia",
+          "updatedAt": "Data aktualizacji",
+          "admin": "Administrator",
+          "user": "Użytkownik",
+          "delete": "Usuń użytkownika",
+          "deleteConfirm": "Czy na pewno chcesz usunąć użytkownika {{username}}?",
+          "deleteSuccess": "Użytkownik {{username}} został usunięty",
+          "deleteError": "Wystąpił błąd podczas usuwania użytkownika",
+          "deactivate": "Dezaktywuj użytkownika",
+          "deactivateConfirm": "Czy na pewno chcesz dezaktywować użytkownika {{username}}?",
+          "deactivateSuccess": "Użytkownik {{username}} został dezaktywowany",
+          "deactivateError": "Wystąpił błąd podczas dezaktywowania użytkownika",
+          "cancelInvitation": "Anuluj zaproszenie",
+          "cancelInvitationConfirm": "Czy na pewno chcesz anulować zaproszenie użytkownika {{username}}?",
+          "cancelInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało anulowane",
+          "cancelInvitationError": "Wystąpił błąd podczas anulowania zaproszenia użytkownika",
+          "resendInvitation": "Wyślij ponownie zaproszenie",
+          "resendInvitationConfirm": "Czy na pewno chcesz wysłać ponownie zaproszenie użytkownika {{username}}?",
+          "resendInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało wyświetlone",
+          "resendInvitationError": "Wystąpił błąd podczas wyświetlania zaproszenia użytkownika",
+          "resendInvitationDescription": "Użytkownik dostanie nowe zaproszenie na e-mail.",
+          "deleteUserDescription": "Użytkownik zostanie na stałe usunięty z systemu."
         },
         "profile": {
           "title": "Profil użytkownika",
@@ -93,8 +120,16 @@
           "data": "Dane",
           "username": "Nazwa użytkownika",
           "email": "E-mail",
-          "changePassword": "Zmiana hasła"
+          "changePassword": "Zmiana hasła",
+          "deactivateAccount": "Dezaktywuj konto",
+          "deactivateAccountConfirm": "Czy na pewno chcesz dezaktywować swoje konto?",
+          "deactivateAccountSuccess": "Twoje konto zostało dezaktywowane",
+          "deactivateAccountError": "Wystąpił błąd podczas dezaktywowania konta"
         }
+      },
+      "tooltips": {
+        "currentUserRole": "Nie możesz zmienić swojej roli.",
+        "currentUserStatus": "Nie możesz zmienić swojego statusu."
       },
       "steps": {
         "title": {
@@ -163,7 +198,8 @@
           "tokenExpired": "Token zaproszenia wygasł.",
           "changeSuccess": "Hasło zostało zmienione pomyślnie.",
           "changeError": "Wystąpił błąd podczas zmiany hasła."
-        }
+        },
+        "usersListError": "Wystąpił błąd podczas pobierania listy użytkowników."
       },
       "global": {
         "logOut": "Wyloguj się",
@@ -199,10 +235,26 @@
           "active": "Aktywny",
           "deactivated": "Dezaktywowany"
         },
+        "currentUser": "(Twoje konto)",
         "deactivate": "Dezaktywuj",
         "deactivateConfirm": "Czy na pewno chcesz dezaktywować użytkownika {{username}}?",
         "deactivateSuccess": "Użytkownik {{username}} został dezaktywowany",
-        "deactivateError": "Błąd podczas dezaktywacji użytkownika"
+        "deactivateError": "Błąd podczas dezaktywacji użytkownika",
+        "cancelInvitation": "Anuluj zaproszenie",
+        "cancelInvitationConfirm": "Czy na pewno chcesz anulować zaproszenie użytkownika {{username}}?",
+        "cancelInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało anulowane",
+        "cancelInvitationError": "Błąd podczas anulowania zaproszenia użytkownika",
+        "cancelInvitationDescription": "Zaproszenie nie będzie już ważne. Następnie będziesz mógł ponownie wysłać zaproszenie lub na stałe usunąć użytkownika.",
+        "resendInvitation": "Wyślij ponownie zaproszenie",
+        "resendInvitationConfirm": "Czy na pewno chcesz wysłać ponownie zaproszenie użytkownika {{username}}?",
+        "resendInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało wyświetlone",
+        "resendInvitationError": "Błąd podczas wyświetlania zaproszenia użytkownika",
+        "resendInvitationDescription": "Użytkownik dostanie nowe zaproszenie na e-mail.",
+        "deleteUser": "Usuń użytkownika",
+        "deleteUserConfirm": "Czy na pewno chcesz usunąć użytkownika {{username}}?",
+        "deleteUserSuccess": "Użytkownik {{username}} został usunięty",
+        "deleteUserError": "Błąd podczas usuwania użytkownika",
+        "deleteUserDescription": "Użytkownik zostanie na stałe usunięty z systemu."
       },
       "popup": {
         "removeConfirm": "Czy na pewno chcesz usunąć?",

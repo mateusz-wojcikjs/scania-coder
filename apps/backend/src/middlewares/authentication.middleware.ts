@@ -1,8 +1,8 @@
+import { AuthJwt } from "@scania-coder/types";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity";
-import { UserRole } from "../enums";
 import { logger } from "../logger";
 
 const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret";
@@ -19,11 +19,17 @@ export const isAuthenticated = async (request: Request, response: Response, next
         const authJwtToken = authHeader.substring(7);
         const jwtUser = await checkJwtValidity(authJwtToken);
         const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { id: (jwtUser as any).userId } });
+        const user = await userRepository.findOne({ where: { id: (jwtUser as AuthJwt).userId } });
 
         if (!user || !user.isActive) {
-            logger.info(`User ${(jwtUser as any).email} is not active or not found, access denied.`);
+            logger.info(`User ${(jwtUser as AuthJwt).email} is not active or not found, access denied.`);
             return response.status(403).json({ message: "Access denied. User account is inactive." });
+        }
+
+        const tokenVersion = (jwtUser as AuthJwt).tokenVersion ?? 0;
+        if (user.tokenVersion !== tokenVersion) {
+            logger.info(`User ${user.email} token version mismatch. Token invalidated.`);
+            return response.status(403).json({ message: "Access denied. Token has been invalidated." });
         }
 
         logger.info("Authentication JWT successfully decoded:", jwtUser);

@@ -7,7 +7,6 @@ import { ROUTE_PATHS } from "../../../constants/index.ts";
 import { TransProps, useTranslation } from "react-i18next";
 import { UseAuth, UseRedirect, UseRoutingPermission } from "../../../interfaces";
 import { useAuth, useRedirect, useRoutingPermission } from "../../../hooks";
-import { PermissionScopeName } from "../../../enums";
 
 export const useMenu = (): UseMenuReturnType => {
   const location = useLocation();
@@ -77,7 +76,7 @@ export const useMenu = (): UseMenuReturnType => {
         { key: "users-list", label: t("sc.fe.menu.users.list"), icon: <UnorderedListOutlined />, onClick: () => handleMenuClick(ROUTE_PATHS.Users), },
         { key: "users-add", label: t("sc.fe.menu.users.add"), icon: <UserAddOutlined />, onClick: () => handleMenuClick(ROUTE_PATHS.UsersAdd), },
       ],
-      permissionScope: [PermissionScopeName.Admin],
+      permissionScope: ["admin"],
     },
   ], [handleMenuClick, t]);
 
@@ -95,7 +94,7 @@ export const useMenu = (): UseMenuReturnType => {
     items: filteredItems,
     handleDrawer,
     isOpen,
-    selectedKeys: getSelectedKey(),
+    selectedKeys: getSelectedKey() || [],
     openKeys: getOpenKeys(),
     onOpenChange: handleOpenChange,
   };

@@ -1,5 +1,5 @@
-import crypto = require("crypto");
-import util = require("util");
+import crypto from "crypto";
+import util from "util";
 
 const hashPassword = util.promisify(crypto.pbkdf2);
 

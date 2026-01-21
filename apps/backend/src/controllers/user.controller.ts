@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { UserRole } from "../enums";
 import { logger } from "../logger";
+import { InvitationService } from "../services/invitation.service";
 import { UserService } from "../services/user.service";
 
 const validatePassword = (password: string): boolean => {
@@ -115,12 +116,13 @@ export const deleteUser = async (request: Request, response: Response, next: Nex
     logger.debug("Called deleteUser()");
     const { id } = request.params;
     const userId: number = Number(id);
+    const currentUserId: number = response.locals.user.userId;
 
     if (isNaN(userId)) {
       return response.status(400).json({ error: "Invalid userId" });
     }
 
-    await UserService.deleteUserById(userId);
+    await UserService.deleteUserById(userId, currentUserId);
     response.status(200).json({ message: "User deleted successfully" });
   }  catch (error) {
     logger.error("Error during deleteUser()", {
@@ -154,28 +156,6 @@ export const toggleUserActiveStatus = async (request: Request, response: Respons
   }
 };
 
-export const resendInvitation = async (request: Request, response: Response, next: NextFunction) => {
-  try {
-    logger.debug("Called resendInvitation()");
-    const { email } = request.body;
-
-    if (!email) {
-      return response.status(400).json({ error: "Email is required" });
-    }
-
-    const user = await UserService.resendInvitation(email);
-    logger.info(`Invitation resent to user ${user.email}`);
-
-    response.status(200).json({ message: "Invitation resent successfully", user });
-  } catch (error) {
-    logger.error("Error during resendInvitation()", {
-      error,
-      requestBody: request.body,
-    });
-    next(error);
-  }
-};
-
 export const getInvitationStatus = async (request: Request, response: Response, next: NextFunction) => {
   try {
     logger.debug("Called getInvitationStatus()");
@@ -185,7 +165,7 @@ export const getInvitationStatus = async (request: Request, response: Response, 
       return response.status(400).json({ error: "Email query parameter is required" });
     }
 
-    const status = await UserService.getInvitationStatus(email);
+    const status = await InvitationService.getInvitationStatus(email);
     logger.info(`Invitation status checked for ${email}: ${status.status}`);
 
     response.status(200).json(status);
@@ -202,14 +182,15 @@ export const deactivateUser = async (request: Request, response: Response, next:
   try {
     logger.debug("Called deactivateUser()");
     const { id } = request.params;
-    const userId: number = Number(id);
+    const targetUserId: number = Number(id);
+    const actorUserId: number = response.locals.user.userId;
 
-    if (isNaN(userId)) {
+    if (isNaN(targetUserId)) {
       return response.status(400).json({ error: "Invalid userId" });
     }
 
-    const user = await UserService.deactivateUser(userId);
-    logger.info(`User ${user.email} has been deactivated`);
+    const user = await UserService.deactivateUserAsAdmin(targetUserId, actorUserId);
+    logger.info(`User ${user.email} has been deactivated by admin`);
 
     response.status(200).json(user);
   } catch (error) {
@@ -221,3 +202,20 @@ export const deactivateUser = async (request: Request, response: Response, next:
   }
 };
 
+export const deactivateAccount = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    logger.debug("Called deactivateAccount()");
+    const actorUserId: number = response.locals.user.userId;
+
+    const user = await UserService.deactivateUserAsSelf(actorUserId, actorUserId);
+    logger.info(`User ${user.email} has deactivated their own account`);
+
+    response.status(200).json(user);
+  } catch (error) {
+    logger.error("Error during deactivateAccount()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};

@@ -10,6 +10,6 @@ export const AppDataSource: DataSource = new DataSource({
     database: process.env.DB_NAME,
     entities: [process.env.NODE_ENV === "production" ? path.join(__dirname, "/../**/**.entity.js") : path.join(__dirname, "/../**/**.entity.ts")],
     ssl: false,
-    synchronize: true,
+    synchronize: process.env.NODE_ENV !== "production",
     logging: true,
 });

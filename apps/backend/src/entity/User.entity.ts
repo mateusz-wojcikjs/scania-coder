@@ -46,9 +46,12 @@ export class User {
     })
     role: UserRole;
 
-    @CreateDateColumn()
+    @Column({ default: 0 })
+    tokenVersion: number;
+
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt: Date;
 }

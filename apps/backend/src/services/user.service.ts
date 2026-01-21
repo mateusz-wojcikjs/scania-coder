@@ -5,7 +5,7 @@ import { User } from "../entity";
 import { ErrorCodes, UserRole } from "../enums";
 import { CustomError } from "../errors";
 import { calculatePasswordHash } from "../utils";
-import { EmailService } from "./email.service";
+import { InvitationService } from "./invitation.service";
 
 export class UserService {
   static async getUsers(
@@ -39,7 +39,7 @@ export class UserService {
       .getManyAndCount();
 
     return {
-      users,
+      data: users,
       total,
       page,
       limit,
@@ -67,8 +67,7 @@ export class UserService {
       throw new CustomError("User already exists", 409, ErrorCodes.ERR_ALREADY_EXISTS);
     }
 
-    const invitationToken = crypto.randomBytes(32).toString("hex");
-    const invitationExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    const { invitationToken, invitationExpires } = InvitationService.generateInvitationToken();
 
     return await AppDataSource.transaction(async (manager) => {
       const newUser = userRepository.create({
@@ -82,16 +81,8 @@ export class UserService {
 
       const savedUser = await manager.save(User, newUser);
       
-      try {
-        await EmailService.sendInvitationEmail({ to: email, token: invitationToken, name: username });
-        return savedUser;
-      } catch (emailError) {
-        throw new CustomError(
-          `Failed to send invitation email: ${emailError instanceof Error ? emailError.message : "Unknown error"}`,
-          500,
-          ErrorCodes.ERR_EMAIL_SEND_FAILED
-        );
-      }
+      await InvitationService.sendInvitationEmail(savedUser);
+      return savedUser;
     });
   }
 
@@ -110,8 +101,23 @@ export class UserService {
     return userRepository.findOne({ where: { id } });
   }
 
-  static async deleteUserById(id: number) {
+  static async deleteUserById(id: number, currentUserId: number) {
+    if (id === currentUserId) {
+      throw new CustomError(
+        "You cannot delete your own account. Use account settings to deactivate your account instead.",
+        403,
+        ErrorCodes.ERR_CANNOT_DELETE_OWN_ACCOUNT
+      );
+    }
+
     const userRepository: Repository<User> = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new CustomError("User not found", 404, ErrorCodes.ERR_USER_NOT_FOUND);
+    }
+    if (user.isActive) {
+      throw new CustomError("User is active. Please deactivate the user instead.", 400, ErrorCodes.ERR_USER_IS_ACTIVE);
+    }
     return await userRepository.delete(id);
   }
 
@@ -127,88 +133,62 @@ export class UserService {
     return await userRepository.save(user);
   }
 
-  static async deactivateUser(id: number) {
+  static async deactivateUserAsAdmin(targetUserId: number, actorUserId: number) {
+    return this.deactivateUser({ targetUserId, actorUserId, mode: "admin" });
+  }
+
+  static async deactivateUserAsSelf(targetUserId: number, actorUserId: number) {
+    return this.deactivateUser({ targetUserId, actorUserId, mode: "self" });
+  }
+
+  private static async deactivateUser(params: { targetUserId: number; actorUserId: number; mode: "admin" | "self" }) {
     const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { id } });
+    const user = await userRepository.findOne({ where: { id: params.targetUserId } });
 
     if (!user) {
       throw new CustomError("User not found", 404, ErrorCodes.ERR_USER_NOT_FOUND);
+    }
+
+    if (params.mode === "self") {
+      if (params.targetUserId !== params.actorUserId) {
+        throw new CustomError(
+          "You can only deactivate your own account",
+          403,
+          ErrorCodes.ERR_CANNOT_DELETE_OWN_ACCOUNT
+        );
+      }
+    } else if (params.mode === "admin") {
+      const actor = await userRepository.findOne({ where: { id: params.actorUserId } });
+      if (!actor) {
+        throw new CustomError("Actor user not found", 404, ErrorCodes.ERR_USER_NOT_FOUND);
+      }
+      if (actor.role !== UserRole.ADMIN) {
+        throw new CustomError(
+          "Admin privileges required to deactivate users",
+          403,
+          ErrorCodes.ERR_UNEXPECTED_ERROR
+        );
+      }
+
+      if (user.role === UserRole.ADMIN) {
+        const activeAdminCount = await userRepository.count({
+          where: {
+            role: UserRole.ADMIN,
+            isActive: true,
+          },
+        });
+        if (activeAdminCount <= 1) {
+          throw new CustomError(
+            "Cannot deactivate the last active admin",
+            400,
+            ErrorCodes.ERR_UNEXPECTED_ERROR
+          );
+        }
+      }
     }
 
     user.isActive = false;
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
     return await userRepository.save(user);
-  }
-
-  static async getInvitationStatus(email: string) {
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { email } });
-
-    if (!user) {
-      return { status: "not_found", message: "User not found" };
-    }
-
-    if (!user.isInvited) {
-      return { status: "not_invited", message: "User is not in invited state" };
-    }
-
-    if (user.invitationExpires && user.invitationExpires < new Date()) {
-      return { status: "expired", message: "Invitation has expired" };
-    }
-
-    return { 
-      status: "pending", 
-      message: "User has a pending invitation",
-      expiresAt: user.invitationExpires
-    };
-  }
-
-  static async resendInvitation(email: string) {
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { email } });
-
-    if (!user) {
-      throw new CustomError("User not found", 404, ErrorCodes.ERR_USER_NOT_FOUND);
-    }
-
-    if (!user.isInvited) {
-      throw new CustomError(
-        "User is not in invited state. They may have already accepted the invitation or it was never sent.",
-        400,
-        ErrorCodes.ERR_INVALID_TOKEN
-      );
-    }
-
-    if (user.invitationExpires && user.invitationExpires < new Date()) {
-      throw new CustomError(
-        "Invitation has expired. Please create a new invitation instead.",
-        400,
-        ErrorCodes.ERR_TOKEN_EXPIRED
-      );
-    }
-
-    const invitationToken = crypto.randomBytes(32).toString("hex");
-    const invitationExpires = new Date(Date.now() + Number(process.env.INVITE_EXPIRES_DAYS) * 24 * 60 * 60 * 1000);
-
-    return await AppDataSource.transaction(async (manager) => {
-      user.invitationToken = invitationToken;
-      user.invitationExpires = invitationExpires;
-      
-      const updatedUser = await manager.save(User, user);
-      
-      try {
-        await EmailService.sendInvitationEmail({ 
-          to: email, 
-          token: invitationToken, 
-          name: user.username 
-        });
-        return updatedUser;
-      } catch (emailError) {
-        throw new CustomError(
-          `Failed to resend invitation email: ${emailError instanceof Error ? emailError.message : "Unknown error"}`,
-          500,
-          ErrorCodes.ERR_EMAIL_SEND_FAILED
-        );
-      }
-    });
   }
 }

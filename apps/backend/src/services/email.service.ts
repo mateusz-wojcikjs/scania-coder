@@ -21,7 +21,6 @@ const REQUIRED_ENV = [
   "SMTP_USER",
   "SMTP_PASS",
   "SMTP_SECURE",
-  "SMTP_SERVICE",
   "SMTP_FROM",
   "FRONTEND_URL",
   "APP_NAME",
@@ -34,10 +33,6 @@ const assertEnv = () => {
   if (missing.length) {
     throw new Error(`Brak wymaganych zmiennych środowiskowych: ${missing.join(", ")}`);
   }
-};
-
-const bool = (val: string | undefined, fallback = false): boolean => {
-  return typeof val === "string" ? ["1", "true", "yes"].includes(val.toLowerCase()) : fallback;
 };
 
 const number = (val: string | undefined, fallback: number): number => {
@@ -56,8 +51,7 @@ export class EmailService {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
-      secure: bool(process.env.SMTP_SECURE),
-      service: process.env.SMTP_SERVICE || undefined,
+      secure: (process.env.SMTP_SECURE ?? "").toLowerCase() === "true",
       auth: {
         user: process.env.SMTP_USER!,
         pass: process.env.SMTP_PASS!,

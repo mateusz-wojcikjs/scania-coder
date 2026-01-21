@@ -6,7 +6,7 @@ import { UseLocalStorage, useLocalStorage } from "./useLocalStorage.hook";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UseAuth } from "../interfaces";
 import { AuthReducerAction, LocalStorageKey, RoutingPath } from "../enums";
-import { User } from "@scania-coder/types";
+import { AuthUser } from "@scania-coder/types";
 import { setAuthToken } from "../api";
 
 const TIMEOUT_DELAY: number = 0;
@@ -17,7 +17,7 @@ export const useAuth: () => UseAuth = (): UseAuth => {
   const [, storeAuthData]: UseLocalStorage<AuthContextState | null> = useLocalStorage<AuthContextState | null>(LocalStorageKey.AuthData, null);
   const navigate: NavigateFunction = useNavigate();
 
-  const signIn = (userData: User, token: string, expiration: number): void => {
+  const signIn = (userData: AuthUser, token: string, expiration: number): void => {
     setAuthToken(token);
     dispatch({ type: AuthReducerAction.Login, payload: { user: { ...userData }, token, expiration } });
     storeAuthData({ user: { ...userData }, token, expiration });
