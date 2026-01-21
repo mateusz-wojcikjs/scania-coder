@@ -1,0 +1,1 @@
+export { CustomLink } from "./customLink/customLink.component.tsx";

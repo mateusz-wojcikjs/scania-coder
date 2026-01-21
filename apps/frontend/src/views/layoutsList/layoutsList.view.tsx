@@ -1,17 +1,19 @@
 import { Loader } from "../../components";
-import { message, Space, Typography } from "antd";
+import { message, Space } from "antd";
 import { TransProps, useTranslation } from "react-i18next";
 import { Popconfirm, Table, TableProps } from "antd/lib";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLayouts, deleteLayout } from "../../api";
 import { DeleteOutlined } from "@ant-design/icons";
 import { ApiMutation } from "../../types";
-import { Layout, LayoutRemove } from "../../interfaces";
-const { Title } = Typography;
+import { Layout, LayoutRemove, UseDate } from "../../interfaces";
+import { useTitle, useDate } from "../../hooks";
 
 export const LayoutsList = (): JSX.Element => {
   const { t }: TransProps<never> = useTranslation();
   const queryClient = useQueryClient();
+  const { formatDate }: UseDate = useDate();
+  useTitle(t("sc.fe.views.layoutsList.title"));
   const { isPending, data: layouts } = useQuery({ queryKey: ["layouts"], queryFn: getLayouts });
   const removeLayout: ApiMutation<LayoutRemove, number> = useMutation({
     mutationFn: deleteLayout,
@@ -25,6 +27,7 @@ export const LayoutsList = (): JSX.Element => {
       await removeLayout.mutateAsync(layout.id);
       message.success(t("sc.fe.alerts.layout.remove", { name: layout.name }));
     } catch (error) {
+      console.error(error);
       message.error(t("sc.fe.alerts.layout.removeError"));
     }
   };
@@ -57,13 +60,13 @@ export const LayoutsList = (): JSX.Element => {
       title: t("sc.fe.table.column.createdAt"),
       key: "createdAt",
       dataIndex: "createdAt",
+      render: (_: unknown, record: Layout) => formatDate(record.createdAt)
     }
   ];
 
   return (
     <>
       {isPending && <Loader />}
-      <Title level={1}>{t("sc.fe.views.layoutsList.title")}</Title>
       {layouts && <Table<Layout>
         columns={columns}
         rowKey={(record) => record.id}

@@ -1,6 +1,7 @@
 import { api } from "../api.ts";
+import { XmlFileMetaData } from "@scania-coder/types";
 
-export const uploadXml: (file: File) => Promise<any> = async (file: File): Promise<any> => {
+export const uploadXml: (file: File) => Promise<XmlFileMetaData> = async (file: File): Promise<XmlFileMetaData> => {
   const formData = new FormData();
   formData.append("file", file);
 

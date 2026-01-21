@@ -1,7 +1,7 @@
 
 import * as dotenv from "dotenv";
 
-const result = dotenv.config();
+dotenv.config();
 
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
@@ -15,8 +15,8 @@ async function deleteDb() {
     console.log("Clearing USERS table.");
     await AppDataSource.getRepository(User).delete({});
 
-    // console.log("Clearing LAYOUTS table.");
-    // await AppDataSource.getRepository(Layout).delete({});
+    console.log("Clearing LAYOUTS table.");
+    await AppDataSource.getRepository(Layout).delete({});
 
 }
 

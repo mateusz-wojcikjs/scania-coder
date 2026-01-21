@@ -1,4 +1,6 @@
+import cors from "cors";
 import dotenv, { DotenvConfigOutput } from "dotenv";
+import express, { Express } from "express";
 
 const result: DotenvConfigOutput = dotenv.config();
 
@@ -7,18 +9,14 @@ if (result.error) {
     process.exit(1);
 }
 
-import express, { Express } from "express";
-import cors from "cors";
-
+import { changePassword } from "./controllers/changePassword.controller";
 import { login } from "./controllers/login.controller";
+import { remindPassword } from "./controllers/remindPassword.controller";
 import { AppDataSource } from "./data-source";
 import { defaultErrorHandler } from "./default-error-handler";
 import { logger } from "./logger";
-import { root } from "./routes/root";
-import xmlFileRoute from "./routes/xmlFile.route";
-import xmlLayoutRoute from "./routes/xmlLayout.route";
-import { isAuthenticated } from "./middlewares";
-
+import { isAuthenticated, requireAdmin } from "./middlewares";
+import { invitationRoute, meRoute, userRoute, xmlFileRoute, xmlLayoutRoute } from "./routes";
 const app: Express = express();
 
 const setupExpress = (): void => {
@@ -27,11 +25,17 @@ const setupExpress = (): void => {
 
     app.use(express.json());
 
-    app.route("/api").get(root);
     app.route("/api/login").post(login);
+    app.route("/api/remind-password").post(remindPassword);
 
-    app.use("/api", isAuthenticated ,xmlFileRoute);
+    app.use("/api", invitationRoute);
+
+    app.route("/api/change-password").patch(isAuthenticated, changePassword);
+
+    app.use("/api", isAuthenticated, meRoute);
+    app.use("/api", isAuthenticated, xmlFileRoute);
     app.use("/api", isAuthenticated, xmlLayoutRoute);
+    app.use("/api", isAuthenticated, requireAdmin, userRoute);
 
     app.use(defaultErrorHandler);
 };

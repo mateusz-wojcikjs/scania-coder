@@ -1,39 +1,135 @@
 {
   "sc": {
     "fe": {
+      "mainTemplate": {
+        "welcome": "Witaj, {{name}}"
+      },
       "forms": {
         "email": "E-mail",
         "password": "Hasło",
+        "newPassword": "Nowe hasło",
+        "confirmPassword": "Potwierdź hasło",
         "validation": {
           "email": "Wprowadź swój mail.",
           "password": "Wprowadź hasło.",
+          "passwordLength": "Hasło musi mieć co najmniej 8 znaków.",
+          "passwordMismatch": "Hasła nie są identyczne.",
+          "confirmPassword": "Potwierdź hasło.",
           "name": "Wprowadź \"name\"",
           "value": "Wprowadź \"value\"",
-          "changeName": "Zmień nazwę"
+          "changeName": "Zmień nazwę",  
+          "role": "Wybierz rolę"
         },
+        "setupPassword": "Ustaw hasło",
         "login": "Zaloguj się",
         "submit": "Nadpisz dane",
         "addFields": "Dodaj Pola",
         "saveConfig": "Zapisz powyższą konfigurację jako szablon.",
         "inputName": "Pole \"name\"",
         "inputValue": "Pole \"value\"",
+        "send": "Wyślij",
         "upload": {
           "success": "Poprawnie załadowano plik {{fileName}}",
           "error": "Nie udało się załadować pliku {{fileName}}",
           "invalidType": "Nie właściwy format pliku. Plik powinien być typu XML."
+        },
+        "changePassword": {
+          "submit": "Zapisz hasło"
         }
       },
       "views": {
         "login": {
-          "title": "Login Page Title",
-          "button": "Login"
+          "title": "Logowanie",
+          "button": "Zaloguj się"
         },
         "root": {
           "title": "Edycja XML"
         },
         "layoutsList": {
           "title": "Lista konfiguracji"
+        },
+        "setupPassword": {
+          "title": "Ustaw hasło"
+        },
+        "websiteError": {
+          "title": "Błąd strony",
+          "button": "Wróć do strony głównej"
+        },
+        "usersList": {
+          "title": "Lista użytkowników"
+        },
+        "usersAdd": {
+          "title": "Dodaj użytkownika",
+          "role": {
+            "user": "Użytkownik",
+            "admin": "Administrator"
+          },
+          "button": "Wyślij zaproszenie",
+          "success": "Wysłano zaproszenie na e-mail {{email}}",
+          "error": "Wystąpił błąd podczas dodawania użytkownika",
+          "description": "Aby dodać użytkownika, należy wysłać mu zaproszenie na e-mail do założenia konta.",
+          "form": {
+            "username": "Nazwa użytkownika",
+            "email": "E-mail",
+            "role": "Rola"
+          }
+        },
+        "remindPassword": {
+          "title": "Odzyskaj hasło",
+          "helperText": "Wpisz swój adres e-mail, aby otrzymać link do resetowania hasła.",
+          "successMessage": "Jeśli podany adres e-mail istnieje w systemie, link do resetowania hasła został wysłany.",
+          "button": "Wróć do strony logowania"
+        },
+        "usersDetails": {
+          "title": "Szczegóły użytkownika", 
+          "update": {
+            "success": "Użytkownik został pomyślnie zaktualizowany.",
+            "error": "Wystąpił błąd podczas aktualizacji użytkownika."
+          },
+          "data": "Dane",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "role": "Rola",
+          "status": "Status",
+          "createdAt": "Data utworzenia",
+          "updatedAt": "Data aktualizacji",
+          "admin": "Administrator",
+          "user": "Użytkownik",
+          "delete": "Usuń użytkownika",
+          "deleteConfirm": "Czy na pewno chcesz usunąć użytkownika {{username}}?",
+          "deleteSuccess": "Użytkownik {{username}} został usunięty",
+          "deleteError": "Wystąpił błąd podczas usuwania użytkownika",
+          "deactivate": "Dezaktywuj użytkownika",
+          "deactivateConfirm": "Czy na pewno chcesz dezaktywować użytkownika {{username}}?",
+          "deactivateSuccess": "Użytkownik {{username}} został dezaktywowany",
+          "deactivateError": "Wystąpił błąd podczas dezaktywowania użytkownika",
+          "cancelInvitation": "Anuluj zaproszenie",
+          "cancelInvitationConfirm": "Czy na pewno chcesz anulować zaproszenie użytkownika {{username}}?",
+          "cancelInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało anulowane",
+          "cancelInvitationError": "Wystąpił błąd podczas anulowania zaproszenia użytkownika",
+          "resendInvitation": "Wyślij ponownie zaproszenie",
+          "resendInvitationConfirm": "Czy na pewno chcesz wysłać ponownie zaproszenie użytkownika {{username}}?",
+          "resendInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało wyświetlone",
+          "resendInvitationError": "Wystąpił błąd podczas wyświetlania zaproszenia użytkownika",
+          "resendInvitationDescription": "Użytkownik dostanie nowe zaproszenie na e-mail.",
+          "deleteUserDescription": "Użytkownik zostanie na stałe usunięty z systemu."
+        },
+        "profile": {
+          "title": "Profil użytkownika",
+          "userData": "Dane użytkownika",
+          "data": "Dane",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "changePassword": "Zmiana hasła",
+          "deactivateAccount": "Dezaktywuj konto",
+          "deactivateAccountConfirm": "Czy na pewno chcesz dezaktywować swoje konto?",
+          "deactivateAccountSuccess": "Twoje konto zostało dezaktywowane",
+          "deactivateAccountError": "Wystąpił błąd podczas dezaktywowania konta"
         }
+      },
+      "tooltips": {
+        "currentUserRole": "Nie możesz zmienić swojej roli.",
+        "currentUserStatus": "Nie możesz zmienić swojego statusu."
       },
       "steps": {
         "title": {
@@ -93,7 +189,17 @@
         "layout": {
           "remove": "Konfiguracja {{name}} została usunięta",
           "removeError": "Błąd podczas usuwania konfiguracji."
-        }
+        },
+        "password": {
+          "setupSuccess": "Hasło zostało ustawione pomyślnie.",
+          "setupError": "Wystąpił błąd podczas ustawiania hasła.",
+          "invalidToken": "Nieprawidłowy lub wygasły token.",
+          "userDeactivated": "Konto użytkownika zostało dezaktywowane. Zaproszenie nie jest już ważne.",
+          "tokenExpired": "Token zaproszenia wygasł.",
+          "changeSuccess": "Hasło zostało zmienione pomyślnie.",
+          "changeError": "Wystąpił błąd podczas zmiany hasła."
+        },
+        "usersListError": "Wystąpił błąd podczas pobierania listy użytkowników."
       },
       "global": {
         "logOut": "Wyloguj się",
@@ -105,14 +211,50 @@
         "layouts": {
           "main": "Konfiguracje",
           "list": "Lista konfiguracji"
+        },
+        "users": {
+          "main": "Użytkownicy",
+          "list": "Lista użytkowników",
+          "add": "Dodaj użytkownika"
         }
       },
       "table": {
         "column": {
           "actions": "Akcje",
           "name": "Nazwa",
+          "username": "Nazwa użytkownika",
+          "email": "E-mail",
+          "role": "Rola",
+          "status": "Status",
           "createdAt": "Data utworzenia"
         }
+      },
+      "user": {
+        "status": {
+          "invited": "Zaproszony",
+          "active": "Aktywny",
+          "deactivated": "Dezaktywowany"
+        },
+        "currentUser": "(Twoje konto)",
+        "deactivate": "Dezaktywuj",
+        "deactivateConfirm": "Czy na pewno chcesz dezaktywować użytkownika {{username}}?",
+        "deactivateSuccess": "Użytkownik {{username}} został dezaktywowany",
+        "deactivateError": "Błąd podczas dezaktywacji użytkownika",
+        "cancelInvitation": "Anuluj zaproszenie",
+        "cancelInvitationConfirm": "Czy na pewno chcesz anulować zaproszenie użytkownika {{username}}?",
+        "cancelInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało anulowane",
+        "cancelInvitationError": "Błąd podczas anulowania zaproszenia użytkownika",
+        "cancelInvitationDescription": "Zaproszenie nie będzie już ważne. Następnie będziesz mógł ponownie wysłać zaproszenie lub na stałe usunąć użytkownika.",
+        "resendInvitation": "Wyślij ponownie zaproszenie",
+        "resendInvitationConfirm": "Czy na pewno chcesz wysłać ponownie zaproszenie użytkownika {{username}}?",
+        "resendInvitationSuccess": "Zaproszenie użytkownika {{username}} zostało wyświetlone",
+        "resendInvitationError": "Błąd podczas wyświetlania zaproszenia użytkownika",
+        "resendInvitationDescription": "Użytkownik dostanie nowe zaproszenie na e-mail.",
+        "deleteUser": "Usuń użytkownika",
+        "deleteUserConfirm": "Czy na pewno chcesz usunąć użytkownika {{username}}?",
+        "deleteUserSuccess": "Użytkownik {{username}} został usunięty",
+        "deleteUserError": "Błąd podczas usuwania użytkownika",
+        "deleteUserDescription": "Użytkownik zostanie na stałe usunięty z systemu."
       },
       "popup": {
         "removeConfirm": "Czy na pewno chcesz usunąć?",
@@ -124,7 +266,12 @@
         "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych.",
         "ERR_INVALID_CREDENTIALS": "Nie poprawne dane logowania.",
         "UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
-        "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje."
+        "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje.",
+        "ERR_EMAIL_PASSWORD_REQUIRED": "E-mail i hasło są wymagane.",
+        "ERR_UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
+        "ERR_USER_DEACTIVATED": "Konto użytkownika zostało dezaktywowane. Zaproszenie nie jest już ważne.",
+        "ERR_TOKEN_EXPIRED": "Token zaproszenia wygasł.",
+        "ERR_INVALID_TOKEN": "Nieprawidłowy lub wygasły token."
       }
     }
   }

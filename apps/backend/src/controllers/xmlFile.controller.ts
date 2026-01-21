@@ -1,7 +1,7 @@
+import { XmlFileMetaData } from "@scania-coder/types";
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../logger";
 import { XmlFileService } from "../services/xmlFile.service";
-import { XmlFileMetaData } from "@scania-coder/types";
 
 export const getXmlMetadata = async (req: Request, res: Response, next: NextFunction) => {
     try {

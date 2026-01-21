@@ -1,4 +1,3 @@
-import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../../../api";
 import { FormProps } from "antd";
@@ -8,12 +7,18 @@ import { UseLoginFormReturnType } from "./loginForm.types.ts";
 import { TransProps, useTranslation } from "react-i18next";
 import { ApiMutation, UseState } from "../../../types";
 import { AxiosError } from "axios";
+import { useAuth, useRedirect } from "../../../hooks";
+import { UseAuth, UseRedirect } from "../../../interfaces";
+import { RoutingPath } from "../../../enums";
+import { TOKEN_EXPIRATION_TIME } from "../../../constants";
 
 export const useLoginForm: () => UseLoginFormReturnType = (): UseLoginFormReturnType => {
+  const UNAUTHORIZED_STATUS_CODE: number = 401;
   const { t }: TransProps<never> = useTranslation();
-  const navigate: NavigateFunction  = useNavigate();
+  const { redirect }: UseRedirect = useRedirect();
   const [loading, setLoading]: UseState<boolean> = useState(false);
   const [validationMessage, setValidationMessage]: UseState<string> = useState("");
+  const { signIn }: UseAuth = useAuth();
 
   const loginMutation: ApiMutation<LoginResponse, LoginData> = useMutation({
     mutationFn: login,
@@ -27,13 +32,21 @@ export const useLoginForm: () => UseLoginFormReturnType = (): UseLoginFormReturn
       { email, password },
       {
         onSuccess: (data: LoginResponse): void => {
-          localStorage.setItem("authJwtToken", JSON.stringify({ token: data.authJwtToken }));
+          signIn(data.user, data.authJwtToken, Date.now() + TOKEN_EXPIRATION_TIME);
           setLoading(false);
-          navigate("/");
+          redirect({ targetRoute: RoutingPath.Root });
         },
         onError: (error: AxiosError<ApiError>): void => {
           const statusCode = error.response?.data?.error.statusCode;
-          if (statusCode === 401) {
+          switch (statusCode) {
+          case UNAUTHORIZED_STATUS_CODE:
+            setValidationMessage(t("sc.api.errors.ERR_INVALID_CREDENTIALS"));
+            break;
+          default:
+            setValidationMessage(t("sc.api.errors.ERR_UNKNOWN_ERROR"));
+            break;
+          }
+          if (statusCode === UNAUTHORIZED_STATUS_CODE) {
             setValidationMessage(t("sc.api.errors.ERR_INVALID_CREDENTIALS"));
           }
           setLoading(false);

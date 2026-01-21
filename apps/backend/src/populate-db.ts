@@ -1,13 +1,13 @@
 
 import * as dotenv from "dotenv";
 
-const result = dotenv.config();
+dotenv.config();
 
 import "reflect-metadata";
 
 import { AppDataSource } from "./data-source";
 import { LAYOUTS, USERS } from "./db-data";
-import { User,Layout } from "./entity";
+import { User, Layout } from "./entity";
 import { calculatePasswordHash } from "./utils";
 
 async function populateDb() {
@@ -15,10 +15,8 @@ async function populateDb() {
 
     console.log("Database connection ready.");
 
-    const users = Object.values(USERS) as any[];
-
-    const layouts = Object.values(LAYOUTS) as any[];
-
+    const users = Object.values(USERS) as (User & { plainTextPassword: string })[];
+    const layouts = Object.values(LAYOUTS) as Layout[];
     const layoutRepository = AppDataSource.getRepository(Layout);
 
     for (const userData of users) {

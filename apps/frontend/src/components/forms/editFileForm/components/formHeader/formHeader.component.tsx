@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Tooltip } from "antd/lib";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { TransProps, useTranslation } from "react-i18next";
-import { theme } from "../../../../../theme/theme.ts";
+import { theme } from "../../../../../theme";
 import { FormHeaderProps } from "./formHeader.types.ts";
 import { Header, FormHeaderCell, Label } from "./formHeader.styles.ts";
 
