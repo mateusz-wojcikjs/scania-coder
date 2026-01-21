@@ -1,4 +1,4 @@
-import { User } from "./user.types";
+import { AuthUser } from "./authUser.types";
 
 export interface LoginData {
   email: string;
@@ -7,7 +7,7 @@ export interface LoginData {
 
 export interface LoginResponse {
   authJwtToken: string;
-  user: User;
+  user: AuthUser;
 }
 
 export interface RemindPasswordData {

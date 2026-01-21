@@ -1,4 +1,4 @@
-import { BlockType } from './blockType.types';
+import { BlockType } from "./blockType.types";
 
 export interface UpdatePayload {
   name: string;

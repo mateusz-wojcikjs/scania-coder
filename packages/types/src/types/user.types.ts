@@ -1,6 +1,12 @@
+import { UserRole } from "./userRole.types";
+
 export interface User {
-  id: string;
+  id: number;
+  username: string;
   email: string;
-  name: string;
-  isAdmin: boolean;
+  role: UserRole;
+  isActive: boolean;
+  isInvited: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
