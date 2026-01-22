@@ -53,8 +53,9 @@ export class InvitationService {
 
     return {
       user: {
+        id: savedUser.id.toString(),
         email: savedUser.email,
-        name: savedUser.username,
+        username: savedUser.username,
         isAdmin: savedUser.role === UserRole.ADMIN
       },
       authJwtToken,
