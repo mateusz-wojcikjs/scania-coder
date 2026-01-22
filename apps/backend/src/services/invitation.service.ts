@@ -26,7 +26,7 @@ export class InvitationService {
       throw new CustomError("User is not in invited state", 400, ErrorCodes.ERR_INVALID_TOKEN);
     }
 
-    if (!user.isActive) {
+    if (!user.isActive && !user.isInvited) {
       throw new CustomError("User account has been deactivated. The invitation is no longer valid.", 400, ErrorCodes.ERR_USER_DEACTIVATED);
     }
 

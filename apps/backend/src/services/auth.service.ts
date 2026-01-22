@@ -28,6 +28,10 @@ export class AuthService {
             throw new UnauthorizedError(ErrorCodes.ERR_INVALID_CREDENTIALS);
         }
 
+        if (!user.isActive) {
+            throw new UnauthorizedError(ErrorCodes.ERR_USER_DEACTIVATED);
+        }
+
         const authJwt = {
             userId: user.id,
             email: user.email,
