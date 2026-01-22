@@ -264,7 +264,7 @@
     "api": {
       "errors": {
         "ERR_INVALID_FILE_STRUCTURE": "Wprowadzony plik XML ma niepoprawną strukturę danych.",
-        "ERR_INVALID_CREDENTIALS": "Nie poprawne dane logowania.",
+        "ERR_INVALID_CREDENTIALS": "Niepoprawne dane logowania.",
         "UNKNOWN_ERROR": "Wystąpił nieznany błąd.",
         "ERR_ALREADY_EXISTS": "Szablon o takiej nazwie już istnieje.",
         "ERR_EMAIL_PASSWORD_REQUIRED": "E-mail i hasło są wymagane.",
