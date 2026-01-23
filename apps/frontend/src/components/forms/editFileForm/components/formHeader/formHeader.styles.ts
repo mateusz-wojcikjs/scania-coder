@@ -7,11 +7,10 @@ export const Header = styled.div`
   align-items: center;
   min-height: 56px;
   margin-bottom: -1px;
-  padding: 0 24px;
+  padding: 0 6px 0 24px;
   color: rgba(0, 0, 0, 0.88);
   font-weight: 600;
   font-size: 16px;
-  gap: 12px;
 `;
 
 export const FormHeaderCell = styled.div`

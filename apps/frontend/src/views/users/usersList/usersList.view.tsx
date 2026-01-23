@@ -11,13 +11,15 @@ import { Loader } from "../../../components";
 import { UserStatus } from "../../../types";
 import { UseAuth, UseUsers } from "../../../interfaces";
 import { SemanticColors } from "../../../theme";
+import { useMediaQuery } from "react-responsive";
+import { Breakpoint } from "../../../enums";
 
 export const UsersList = (): JSX.Element => {
   const { users, isLoading, actionLoading, error, handleDeactivate, handleCancelInvitation, handleResendInvitation, handleDeleteUser }: UseUsers = useUsers();
   const { userData }: UseAuth = useAuth();
   const { t }: TransProps<never> = useTranslation();
   useTitle(t("sc.fe.views.usersList.title"));
-
+  const isMobile: boolean = useMediaQuery({ query: Breakpoint.Mobile });
   const columns: TableProps<User>["columns"] = [
     {
       title: t("sc.fe.table.column.username"),
@@ -136,6 +138,8 @@ export const UsersList = (): JSX.Element => {
         dataSource={users}
         // TODO: apply pagination when ready
         pagination={false}
+        scroll={{ x: 300 }}
+        size={isMobile ? "small" : "middle"}
       />}
       {error && <Alert message={t("sc.fe.alerts.usersListError")} type="error" />}
     </>

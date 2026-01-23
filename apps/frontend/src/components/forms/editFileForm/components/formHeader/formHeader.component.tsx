@@ -13,19 +13,19 @@ export const FormHeader: FC<FormHeaderProps> = (props: FormHeaderProps): JSX.Ele
   if (isCableList) {
     return (
       <Header>
-        <FormHeaderCell style={{ flex: 1 }}>
-          <Label>{t("sc.fe.steps.edit.labels.value")}</Label>
+        <FormHeaderCell style={{ width: 185 }}>
+          <Label>{t("sc.fe.steps.edit.labels.name")}</Label>
         </FormHeaderCell>
-        <FormHeaderCell style={{ flex: 1 }}>
+        <FormHeaderCell style={{ width: 185 }}>
           <Label>{t("sc.fe.steps.edit.labels.newValue")}</Label>
-          <Tooltip title={t("sc.fe.steps.edit.tooltips.newValue")}>
-            <InfoCircleOutlined style={{ color: theme.colors.primary }} />
-          </Tooltip>
         </FormHeaderCell>
         <FormHeaderCell style={{ flex: 1 }}>
           <Label>{t("sc.fe.steps.edit.labels.removeRow")}</Label>
+          <Tooltip title={t("sc.fe.steps.edit.tooltips.removeRow")}>
+            <InfoCircleOutlined style={{ color: theme.colors.primary }} />
+          </Tooltip>
         </FormHeaderCell>
-        <FormHeaderCell style={{ width: 90 }}>
+        <FormHeaderCell style={{ width: 70 }}>
           <Label>{t("sc.fe.steps.edit.labels.removeFields")}</Label>
         </FormHeaderCell>
       </Header>
@@ -34,16 +34,19 @@ export const FormHeader: FC<FormHeaderProps> = (props: FormHeaderProps): JSX.Ele
 
   return (
     <Header>
-      <FormHeaderCell style={{ flex: 1 }}>
+      <FormHeaderCell style={{ width: 185 }}>
         <Label>{t("sc.fe.steps.edit.labels.name")}</Label>
       </FormHeaderCell>
-      <FormHeaderCell style={{ flex: 1 }}>
+      <FormHeaderCell style={{ width: 185 }}>
         <Label>{t("sc.fe.steps.edit.labels.value")}</Label>
       </FormHeaderCell>
       <FormHeaderCell style={{ flex: 1 }}>
         <Label>{t("sc.fe.steps.edit.labels.removeRow")}</Label>
+        <Tooltip title={t("sc.fe.steps.edit.tooltips.removeRow")}>
+          <InfoCircleOutlined style={{ color: theme.colors.primary }} />
+        </Tooltip>
       </FormHeaderCell>
-      <FormHeaderCell style={{ width: 90 }}>
+      <FormHeaderCell style={{ width: 70 }}>
         <Label>{t("sc.fe.steps.edit.labels.removeFields")}</Label>
       </FormHeaderCell>
     </Header>
