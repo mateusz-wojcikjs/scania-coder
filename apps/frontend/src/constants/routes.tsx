@@ -63,7 +63,9 @@ export const router = createBrowserRouter([
     path: ROUTE_PATHS.UsersDetails,
     element: (
       <ProtectedRoute>
-        <UserDetailsView />
+        <MainTemplate title={"sc.fe.views.usersDetails.title"}>
+          <UserDetailsView />
+        </MainTemplate>
       </ProtectedRoute>
     ),
   },

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { getUser } from "../../../api/requests";
-import { Loader, MainTemplate } from "../../../components";
+import { Loader } from "../../../components";
 import { TransProps, useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useAuth, useDate, useTitle, useUsers } from "../../../hooks";
@@ -46,7 +46,7 @@ export const UserDetailsView = (): JSX.Element => {
   const canDeleteUser: boolean = status === "deactivated";
 
   return (
-    <MainTemplate title={"sc.fe.views.usersDetails.title"}>
+    <>
       {isLoading && <Loader />}
       {data && (
         <>
@@ -97,6 +97,6 @@ export const UserDetailsView = (): JSX.Element => {
           </Space>
         </>
       )}
-    </MainTemplate>
+    </>
   );
 };
