@@ -27,7 +27,7 @@ export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element =
               {isCableList ? (
                 <span>{t("sc.fe.steps.edit.labels.editCableList")}</span>
               ) : (
-                <span>{t("sc.fe.steps.edit.labels.create")}</span>
+                <span>{t("sc.fe.steps.edit.labels.editFPCBlock")}</span>
               )}
             </div>
           );

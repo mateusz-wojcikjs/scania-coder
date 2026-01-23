@@ -157,7 +157,7 @@
             "name": "Nazwa",
             "value": "Wartość",
             "newValue": "Nowa wartość",
-            "create": "Edytuj blok FPC",
+            "editFPCBlock": "Edytuj blok FPC",
             "savedLayouts": "Konfiguracje zapisane jako szablon:",
             "removeRow": "Usuwanie wiersza",
             "removeFields": "Usuń pola",
