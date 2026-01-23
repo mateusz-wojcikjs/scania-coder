@@ -16,6 +16,7 @@
           "passwordMismatch": "Hasła nie są identyczne.",
           "confirmPassword": "Potwierdź hasło.",
           "name": "Wprowadź \"name\"",
+          "nameDuplicate": "Nazwa musi być unikalna.",
           "value": "Wprowadź \"value\"",
           "changeName": "Zmień nazwę",  
           "role": "Wybierz rolę"
@@ -157,9 +158,9 @@
             "name": "Nazwa",
             "value": "Wartość",
             "newValue": "Nowa wartość",
-            "create": "Edytuj blok FPC",
+            "editFPCBlock": "Edytuj blok FPC",
             "savedLayouts": "Konfiguracje zapisane jako szablon:",
-            "removeRow": "Usuwanie wiersza",
+            "removeRow": "Usuń wiersz",
             "removeFields": "Usuń pola",
             "layoutName": "Nazwa konfiguracji",
             "checkToRemove": "Oznacz do usunięcia",
@@ -168,7 +169,8 @@
             "newNameValue": "Nowa wartość \"name\""
           },
           "tooltips": {
-            "newValue": "Jeśli chcesz dodać nowe pole to 'Wartość' i 'Nowa wartość' muszą być identyczne."
+            "newValue": "Jeśli chcesz dodać nowe pole to 'Wartość' i 'Nowa wartość' muszą być identyczne.",
+            "removeRow": "Zaznaczenie spowoduje usunięcie wiersza w edytowanym pliku."
           },
           "messages": {
             "layoutSuccess": "Poprawnie wczytano szablon",
