@@ -87,20 +87,42 @@ export class XmlFileService {
           if (update.shouldBeRemoved) {
             cableListRecords.splice(cableListIndex, 1);
           } else {
-            if (cableListRecords[cableListIndex].$.Name !== update.newValue) {
-              cableListRecords[cableListIndex].$.Name = update.newValue;
-              updatedFields.push(update.name);
+            if (update.newValue && update.newValue.trim() !== "") {
+              if (cableListRecords[cableListIndex].$.Name !== update.newValue) {
+                const existingIndex: number = cableListRecords.findIndex(
+                  (c: CableList): boolean => c.$.Name === update.newValue,
+                );
+                
+                if (existingIndex !== -1) {
+                  cableListRecords.splice(cableListIndex, 1);
+                  updatedFields.push(update.name);
+                } else {
+                  cableListRecords[cableListIndex].$.Name = update.newValue;
+                  updatedFields.push(update.name);
+                }
+              }
             }
           }
         } else if (!update.shouldBeRemoved) {
           try {
+            const nameValue: string = update.newValue && update.newValue.trim() !== "" 
+              ? update.newValue 
+              : update.name;
+            
             const newCableList: CableList = {
               $: {
-                Name: update.newValue,
+                Name: nameValue,
               },
             };
 
-            cableListRecords.push(newCableList);
+            let insertIndex: number = cableListRecords.length;
+            for (let i = 0; i < cableListRecords.length; i++) {
+              if (Number(cableListRecords[i].$.Name) > Number(nameValue)) {
+                insertIndex = i;
+                break;
+              }
+            }
+            cableListRecords.splice(insertIndex, 0, newCableList);
             updatedFields.push(update.name);
           } catch (error) {
             errors.push(`Failed to add or update CableList: ${update.name}`);
@@ -111,6 +133,14 @@ export class XmlFileService {
           }
         }
       }
+    });
+
+    fpcRecords.sort((a: FPC, b: FPC): number => {
+      return Number(a.$.Name) - Number(b.$.Name);
+    });
+
+    cableListRecords.sort((a: CableList, b: CableList): number => {
+      return Number(a.$.Name) - Number(b.$.Name);
     });
 
     const builder: Builder = new Builder({

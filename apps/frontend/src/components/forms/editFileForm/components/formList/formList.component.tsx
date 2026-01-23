@@ -7,6 +7,14 @@ import { FormListProps } from "./formList.types.ts";
 import { FormRow, IconWrapper, StyledButton, StyledFormItem } from "./formList.styles.ts";
 
 const EMPTY_ARRAY_LENGTH: number = 0;
+const NO_DUPLICATES: number = 0;
+
+interface FormListItem {
+  name?: string;
+  newValue?: string;
+  shouldBeRemoved?: boolean;
+  blockType?: string;
+}
 
 export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element => {
   const { name, isCableList = false, onCheckToRemove }: FormListProps = props;
@@ -27,7 +35,7 @@ export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element =
               {isCableList ? (
                 <span>{t("sc.fe.steps.edit.labels.editCableList")}</span>
               ) : (
-                <span>{t("sc.fe.steps.edit.labels.create")}</span>
+                <span>{t("sc.fe.steps.edit.labels.editFPCBlock")}</span>
               )}
             </div>
           );
@@ -36,62 +44,104 @@ export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element =
       <Form.List name={name}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map(({ key, name, ...restField }) => (
-              <FormRow key={key}>
-                <StyledFormItem
-                  {...restField}
-                  name={[name, "name"]}
-                  rules={[{ required: true, message: t("sc.fe.forms.validation.name") }]}
-                >
-                  <Input placeholder={t("sc.fe.forms.inputName")} />
-                </StyledFormItem>
-                <Form.Item
-                  shouldUpdate={(prev, cur) =>
-                    prev[name]?.[name]?.shouldBeRemoved !==
-                      cur[name]?.[name]?.shouldBeRemoved
-                  }
-                  noStyle
-                >
-                  {({ getFieldValue }) => {
-                    const shouldBeRemoved = getFieldValue([name, "shouldBeRemoved"]);
-                    return (
-                      <StyledFormItem
-                        {...restField}
-                        name={[name, "newValue"]}
-                        rules={[{ required: !shouldBeRemoved, message: t("sc.fe.forms.validation.value") }]}
-                      >
-                        <Input 
-                          placeholder={isCableList ? t("sc.fe.steps.edit.labels.newNameValue") : t("sc.fe.forms.inputValue")} 
-                          disabled={shouldBeRemoved} 
-                        />
-                      </StyledFormItem>
-                    );
-                  }}
-                </Form.Item>
-                <StyledFormItem
-                  {...restField}
-                  name={[name, "shouldBeRemoved"]}
-                  valuePropName="checked"
-                >
-                  <Checkbox onChange={(e) => onCheckToRemove(e, name)}>
-                    {t("sc.fe.steps.edit.labels.checkToRemove")}
-                  </Checkbox>
-                </StyledFormItem>
-                {isCableList && (
+            {fields.map(({ key, name: fieldIndex, ...restField }) => {
+              const listName = name;
+              return (
+                <FormRow key={key}>
                   <Form.Item
-                    {...restField}
-                    name={[name, "blockType"]}
-                    initialValue="CableList"
-                    hidden
+                    shouldUpdate={(prev, cur) => {
+                      const prevList = (prev[listName] || []) as FormListItem[];
+                      const curList = (cur[listName] || []) as FormListItem[];
+                      return prevList.length !== curList.length ||
+                        prevList.some((item: FormListItem, idx: number) => item?.name !== curList[idx]?.name);
+                    }}
+                    noStyle
                   >
-                    <Input />
+                    {({ getFieldValue }) => {
+                      const allItems = (getFieldValue(listName) || []) as FormListItem[];
+                      return (
+                        <StyledFormItem
+                          {...restField}
+                          name={[fieldIndex, "name"]}
+                          rules={[
+                            { required: true, message: t("sc.fe.forms.validation.name") },
+                            {
+                              validator: (_rule, value) => {
+                                if (!value) {
+                                  return Promise.resolve();
+                                }
+                                const duplicateCount = allItems.filter(
+                                  (item: FormListItem, idx: number) => item?.name === value && idx !== fieldIndex
+                                ).length;
+                                if (duplicateCount > NO_DUPLICATES) {
+                                  return Promise.reject(new Error(t("sc.fe.forms.validation.nameDuplicate")));
+                                }
+                                return Promise.resolve();
+                              },
+                            },
+                          ]}
+                          dependencies={[listName]}
+                        >
+                          <Input placeholder={t("sc.fe.forms.inputName")} />
+                        </StyledFormItem>
+                      );
+                    }}
                   </Form.Item>
-                )}
-                <IconWrapper>
-                  <MinusCircleOutlined onClick={() => remove(name)} />
-                </IconWrapper>
-              </FormRow>
-            ))}
+                  <Form.Item
+                    shouldUpdate={(prev, cur) => {
+                      const prevValue = prev[listName]?.[fieldIndex]?.shouldBeRemoved;
+                      const curValue = cur[listName]?.[fieldIndex]?.shouldBeRemoved;
+                      return prevValue !== curValue;
+                    }}
+                    noStyle
+                  >
+                    {({ getFieldValue }) => {
+                      const shouldBeRemoved = getFieldValue([listName, fieldIndex, "shouldBeRemoved"]);
+                      return (
+                        <StyledFormItem
+                          {...restField}
+                          name={[fieldIndex, "newValue"]}
+                          rules={[
+                            {
+                              message: t("sc.fe.forms.validation.value"),
+                              required: !shouldBeRemoved && !isCableList,
+                            },
+                          ]}
+                          dependencies={[[fieldIndex, "shouldBeRemoved"]]}
+                        >
+                          <Input 
+                            placeholder={isCableList ? t("sc.fe.steps.edit.labels.newNameValue") : t("sc.fe.forms.inputValue")} 
+                            disabled={shouldBeRemoved} 
+                          />
+                        </StyledFormItem>
+                      );
+                    }}
+                  </Form.Item>
+                  <StyledFormItem
+                    {...restField}
+                    name={[fieldIndex, "shouldBeRemoved"]}
+                    valuePropName="checked"
+                  >
+                    <Checkbox onChange={(e) => onCheckToRemove(e, fieldIndex)}>
+                      {t("sc.fe.steps.edit.labels.checkToRemove")}
+                    </Checkbox>
+                  </StyledFormItem>
+                  {isCableList && (
+                    <Form.Item
+                      {...restField}
+                      name={[fieldIndex, "blockType"]}
+                      initialValue="CableList"
+                      hidden
+                    >
+                      <Input />
+                    </Form.Item>
+                  )}
+                  <IconWrapper>
+                    <MinusCircleOutlined onClick={() => remove(fieldIndex)} />
+                  </IconWrapper>
+                </FormRow>
+              );
+            })}
             <Form.Item>
               <StyledButton
                 type="dashed"
