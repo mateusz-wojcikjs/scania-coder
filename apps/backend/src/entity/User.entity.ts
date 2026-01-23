@@ -15,11 +15,29 @@ export class User {
     @Column({ unique: true })
     email: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     password: string;
 
-    @Column()
+    @Column({ nullable: true })
     passwordSalt: string;
+
+    @Column({ nullable: true })
+    passwordResetToken: string;
+
+    @Column({ nullable: true })
+    passwordResetExpires: Date;
+
+    @Column({ nullable: true })
+    invitationToken: string;
+
+    @Column({ nullable: true })
+    invitationExpires: Date;
+
+    @Column({ default: false })
+    isInvited: boolean;
+
+    @Column({ default: false })
+    isActive: boolean;
 
     @Column({
         type: "enum",
@@ -28,9 +46,12 @@ export class User {
     })
     role: UserRole;
 
-    @CreateDateColumn()
+    @Column({ default: 0 })
+    tokenVersion: number;
+
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt: Date;
 }

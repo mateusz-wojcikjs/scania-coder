@@ -8,6 +8,14 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useFileEditor } from "../../../hooks";
 import { FormList } from "./components";
 
+const EMPTY_ARRAY_LENGTH: number = 0;
+
+interface FormValues {
+  updates: UpdatePayload[];
+  cableList: UpdatePayload[];
+  layoutName: string;
+}
+
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
   const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, form }: EditFileFormProps = props;
@@ -16,7 +24,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
   const { t }: TransProps<never> = useTranslation();
 
   useEffect(() => {
-    if (!layoutFields || layoutFields.length === 0) {
+    if (!layoutFields || layoutFields.length === EMPTY_ARRAY_LENGTH) {
       form.setFieldsValue({ updates: [], cableList: [] });
       return;
     }
@@ -44,7 +52,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
     });
   }, [layoutFields, form]);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: FormValues): Promise<void> => {
     setIsLoading(true);
     const allUpdates: UpdatePayload[] = [
       ...(values.updates || []),
@@ -75,7 +83,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
         onError: (err) => {
           const errorKey = `sc.api.errors.${err.response?.data?.error?.errorCode}`;
           message.error(t(errorKey, "sc.api.errors.UNKNOWN_ERROR"));
-          setLayoutError(t('sc.fe.forms.validation.changeName'));
+          setLayoutError(t("sc.fe.forms.validation.changeName"));
           setIsLoading(false);
         }
       });
@@ -85,7 +93,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
           handleEditSuccess(blob);
         },
         onError: () => {
-          message.error(t('sc.fe.steps.edit.error'));
+          message.error(t("sc.fe.steps.edit.error"));
           setIsLoading(false);
         }
       });

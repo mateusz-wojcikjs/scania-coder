@@ -1,15 +1,16 @@
+import { UpdatePayload } from "@scania-coder/types";
 import { AppDataSource } from "../data-source";
 import { Layout } from "../entity";
-import { UpdatePayload } from "@scania-coder/types";
+import { ErrorCodes } from "../enums";
 import { CustomError } from "../errors";
 
 export class XmlLayoutService {
   static async createLayout(authorId: number, name: string, updates: UpdatePayload[]) {
     const layoutRepository = AppDataSource.getRepository(Layout);
-    const layout = await layoutRepository.findOne({ where: { name, authorId }});
+    const layout = await layoutRepository.findOne({ where: { name, authorId } });
 
     if (layout) {
-      throw new CustomError(`Layout already exists`, 409, "ERR_ALREADY_EXISTS");
+      throw new CustomError("Layout already exists", 409, ErrorCodes.ERR_ALREADY_EXISTS);
     }
 
     const newLayout = layoutRepository.create({
@@ -21,21 +22,22 @@ export class XmlLayoutService {
     return await layoutRepository.save(newLayout);
   }
 
-  static async getLayoutById(id: number) {
+  static async getLayoutById(id: number, authorId: number) {
     return await AppDataSource
       .getRepository(Layout)
-      .findOneBy({ id })
+      .findOne({ where: { id, authorId } });
   }
 
-  static async getAllLayouts() {
+  static async getAllLayouts(authorId: number) {
     return await AppDataSource
       .getRepository(Layout)
       .createQueryBuilder("layout")
+      .where("layout.authorId = :authorId", { authorId })
       .getMany();
   }
 
-  static async deleteLayoutById(id: number) {
+  static async deleteLayoutById(id: number, authorId: number) {
     const layoutRepository = AppDataSource.getRepository(Layout);
-    return await layoutRepository.delete(id);
+    return await layoutRepository.delete({ id, authorId });
   }
 }

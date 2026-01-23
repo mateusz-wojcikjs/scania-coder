@@ -12,6 +12,7 @@
       "dependsOn": ["^start"]
     },
     "lint": {},
+    "lint:fix": {},
     "test": {}
   },
   "ui": "tui"

@@ -6,9 +6,13 @@ export const GlobalStyle = createGlobalStyle`
         font-size: 62.5%;
     }
 
+    body {
+      background-color: ${({ theme }): string => theme.colors.gray100};
+    }
+
     body, a, button {
         font-family: 'Poppins', sans-serif;
-        background-color: ${({ theme }): string => theme.colors.gray100};
+
     }
 
     *, *::after, *::before {

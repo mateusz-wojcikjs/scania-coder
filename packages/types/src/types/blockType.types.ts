@@ -1,1 +1,1 @@
-export type BlockType = 'FPC' | 'CableList';
+export type BlockType = "FPC" | "CableList";

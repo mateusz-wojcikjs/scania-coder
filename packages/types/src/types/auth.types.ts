@@ -1,3 +1,5 @@
+import { AuthUser } from "./authUser.types";
+
 export interface LoginData {
   email: string;
   password: string;
@@ -5,9 +7,13 @@ export interface LoginData {
 
 export interface LoginResponse {
   authJwtToken: string;
-  user: {
-    email: string;
-    name: string;
-    isAdmin: boolean;
-  }
+  user: AuthUser;
+}
+
+export interface RemindPasswordData {
+  email: string;
+}
+
+export interface RemindPasswordResponse {
+  message: string;
 }

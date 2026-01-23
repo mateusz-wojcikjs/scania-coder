@@ -1,4 +1,4 @@
-import { ErrorCodes } from "@scania-coder/types";
+import { ErrorCodes } from "./enums";
 
 export class CustomError extends Error {
     public statusCode: number;
@@ -30,5 +30,11 @@ export class UnauthorizedError extends CustomError {
 export class InternalServerError extends CustomError {
     constructor(errorCode: ErrorCodes) {
         super("Internal Server Error", 500, errorCode);
+    }
+}
+
+export class NotFoundError extends CustomError {
+    constructor(errorCode: ErrorCodes) {
+        super("Not Found", 404, errorCode);
     }
 }

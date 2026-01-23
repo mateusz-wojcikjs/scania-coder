@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UpdatePayload } from "@scania-coder/types";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({
   name: "LAYOUTS"
@@ -18,9 +18,9 @@ export class Layout {
   @Column()
   authorId: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt: Date;
-
-  @UpdateDateColumn()
+  
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt: Date;
 }

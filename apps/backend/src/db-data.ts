@@ -1,21 +1,42 @@
+import { User } from "./entity";
 import { UserRole } from "./enums";
 
-export const USERS = {
+export const USERS: Record<number, User & { plainTextPassword: string }> = {
     1: {
         id: 1,
         email: "test@devmw.pl",
         username: "mateo",
-        plainTextPassword: "test",
+        plainTextPassword: "DevMW123",
         passwordSalt: "o61TA7yaJIsa",
         role: UserRole.USER,
+        password: "o61TA7yaJIsa",
+        passwordResetToken: "",
+        passwordResetExpires: new Date(),
+        invitationToken: "",
+        invitationExpires: new Date(),
+        isInvited: false,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        tokenVersion: 0,
     },
     2: {
         id: 2,
         email: "admin@devmw.pl",
         username: "mateo admin",
-        plainTextPassword: "admin",
+        plainTextPassword: "DevMW123",
         passwordSalt: "NydKRjIh4T4X",
         role: UserRole.ADMIN,
+        password: "NydKRjIh4T4X",
+        passwordResetToken: "",
+        passwordResetExpires: new Date(),
+        invitationToken: "",
+        invitationExpires: new Date(),
+        isInvited: false,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        tokenVersion: 0,
     }
 
 };
