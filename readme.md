@@ -6,8 +6,8 @@ Badges
 Overview
 Scania Coder is a full-stack monorepo containing the app frontend, backend, and shared types. The backend is a TypeScript/Express API with TypeORM and PostgreSQL, and the frontend is a React/Vite SPA. The system integrates AWS SES for email delivery and S3 for image storage, and is designed to run locally via Docker.
 
-Documentation
-- Docs (mock): https://example.com/scania-coder-docs
+Live production
+- https://bart-trans.devmw.pl
 
 Features
 - JWT-based authentication and authorization.
