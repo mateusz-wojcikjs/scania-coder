@@ -1,9 +1,9 @@
 import { TransProps, useTranslation } from "react-i18next";
 import { Container } from "./root.styled.ts";
-import { Download, Edit, Upload } from "./components/index.ts";
+import { Download, Edit, Upload } from "./components";
 import { UseFileEditor } from "interfaces/hooks";
-import { Loader } from "../../components/index.ts";
-import { useFileEditor, useTitle } from "../../hooks/index.ts";
+import { Loader } from "../../components";
+import { useFileEditor, useTitle } from "../../hooks";
 // TODO: split provider from context file
 import { FileEditorProvider } from "../../contexts/fileEditor.context.tsx";
 

@@ -126,6 +126,16 @@
           "deactivateAccountConfirm": "Czy na pewno chcesz dezaktywować swoje konto?",
           "deactivateAccountSuccess": "Twoje konto zostało dezaktywowane",
           "deactivateAccountError": "Wystąpił błąd podczas dezaktywowania konta"
+        },
+        "layoutsDetails": {
+          "save": "Zapisz zmiany",
+          "title": "Szczegóły konfiguracji",
+          "labels": {
+            "layoutName": "Nazwa konfiguracji"
+          },
+          "messages": {
+            "layoutNameRequired": "Nazwa konfiguracji jest wymagana."
+          }
         }
       },
       "tooltips": {

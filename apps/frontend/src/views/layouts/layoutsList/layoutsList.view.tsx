@@ -1,15 +1,16 @@
-import { Loader } from "../../components";
+import { Loader } from "../../../components";
 import { message, Space } from "antd";
 import { TransProps, useTranslation } from "react-i18next";
 import { Popconfirm, Table, TableProps } from "antd/lib";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getLayouts, deleteLayout } from "../../api";
-import { DeleteOutlined } from "@ant-design/icons";
-import { ApiMutation } from "../../types";
-import { Layout, LayoutRemove, UseDate } from "../../interfaces";
-import { useTitle, useDate } from "../../hooks";
+import { getLayouts, deleteLayout } from "../../../api";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import { ApiMutation } from "../../../types";
+import { Layout, LayoutRemove, UseDate } from "../../../interfaces";
+import { useTitle, useDate } from "../../../hooks";
 import { useMediaQuery } from "react-responsive";
-import { Breakpoint } from "../../enums";
+import { Breakpoint, RoutingPath } from "../../../enums";
+import { Link } from "react-router-dom";
 
 export const LayoutsList = (): JSX.Element => {
   const { t }: TransProps<never> = useTranslation();
@@ -46,6 +47,9 @@ export const LayoutsList = (): JSX.Element => {
       key: "action",
       render: (_: unknown, record: Layout): JSX.Element => (
         <Space size="middle">
+          <Link to={`${RoutingPath.LayoutsDetails.replace(":id", record.id.toString())}`}>
+            <FormOutlined />
+          </Link>
           <Popconfirm
             title={t("sc.fe.popup.layoutRemove", { name: record.name })}
             description={t("sc.fe.popup.removeConfirm")}
