@@ -6,3 +6,10 @@ export interface FormListProps {
   onCheckToRemove: (e: CheckboxChangeEvent, name: number) => void;
   isCableList?: boolean;
 }
+
+export interface FormListItem {
+  name?: string;
+  newValue?: string;
+  shouldBeRemoved?: boolean;
+  blockType?: string;
+}

@@ -3,18 +3,11 @@ import { Form, Input, Checkbox } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { TransProps, useTranslation } from "react-i18next";
 import { FormHeader } from "../formHeader/formHeader.component";
-import { FormListProps } from "./formList.types.ts";
+import { FormListProps, FormListItem } from "./formList.types.ts";
 import { FormRow, IconWrapper, StyledButton, StyledFormItem } from "./formList.styles.ts";
 
 const EMPTY_ARRAY_LENGTH: number = 0;
 const NO_DUPLICATES: number = 0;
-
-interface FormListItem {
-  name?: string;
-  newValue?: string;
-  shouldBeRemoved?: boolean;
-  blockType?: string;
-}
 
 export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element => {
   const { name, isCableList = false, onCheckToRemove }: FormListProps = props;
