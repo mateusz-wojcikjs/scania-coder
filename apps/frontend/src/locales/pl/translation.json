@@ -134,7 +134,9 @@
             "layoutName": "Nazwa konfiguracji"
           },
           "messages": {
-            "layoutNameRequired": "Nazwa konfiguracji jest wymagana."
+            "layoutNameRequired": "Nazwa konfiguracji jest wymagana.",
+            "saveSuccess": "Zapisano konfigurację.",
+            "invalidId": "Nieprawidłowy identyfikator konfiguracji."
           }
         }
       },

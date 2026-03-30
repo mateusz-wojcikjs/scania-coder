@@ -29,5 +29,5 @@ export interface UseFileEditor {
   onLayoutChangeMutation: ApiMutation<Layout, number>;
   editXmlMutation: ApiMutation<Blob, FormData>;
   saveLayoutMutation: ApiMutation<Layout, LayoutItemData>;
-  onCheckToRemove: (e: CheckboxChangeEvent, name: number) => void;
+  onCheckToRemove: (e: CheckboxChangeEvent, listName: string, fieldIndex: number) => void;
 }

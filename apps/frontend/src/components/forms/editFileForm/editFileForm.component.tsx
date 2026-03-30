@@ -1,14 +1,13 @@
 import { Button, Checkbox, Form, Input, message } from "antd";
-import { FC, useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { FC, useState } from "react";
 import { TransProps, useTranslation } from "react-i18next";
 import { EditFileFormProps } from "./editFileForm.types.ts";
 import { UpdatePayload } from "@scania-coder/types";
 import { LayoutItemData } from "../../../types";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { useFileEditor } from "../../../hooks";
-import { FormList } from "./components";
-
-const EMPTY_ARRAY_LENGTH: number = 0;
+import { useFileEditorContext, useSyncLayoutFieldsToForm } from "../../../hooks";
+import { LayoutUpdatesFormFields } from "./components";
 
 interface FormValues {
   updates: UpdatePayload[];
@@ -17,40 +16,13 @@ interface FormValues {
 }
 
 export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): JSX.Element => {
-  const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditor();
+  const { editXmlMutation, saveLayoutMutation, onCheckToRemove } = useFileEditorContext();
   const { blobFile, file, setUrl, layoutFields, setIsLoading, newMajorVersion, form }: EditFileFormProps = props;
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [layoutError, setLayoutError] = useState<string | null>(null);
   const { t }: TransProps<never> = useTranslation();
 
-  useEffect(() => {
-    if (!layoutFields || layoutFields.length === EMPTY_ARRAY_LENGTH) {
-      form.setFieldsValue({ updates: [], cableList: [] });
-      return;
-    }
-
-    const updates = layoutFields
-      .filter(f => f.blockType !== "CableList")
-      .map(({ name, newValue, shouldBeRemoved }) => ({
-        name,
-        newValue,
-        shouldBeRemoved,
-      }));
-
-    const cableList = layoutFields
-      .filter(f => f.blockType === "CableList")
-      .map(({ name, newValue, shouldBeRemoved }) => ({
-        name,
-        newValue,
-        shouldBeRemoved,
-        blockType: "CableList",
-      }));
-
-    form.setFieldsValue({
-      updates,
-      cableList,
-    });
-  }, [layoutFields, form]);
+  useSyncLayoutFieldsToForm(form, layoutFields);
 
   const onFinish = async (values: FormValues): Promise<void> => {
     setIsLoading(true);
@@ -80,7 +52,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
             }
           });
         },
-        onError: (err) => {
+        onError: (err: AxiosError<{ error?: { errorCode?: string } }>) => {
           const errorKey = `sc.api.errors.${err.response?.data?.error?.errorCode}`;
           message.error(t(errorKey, "sc.api.errors.UNKNOWN_ERROR"));
           setLayoutError(t("sc.fe.forms.validation.changeName"));
@@ -121,8 +93,7 @@ export const EditFileForm: FC<EditFileFormProps> = (props: EditFileFormProps): J
       disabled={!file}
       form={form}
     >
-      <FormList name="updates" onCheckToRemove={onCheckToRemove} />
-      <FormList name="cableList" isCableList onCheckToRemove={onCheckToRemove} />
+      <LayoutUpdatesFormFields onCheckToRemove={onCheckToRemove} />
       <Form.Item>
         <Checkbox onChange={(e: CheckboxChangeEvent): void => setIsCheckboxChecked(e.target.checked)}>
           {t("sc.fe.forms.saveConfig")}

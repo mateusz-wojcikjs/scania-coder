@@ -51,6 +51,32 @@ export const getLayouts = async (request: Request, response: Response, next: Nex
   }
 };
 
+export const updateLayout = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const { id } = request.params;
+    const { name, updates } = request.body;
+    const userId: number = response.locals.user.userId;
+    const layoutId = Number(id);
+
+    if (isNaN(layoutId)) {
+      return response.status(400).json({ error: "Invalid layout ID" });
+    }
+
+    const updated = await XmlLayoutService.updateLayout(layoutId, userId, name, updates);
+    if (!updated) {
+      return response.status(404).json({ error: "Layout not found" });
+    }
+
+    response.status(200).json(updated);
+  } catch (error) {
+    logger.error("Error during updateLayout()", {
+      error,
+      requestBody: request.body,
+    });
+    next(error);
+  }
+};
+
 export const deleteLayout = async (
   request: Request,
   response: Response,

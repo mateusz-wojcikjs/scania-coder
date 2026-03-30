@@ -3,7 +3,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export interface FormListProps {
   name: string;
-  onCheckToRemove: (e: CheckboxChangeEvent, name: number) => void;
+  onCheckToRemove: (e: CheckboxChangeEvent, listName: string, fieldIndex: number) => void;
   isCableList?: boolean;
 }
 
