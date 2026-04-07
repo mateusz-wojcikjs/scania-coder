@@ -33,14 +33,14 @@ export const useMenu = (): UseMenuReturnType => {
     if (path === ROUTE_PATHS.Users) return ["users-list"];
     if (path === ROUTE_PATHS.UsersAdd) return ["users-add"];
     if (matchPath(ROUTE_PATHS.UsersDetails, path)?.pathname) return ["users-list"];
-    if (path === ROUTE_PATHS.Root) return ["editor"];
+    if (matchPath(ROUTE_PATHS.LayoutsDetails, path)?.pathname) return ["list"];
   }, [location.pathname]);
 
   const getOpenKeys = useCallback(() => {
     const path = location.pathname;
     const routeBasedOpenKeys: string[] = [];
 
-    if (path === ROUTE_PATHS.Layouts) {
+    if (path === ROUTE_PATHS.Layouts || matchPath(ROUTE_PATHS.LayoutsDetails, path)?.pathname) {
       routeBasedOpenKeys.push("layouts");
     }
     if (path === ROUTE_PATHS.Users || path === ROUTE_PATHS.UsersAdd || matchPath(ROUTE_PATHS.UsersDetails, path)?.pathname) {

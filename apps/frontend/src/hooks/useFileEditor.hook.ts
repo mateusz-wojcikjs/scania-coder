@@ -8,7 +8,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLayout, editXml, getLayoutDetails, getLayouts } from "../api";
 import { QueryKey } from "../enums";
 import { Layout, UseFileEditor } from "../interfaces";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { createOnCheckToRemoveHandler } from "./createOnCheckToRemoveHandler.ts";
 
 const INCREMENT_VERSION: number = 1;
 
@@ -93,16 +93,7 @@ export const useFileEditor: () => UseFileEditor = (): UseFileEditor => {
     },
   });
 
-  const onCheckToRemove:  (e: CheckboxChangeEvent, name: number) => void = (e: CheckboxChangeEvent, name: number): void => {
-    if (e.target.checked) {
-      form.setFields([
-        {
-          name: ["updates", name, "newValue"],
-          value: undefined,
-        },
-      ]);
-    }
-  };
+  const onCheckToRemove = createOnCheckToRemoveHandler(form);
 
   return {
     isLoading: onLayoutChangeMutation.isPending || isLoading,

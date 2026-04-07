@@ -16,6 +16,7 @@
           "passwordMismatch": "Hasła nie są identyczne.",
           "confirmPassword": "Potwierdź hasło.",
           "name": "Wprowadź \"name\"",
+          "nameDuplicate": "Nazwa musi być unikalna.",
           "value": "Wprowadź \"value\"",
           "changeName": "Zmień nazwę",  
           "role": "Wybierz rolę"
@@ -125,6 +126,18 @@
           "deactivateAccountConfirm": "Czy na pewno chcesz dezaktywować swoje konto?",
           "deactivateAccountSuccess": "Twoje konto zostało dezaktywowane",
           "deactivateAccountError": "Wystąpił błąd podczas dezaktywowania konta"
+        },
+        "layoutsDetails": {
+          "save": "Zapisz zmiany",
+          "title": "Szczegóły konfiguracji",
+          "labels": {
+            "layoutName": "Nazwa konfiguracji"
+          },
+          "messages": {
+            "layoutNameRequired": "Nazwa konfiguracji jest wymagana.",
+            "saveSuccess": "Zapisano konfigurację.",
+            "invalidId": "Nieprawidłowy identyfikator konfiguracji."
+          }
         }
       },
       "tooltips": {
@@ -157,9 +170,9 @@
             "name": "Nazwa",
             "value": "Wartość",
             "newValue": "Nowa wartość",
-            "create": "Edytuj blok FPC",
+            "editFPCBlock": "Edytuj blok FPC",
             "savedLayouts": "Konfiguracje zapisane jako szablon:",
-            "removeRow": "Usuwanie wiersza",
+            "removeRow": "Usuń wiersz",
             "removeFields": "Usuń pola",
             "layoutName": "Nazwa konfiguracji",
             "checkToRemove": "Oznacz do usunięcia",
@@ -168,7 +181,8 @@
             "newNameValue": "Nowa wartość \"name\""
           },
           "tooltips": {
-            "newValue": "Jeśli chcesz dodać nowe pole to 'Wartość' i 'Nowa wartość' muszą być identyczne."
+            "newValue": "Jeśli chcesz dodać nowe pole to 'Wartość' i 'Nowa wartość' muszą być identyczne.",
+            "removeRow": "Zaznaczenie spowoduje usunięcie wiersza w edytowanym pliku."
           },
           "messages": {
             "layoutSuccess": "Poprawnie wczytano szablon",
