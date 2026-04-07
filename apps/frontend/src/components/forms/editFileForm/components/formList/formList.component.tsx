@@ -115,7 +115,7 @@ export const FormList: FC<FormListProps> = (props: FormListProps): JSX.Element =
                     name={[fieldIndex, "shouldBeRemoved"]}
                     valuePropName="checked"
                   >
-                    <Checkbox onChange={(e) => onCheckToRemove(e, fieldIndex)}>
+                    <Checkbox onChange={(e) => onCheckToRemove(e, name, fieldIndex)}>
                       {t("sc.fe.steps.edit.labels.checkToRemove")}
                     </Checkbox>
                   </StyledFormItem>

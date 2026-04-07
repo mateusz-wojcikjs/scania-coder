@@ -1,4 +1,6 @@
 export { useFileEditor } from "./useFileEditor.hook.ts";
+export { useSyncLayoutFieldsToForm } from "./useSyncLayoutFieldsToForm.hook.ts";
+export { createOnCheckToRemoveHandler } from "./createOnCheckToRemoveHandler.ts";
 export { useFileEditorContext } from "./useFileEditorContext.hook.ts";
 export { useUpload } from "./useUpload.hook.ts";
 export { useAuth } from "./useAuth.hook.ts";

@@ -13,6 +13,13 @@ export const useRoutingPermission: () => UseRoutingPermission = (): UseRoutingPe
   };
 
   const checkRoutePermission: (pathname: RoutingPath) => boolean = (pathname: RoutingPath): boolean => {
+    if (matchPath(RoutingPath.LayoutsDetails, pathname)) {
+      return !!userData?.email;
+    }
+    if (matchPath(RoutingPath.UsersDetails, pathname)) {
+      return !!userData?.isAdmin;
+    }
+
     switch (pathname) {
     case RoutingPath.Login:
       return true;
@@ -22,7 +29,6 @@ export const useRoutingPermission: () => UseRoutingPermission = (): UseRoutingPe
       return !!userData?.email;
     case RoutingPath.Users:
     case RoutingPath.UsersAdd:
-    case matchPath(RoutingPath.UsersDetails, pathname)?.pathname:
       return !!userData?.isAdmin;
     default:
       return false;

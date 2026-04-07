@@ -40,4 +40,23 @@ export class XmlLayoutService {
     const layoutRepository = AppDataSource.getRepository(Layout);
     return await layoutRepository.delete({ id, authorId });
   }
+
+  static async updateLayout(id: number, authorId: number, name: string, updates: UpdatePayload[]) {
+    const layoutRepository = AppDataSource.getRepository(Layout);
+    const layout = await layoutRepository.findOne({ where: { id, authorId } });
+
+    if (!layout) {
+      return null;
+    }
+
+    const duplicate = await layoutRepository.findOne({ where: { name, authorId } });
+    if (duplicate && duplicate.id !== id) {
+      throw new CustomError("Layout already exists", 409, ErrorCodes.ERR_ALREADY_EXISTS);
+    }
+
+    layout.name = name;
+    layout.updates = updates;
+
+    return await layoutRepository.save(layout);
+  }
 }
